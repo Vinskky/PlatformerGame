@@ -18,7 +18,7 @@
 ## Developers
 
  - {Dev01} - {Role(s)}
- - {Dev02} - {Role(s)}
+ - Martí Buxeda - {IDK}
  - {Dev03} - {Role(s)}
  - {Dev04} - {Role(s)}
  - {Dev05} - {Role(s)}
