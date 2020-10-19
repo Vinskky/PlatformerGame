@@ -13,6 +13,7 @@ class Render;
 class Textures;
 class Audio;
 class Scene;
+class Map;
 
 class App
 {
@@ -45,6 +46,10 @@ public:
 	const char* GetTitle() const;
 	const char* GetOrganization() const;
 
+    // L02: TODO 1: Create methods to request Load / Save
+	void LoadRequest(const char* filename);
+	void SaveRequest(const char* filename);
+
 private:
 
 	// Load config file
@@ -65,6 +70,9 @@ private:
 	// Call modules after each loop iteration
 	bool PostUpdate();
 
+	// L02: TODO 5: Declare methods to load/save game
+	bool LoadGame();
+	bool SaveGame()const;
 public:
 
 	// Modules
@@ -74,6 +82,7 @@ public:
 	Textures* tex;
 	Audio* audio;
 	Scene* scene;
+	Map* map;
 
 private:
 
@@ -84,15 +93,22 @@ private:
 
 	List<Module *> modules;
 
-	// TODO 2: Create two new variables from pugui namespace:
-	// a xml_document to store the config file and
-	// two xml_node to read specific branches of the xml
+	// L01: DONE 2: Create new variables from pugui namespace:
+	// xml_document to store the config file and
+	// xml_node(s) to read specific branches of the xml
 	pugi::xml_document configFile;
 	pugi::xml_node config;
 	pugi::xml_node configApp;
 
 	uint frames;
 	float dt;
+
+	// L02: TODO 1: Create required variables to request load / save and 
+	// the filename for save / load
+	bool loadRequest;
+	mutable bool saveRequest;
+	SString loadFileName;
+	mutable SString saveFileName;
 };
 
 extern App* app;

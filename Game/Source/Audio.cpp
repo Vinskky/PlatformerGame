@@ -15,7 +15,7 @@
 Audio::Audio() : Module()
 {
 	music = NULL;
-	name.create("audio");
+	name.Create("audio");
 }
 
 // Destructor
@@ -55,9 +55,32 @@ bool Audio::Awake(pugi::xml_node& config)
 		ret = true;
 	}
 
+	if (config != NULL)
+	{
+		volume = config.child("volume").attribute("value").as_int();
+	}
 	return ret;
 }
 
+bool Audio::PreUpdate()
+{
+	return true;
+}
+
+//Update called each loop to assign volume value
+bool Audio::Update(float dt)
+{
+	
+
+	return true;
+}
+bool Audio::PostUpdate()
+{
+	bool ret = true;
+
+	Mix_VolumeMusic(volume);
+	return ret;
+}
 // Called before quitting
 bool Audio::CleanUp()
 {
@@ -176,3 +199,57 @@ bool Audio::PlayFx(unsigned int id, int repeat)
 
 	return ret;
 }
+
+void Audio::SetVolume(uint value)
+{
+	if (value == 0)
+	{
+		//increase volume
+		volume += 10;
+		if (volume > 128)
+		{
+			volume = 128;
+			LOG("Max. volume reached!");
+		}
+	}
+	else if (value == 1)
+	{
+		//increase volume
+		volume -= 10;
+		if (volume < 0)
+		{
+			volume = 0;
+			LOG("Min. volume reached!");
+		}
+	}
+	else
+	{
+		LOG("Error trying to increase/decrease volume. check parameter value");
+	}
+
+}
+
+bool Audio::Load(pugi::xml_node &loadNode)
+{
+	volume = (float)loadNode.child("volume").attribute("value").as_int();
+	return true;
+}
+
+bool Audio::Save(pugi::xml_node &saveNode)
+{
+
+	bool ret = true;
+	pugi::xml_node vol = saveNode.append_child("volume");
+	if (vol == NULL)
+	{
+		LOG("Error on Save function of %s", name.GetString());
+		ret = false;
+	}
+	else
+	{
+		vol.append_attribute("value").set_value(volume);
+	}
+	return ret;
+}
+
+
