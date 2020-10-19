@@ -26,7 +26,7 @@ bool Map::Awake(pugi::xml_node& config)
     bool ret = true;
 
     folder.Create(config.child("folder").child_value());
-
+    level2Load.Create(config.child("level").child_value());
     return ret;
 }
 
@@ -173,7 +173,7 @@ bool Map::Load(const char* filename)
     if(ret == true)
     {
         // L03: TODO 5: LOG all the data loaded iterate all tilesets and LOG everything
-        LOG("Successfully parsed map XML file : hello2.tmx");
+        LOG("Successfully parsed map XML file : %s", level2Load.GetString());
         LOG(" width : %d height : %d", mapInfo.width, mapInfo.height);
         LOG(" tile_width : %d tile_height : %d", mapInfo.tileWidth, mapInfo.tileHeight);
 
@@ -214,9 +214,10 @@ bool Map::Load(const char* filename)
 bool Map::LoadMapData()
 {
     bool ret = false;
-
+    SString path = folder.GetString();
+    path += level2Load.GetString();
     pugi::xml_node mapNode;
-    pugi::xml_parse_result result = mapFile.load_file("Assets/maps/hello2.tmx");
+    pugi::xml_parse_result result = mapFile.load_file(path.GetString());
 
     if (result != NULL)
     {

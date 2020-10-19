@@ -100,22 +100,28 @@ public:
     // Load new map
     bool Load(const char* path);
 
+    inline SString GetLevel2Load()const
+    {
+        return level2Load;
+    }
 	// L04: DONE 8: Create a method that translates x,y coordinates from map positions to world positions
 	iPoint MapToWorld(int x, int y) const;
     // L03: TODO 1: Add your struct for map info as public for now
     MapData mapInfo;
+private:
+    bool LoadMapData();
+    bool LoadTileSet(pugi::xml_node&, TileSet*);
+    bool LoadTileSetImage(pugi::xml_node&, TileSet*);
+    bool LoadMapLayers(pugi::xml_node&, MapLayer*);
 
 private:
 
     pugi::xml_document mapFile;
     SString folder;
+    SString level2Load;
     bool mapLoaded;
 
-	bool LoadMapData();
 
-	bool LoadTileSet(pugi::xml_node&, TileSet*);
-    bool LoadTileSetImage(pugi::xml_node&, TileSet*);
-    bool LoadMapLayers(pugi::xml_node&, MapLayer*);
 
 };
 

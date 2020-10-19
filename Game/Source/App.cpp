@@ -321,7 +321,7 @@ bool App::LoadGame()
 			item = item->prev;
 			
 		}
-		LOG("Loading finished");
+		LOG("Loading finished...");
 	}
 
 	loadRequest = false;

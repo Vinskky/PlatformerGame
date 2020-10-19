@@ -20,6 +20,6 @@
   </audio>
   <map>
     <folder>Assets/maps/</folder>
-    <name>hello2.tmx</name>
+    <level>hello2.tmx</level>
   </map>
 </config>
