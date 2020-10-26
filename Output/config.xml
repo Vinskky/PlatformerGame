@@ -6,7 +6,7 @@
     <organization>UPC</organization>
   </app>
   <renderer>
-    <vsync value="false"/>
+    <vsync value="true"/>
   </renderer>
   <window>
     <resolution width="1280" height="720" scale="1"/>
@@ -22,4 +22,39 @@
     <folder>Assets/maps/</folder>
     <level>hello2.tmx</level>
   </map>
+  <player>
+    <source name="Assets/textures/Character.png"/>
+    <animations>
+      <animation name ="walk" loop="true" speed="0.03">     
+          <frame height="28" width="24" x ="0" y="32"/>
+          <frame height="28" width="24" x ="24" y="32"/>
+          <frame height="28" width="24" x ="48" y="32"/>
+          <frame height="28" width="24" x ="76" y="32"/>
+          <frame height="28" width="24" x ="105" y="32"/>
+          <frame height="28" width="24" x ="135" y="32"/>
+      </animation>
+      <animation name="idle" loop="true" speed="0.05">
+          <frame height="30" width="21" x ="0" y="0"/>
+          <frame height="30" width="21" x ="21" y="0"/>
+          <frame height="30" width="21" x ="42" y="0"/>
+          <frame height="30" width="21" x ="64" y="0"/>
+      </animation>
+      <animation name="die" loop="true" speed="0.015">
+        <frame height="25" width="20" x ="0" y="62"/>
+        <frame height="25" width="20" x ="27" y="62"/>
+        <frame height="25" width="20" x ="53" y="62"/>
+        <frame height="25" width="20" x ="79" y="62"/>
+      </animation>
+      <animation name="jump" loop="true" speed="0.015">
+        <frame height="36" width="21" x ="0" y="88"/>
+        <frame height="36" width="21" x ="26" y="88"/>
+        <frame height="36" width="21" x ="53" y="88"/>
+        <frame height="36" width="21" x ="77" y="88"/>
+        <frame height="36" width="18" x ="103" y="88"/>
+        <frame height="36" width="18" x ="122" y="88"/>
+        <frame height="36" width="20" x ="142" y="88"/>
+        <frame height="36" width="20" x ="164" y="88"/>
+      </animation>
+    </animations>
+  </player>
 </config>

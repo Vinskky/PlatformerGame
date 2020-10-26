@@ -4,11 +4,25 @@
 #include "Module.h"
 #include "List.h"
 #include "Point.h"
+#include "Animation.h"
+
+#include "PugiXml\src\pugixml.hpp"
 
 struct SDL_Texture;
 
-class Player : public Module {
+struct PlayerData
+{
+	Animation* currentAnimation;
+	Animation idle;
+	Animation jump;
+	Animation die;
+	Animation walk;
 
+	iPoint position;
+};
+
+class Player : public Module 
+{
 public:
 
 	//constructor
@@ -16,6 +30,8 @@ public:
 
 	//Destructor
 	virtual ~Player();
+
+	bool Awake(pugi::xml_node& config);
 
 	bool Start();
 
@@ -25,11 +41,16 @@ public:
 
 	bool CleanUp();
 
-private:
+	void Jump();
 
-	int position;
+	void Draw();
 
+public:
+	PlayerData playerInfo;
+	
+private:	
 	SDL_Texture* texture;
+	SString textPath;
 };
 
 #endif

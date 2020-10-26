@@ -120,9 +120,6 @@ private:
     SString folder;
     SString level2Load;
     bool mapLoaded;
-
-
-
 };
 
 #endif // __MAP_H__

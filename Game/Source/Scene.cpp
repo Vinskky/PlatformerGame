@@ -6,7 +6,7 @@
 #include "Window.h"
 #include "Scene.h"
 #include "Map.h"
-
+#include "Player.h"
 #include "Defs.h"
 #include "Log.h"
 
@@ -72,8 +72,17 @@ bool Scene::Update(float dt)
 	if(app->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 		app->render->camera.x += 1;
 
-	app->map->Draw();
+	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+		app->player->playerInfo.position.x -= 1;
 
+	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+		app->player->playerInfo.position.x += 1;
+	
+	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+		app->player->Jump();
+
+	app->map->Draw();
+	app->player->Draw();
 	//app->render->DrawTexture(img, 380, 100);
 	SString title("Map:%dx%d Tiles:%dx%d Tilesets:%d", app->map->mapInfo.width, app->map->mapInfo.height, app->map->mapInfo.tileWidth, app->map->mapInfo.tileHeight, app->map->mapInfo.tileSets.count());
 
