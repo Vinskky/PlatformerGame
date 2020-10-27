@@ -9,7 +9,7 @@
     <vsync value="true"/>
   </renderer>
   <window>
-    <resolution width="600" height="240" scale="1"/>
+    <resolution width="1280" height="720" scale="3"/>
     <fullscreen value="false"/>
     <borderless value="false"/>
     <resizable value="false"/>
@@ -18,6 +18,10 @@
   <audio>
     <volume value="64"/>
   </audio>
+  <scene>
+    <intro name="Assets/textures/IntroPlaceholder.png" />
+    <death />
+  </scene>
   <map>
     <folder>Assets/maps/</folder>
     <level>Level_1_Platformer.tmx</level>

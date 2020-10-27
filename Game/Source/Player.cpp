@@ -84,7 +84,7 @@ bool Player::Start()
 
 bool Player::Update(float dt) 
 {
-	Draw();
+	//Draw();
 	return true;
 }
 

@@ -10,7 +10,7 @@
 #include "Defs.h"
 #include "Log.h"
 
-Scene::Scene() : Module()
+Scene::Scene() : Module(), introKey(true),introScene(nullptr), deathScene(nullptr)
 {
 	name.Create("scene");
 }
@@ -20,18 +20,18 @@ Scene::~Scene()
 {}
 
 // Called before render is available
-bool Scene::Awake()
+bool Scene::Awake(pugi::xml_node& conf)
 {
 	LOG("Loading Scene");
 	bool ret = true;
-
+	sourceIntro = conf.child("intro").attribute("name").as_string();
 	return ret;
 }
 
 // Called before the first frame
 bool Scene::Start()
 {
-	//img = app->tex->Load("Assets/textures/test.png");
+	introScene = app->tex->Load(sourceIntro.GetString());
 	app->audio->PlayMusic("Assets/audio/music/music_spy.ogg");
 	app->map->Load(app->map->GetLevel2Load().GetString());
 	
@@ -47,46 +47,54 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
-    // L02: TODO 3: Request Load / Save when pressing L/S
-	if (app->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
-		app->LoadRequest("savegame.xml");
-	
-	if (app->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
-		app->SaveRequest("savegame.xml");
-	//L02: BONUS CODE
-	if (app->input->GetKey(SDL_SCANCODE_KP_PLUS) == KEY_DOWN)
-		app->audio->SetVolume(0);
+	if (introKey == false)
+	{
+		// L02: TODO 3: Request Load / Save when pressing L/S
+		if (app->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
+			app->LoadRequest("savegame.xml");
 
-	if (app->input->GetKey(SDL_SCANCODE_KP_MINUS) == KEY_DOWN)
-		app->audio->SetVolume(1);
+		if (app->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
+			app->SaveRequest("savegame.xml");
+		//L02: BONUS CODE
+		if (app->input->GetKey(SDL_SCANCODE_KP_PLUS) == KEY_DOWN)
+			app->audio->SetVolume(0);
 
-	if(app->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
-		app->render->camera.y -= 1;
+		if (app->input->GetKey(SDL_SCANCODE_KP_MINUS) == KEY_DOWN)
+			app->audio->SetVolume(1);
 
-	if(app->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-		app->render->camera.y += 1;
+		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+		{
+			app->player->playerInfo.position.x -= 1;
+			app->render->camera.x += 1;
+		}
 
-	if(app->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-		app->render->camera.x -= 1;
+		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+		{
+			app->player->playerInfo.position.x += 1;
+			app->render->camera.x -= 1;
+		}
 
-	if(app->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-		app->render->camera.x += 1;
 
-	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
-		app->player->playerInfo.position.x -= 1;
+		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+			app->player->Jump();
 
-	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
-		app->player->playerInfo.position.x += 1;
-	
-	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
-		app->player->Jump();
+		app->map->Draw();
+		app->player->Draw();
 
-	app->map->Draw();
-	app->player->Draw();
-	//app->render->DrawTexture(img, 380, 100);
+		
+	}
+	else
+	{
+		app->render->DrawTexture(introScene, 0, 0);
+
+		if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+			introKey = false;
+	}
+    
 	SString title("Map:%dx%d Tiles:%dx%d Tilesets:%d", app->map->mapInfo.width, app->map->mapInfo.height, app->map->mapInfo.tileWidth, app->map->mapInfo.tileHeight, app->map->mapInfo.tileSets.count());
 
 	app->win->SetTitle(title.GetString());
+
 	return true;
 }
 
