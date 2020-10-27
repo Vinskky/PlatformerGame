@@ -56,8 +56,8 @@ void Map::Draw()
         // L06: TODO 4: Make sure we draw all the layers and not just the first one
         for (int y = 0; y < mapInfo.height; ++y)
         {
-            //if (layer->properties.GetProperty("Drawable") == "true")
-            //{/
+            if (layer->properties.GetProperty("Drawable") == "true")
+            {
                 for (int x = 0; x < mapInfo.width; ++x)
                 {
                     uint tileId = layer->Get(x, y);
@@ -69,7 +69,7 @@ void Map::Draw()
                         app->render->DrawTexture(set->imageSource, pos.x, pos.y, &r);
                     }
                 }
-            //}
+            }
             
         }
         item = item->next;
@@ -263,6 +263,8 @@ bool Map::Load(const char* filename)
 
     return ret;
 }
+
+
 
 bool Map::LoadMapData()
 {

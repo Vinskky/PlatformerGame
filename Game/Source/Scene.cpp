@@ -74,6 +74,33 @@ bool Scene::Update(float dt)
 			app->render->camera.x -= 1;
 		}
 
+		if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+		{
+			ListItem<MapLayer*>* item = app->map->mapInfo.layers.start;
+			while (item != NULL)
+			{
+				if (item->data->name == "Colision Layer")
+				{
+					ListItem<Properties::Property*>* item2 = item->data->properties.list.start;
+					while (item2 != NULL)
+					{
+						if (item2->data->name == "Drawable")
+						{
+							if (item2->data->value == "true")
+							{
+								item2->data->value = "false";
+							}
+							else
+							{
+								item2->data->value = "true";
+							}
+						}
+						item2 = item2->next;
+					}
+				}
+				item = item->next;
+			}
+		}
 
 		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 			app->player->Jump();

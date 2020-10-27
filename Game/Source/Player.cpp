@@ -76,9 +76,9 @@ bool Player::Awake(pugi::xml_node& config)
 
 bool Player::Start() 
 {
-	playerInfo.position = { 0,200 };
+	playerInfo.position = { 32,110 };
 	texture = app->tex->Load(textPath.GetString());
-	playerInfo.currentAnimation = &playerInfo.jump;
+	playerInfo.currentAnimation = &playerInfo.idle;
 	return true;
 }
 

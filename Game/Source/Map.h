@@ -143,6 +143,7 @@ public:
     iPoint WorldToMap(int x, int y) const;
     // L03: TODO 1: Add your struct for map info as public for now
     MapData mapInfo;
+
 private:
     bool LoadMapData();
     bool LoadTileSet(pugi::xml_node&, TileSet*);
