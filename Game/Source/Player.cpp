@@ -76,6 +76,7 @@ bool Player::Awake(pugi::xml_node& config)
 
 bool Player::Start() 
 {
+	playerInfo.position = { 0,200 };
 	texture = app->tex->Load(textPath.GetString());
 	playerInfo.currentAnimation = &playerInfo.jump;
 	return true;
@@ -105,5 +106,5 @@ void Player::Jump()
 
 void Player::Draw()
 {
-	app->render->DrawTexture(texture, 0, 200, &(playerInfo.currentAnimation->GetCurrentFrame()));
+	app->render->DrawTexture(texture, playerInfo.position.x, playerInfo.position.y, &(playerInfo.currentAnimation->GetCurrentFrame()));
 }

@@ -9,7 +9,7 @@
     <vsync value="true"/>
   </renderer>
   <window>
-    <resolution width="1280" height="720" scale="1"/>
+    <resolution width="600" height="240" scale="1"/>
     <fullscreen value="false"/>
     <borderless value="false"/>
     <resizable value="false"/>
@@ -20,7 +20,7 @@
   </audio>
   <map>
     <folder>Assets/maps/</folder>
-    <level>hello2.tmx</level>
+    <level>Level_1_Platformer.tmx</level>
   </map>
   <player>
     <source name="Assets/textures/Character.png"/>

@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 <save_state>
 	<renderer>
-		<camera x="228" y="274" />
+		<camera x="0" y="0" />
 	</renderer>
+	<player />
 	<map />
 	<scene />
 	<audio>
