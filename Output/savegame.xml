@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 <save_state>
 	<renderer>
-		<camera x="-756" y="0" />
+		<camera x="-261" y="0" />
 	</renderer>
+	<:anonymous />
 	<player />
 	<map />
 	<scene />

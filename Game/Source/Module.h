@@ -6,6 +6,7 @@
 #include "PugiXml/src/pugixml.hpp"
 
 class App;
+struct Collider;
 
 class Module
 {
@@ -71,6 +72,9 @@ public:
 
 	SString name;
 	bool active;
+
+	//Listeners
+	virtual void OnCollision(Collider*, Collider*) {}
 
 };
 

@@ -6,13 +6,16 @@
 #include "Map.h"
 #include "Player.h"
 #include "window.h"
+#include "Collider.h"
 
 #include "Defs.h"
 #include "Log.h"
 
 #include <math.h>
 
-
+#define JUMPSPEED 50.0f
+const float gravity = 10.0f;
+const float deltaTime = 1.0f / 60.0f;
 
 Player::Player():Module(),texture(nullptr)
 {
@@ -74,18 +77,23 @@ bool Player::Awake(pugi::xml_node& config)
 	return ret;
 }
 
-
 bool Player::Start() 
 {
 	playerInfo.position = { 32,110 };
+
+	playerCollider = app->collision->AddCollider({playerInfo.position.x + collPlayer.x, playerInfo.position.y + collPlayer.y, 10, 27}, Type::PLAYER, app->player);
+
 	texture = app->tex->Load(textPath.GetString());
+
 	playerInfo.currentAnimation = &playerInfo.idle;
+
 	return true;
 }
 
 bool Player::Update(float dt) 
 {
 	//Draw();
+	playerCollider->SetPosition(playerInfo.position.x + collPlayer.x, playerInfo.position.y + collPlayer.y);
 
 	return true;
 }

@@ -35,7 +35,7 @@ bool Scene::Awake(pugi::xml_node& conf)
 bool Scene::Start()
 {
 	introScene = app->tex->Load(sourceIntro.GetString());
-	app->audio->PlayMusic("Assets/audio/music/music_spy.ogg");
+	//app->audio->PlayMusic("Assets/audio/music/music_spy.ogg");
 	app->map->Load(app->map->GetLevel2Load().GetString());
 	
 	return true;

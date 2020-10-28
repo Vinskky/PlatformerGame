@@ -9,6 +9,7 @@
 #include "PugiXml\src\pugixml.hpp"
 
 struct SDL_Texture;
+class Collider;
 
 struct PlayerData
 {
@@ -19,7 +20,7 @@ struct PlayerData
 	Animation walk;
 
 	iPoint position;
-	iPoint posOnWin;
+	//iPoint posOnWin;
 };
 
 class Player : public Module 
@@ -48,10 +49,12 @@ public:
 
 public:
 	PlayerData playerInfo;
+	Collider* playerCollider = nullptr;
 	
 private:	
 	SDL_Texture* texture;
 	SString textPath;
+	iPoint collPlayer = { 7, 3 };
 };
 
 #endif
