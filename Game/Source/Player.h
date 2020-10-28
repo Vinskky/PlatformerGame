@@ -19,6 +19,7 @@ struct PlayerData
 	Animation walk;
 
 	iPoint position;
+	iPoint posOnWin;
 };
 
 class Player : public Module 

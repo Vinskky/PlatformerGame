@@ -5,6 +5,7 @@
 #include "Audio.h"
 #include "Map.h"
 #include "Player.h"
+#include "window.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -85,6 +86,7 @@ bool Player::Start()
 bool Player::Update(float dt) 
 {
 	//Draw();
+
 	return true;
 }
 

@@ -10,6 +10,9 @@
 #include "Defs.h"
 #include "Log.h"
 
+#define MAX_RIGHT_DISTANCE 320
+#define MAX_LEFT_DISTANCE 50
+
 Scene::Scene() : Module(), introKey(true),introScene(nullptr), deathScene(nullptr)
 {
 	name.Create("scene");
@@ -65,13 +68,18 @@ bool Scene::Update(float dt)
 		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 		{
 			app->player->playerInfo.position.x -= 1;
-			app->render->camera.x += 1;
+			if (app->render->camera.x < 0 /*&& app->player->playerInfo.position.x <= MAX_LEFT_DISTANCE*/) {
+				app->render->camera.x += 3;
+			}
 		}
 
 		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
 		{
 			app->player->playerInfo.position.x += 1;
-			app->render->camera.x -= 1;
+			if (app->render->camera.x > -2559 /*&& app->player->playerInfo.position.x >= MAX_RIGHT_DISTANCE*/) {
+				app->render->camera.x -= 3;
+			}
+
 		}
 
 		if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
