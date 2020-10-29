@@ -3,6 +3,7 @@
 #include "Render.h"
 #include "Textures.h"
 #include "Map.h"
+#include "Collider.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -264,8 +265,6 @@ bool Map::Load(const char* filename)
     return ret;
 }
 
-
-
 bool Map::LoadMapData()
 {
     bool ret = false;
@@ -352,6 +351,10 @@ bool Map::LoadMapLayers(pugi::xml_node &node, MapLayer* layer)
         {
             layer->data[i++] = tile.attribute("gid").as_int();
         }
+        if (strcmp(layer->name.GetString(), "Colision Layer") == 0) 
+        {
+            ColliderAsign(layer);
+        }
     }
     
     return ret;
@@ -399,4 +402,51 @@ TileSet* Map::GetTilesetFromTileId(int id) const
         item = item->next;
     }
     return set;
+}
+
+void Map::ColliderAsign(MapLayer* layer)
+{
+    for(uint i = 0; i < (layer->height * layer->width); ++i)
+    {
+        int id = layer->data[i];
+
+        if(id > 0)
+        {
+            int x = i;
+            int y = layer->width;
+            layer->Get(x, y);
+
+            TileSet* set = mapInfo.tileSets.start->data;
+
+            SDL_Rect r = set->GetTileRect(id);
+
+            iPoint pos = MapToWorld(x, y);
+
+            r.x = pos.x;
+            r.y = pos.y;
+
+            switch(id)
+            {
+                case 273:
+                    app->collision->AddCollider(r, Type::DIE);
+                    break;
+
+                case 274:
+                    app->collision->AddCollider(r, Type::WALL);
+                    break;
+
+                case 275:
+                    app->collision->AddCollider(r, Type::START);
+                    break;
+
+                case 276:
+                    app->collision->AddCollider(r, Type::END);
+                    break;
+
+                case 277:
+                    app->collision->AddCollider(r, Type::BOOST);
+                    break;
+            }
+        }
+    }
 }

@@ -141,6 +141,9 @@ public:
 	iPoint MapToWorld(int x, int y) const;
     // L05: TODO 2: Add orthographic world to map coordinates
     iPoint WorldToMap(int x, int y) const;
+
+    void ColliderAsign(MapLayer* layer);
+
     // L03: TODO 1: Add your struct for map info as public for now
     MapData mapInfo;
 
