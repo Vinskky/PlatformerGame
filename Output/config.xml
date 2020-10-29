@@ -60,5 +60,6 @@
         <frame height="36" width="20" x ="164" y="88"/>
       </animation>
     </animations>
+    <maxSpeed x ="1" y ="5" />
   </player>
 </config>
