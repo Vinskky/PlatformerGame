@@ -5,7 +5,7 @@
 #include "App.h"
 #include "SDL/include/SDL.h"
 
-#define MAX_COLLIDERS 200
+#define MAX_COLLIDERS 400
 
 enum Type
 {

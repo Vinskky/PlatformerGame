@@ -6,7 +6,7 @@
 #include "Defs.h"
 #include "Log.h"
 
-#define MAX_COLLIDERS 200
+#define MAX_COLLIDERS 400
 
 // ModuleCollision Class
 
@@ -213,9 +213,9 @@ void Collider::SetPosition(int x, int y) {
 
 bool Collider::OnCollision(const SDL_Rect& r) const
 {
-	if (rect.x > r.x + r.w || rect.x + rect.w < r.x || rect.y > r.y + r.h || rect.y + rect.h < r.y) {
+	if (rect.x > r.x + r.w || rect.x + rect.w < r.x || rect.y > r.y + r.h || rect.y + rect.h < r.y)
 		return false;
-	}
+
 	LOG("COLLIDING");
 	return true;
 }

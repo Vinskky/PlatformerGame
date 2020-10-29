@@ -414,7 +414,6 @@ void Map::ColliderAsign(MapLayer* layer)
         {
             int x = i;
             int y = layer->width;
-            layer->Get(x, y);
 
             TileSet* set = mapInfo.tileSets.start->data;
 
