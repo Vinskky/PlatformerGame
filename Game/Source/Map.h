@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "List.h"
 #include "Point.h"
+#define PARALLAX_VEL 0.0001
 
 
 #include "PugiXml\src\pugixml.hpp"
@@ -161,6 +162,7 @@ private:
 
 private:
 
+    fPoint backgroudPos;
     pugi::xml_document mapFile;
     SString folder;
     SString level2Load;

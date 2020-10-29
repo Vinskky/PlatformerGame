@@ -67,7 +67,22 @@ void Map::Draw()
                         TileSet* set = GetTilesetFromTileId(tileId);
                         SDL_Rect r = set->GetTileRect(tileId);
                         iPoint pos = MapToWorld(x, y);
-                        app->render->DrawTexture(set->imageSource, pos.x, pos.y, &r);
+
+                        if (strcmp(layer->name.GetString(),"Parallax 0")== 0 || strcmp(layer->name.GetString(), "Parallax 2") == 0) // Player moves to right
+                        {
+                            backgroudPos.x += PARALLAX_VEL;
+                            app->render->DrawTexture(set->imageSource, pos.x + backgroudPos.x, pos.y, &r);
+                        }
+                        else if (strcmp(layer->name.GetString(), "Parallax 1") == 0 || strcmp(layer->name.GetString(), "Parallax 3") == 0) // Player moves to left
+                        {
+                            backgroudPos.x -= PARALLAX_VEL;
+                            app->render->DrawTexture(set->imageSource, pos.x - backgroudPos.x, pos.y, &r);
+                        }
+                        else
+                        {
+                            app->render->DrawTexture(set->imageSource, pos.x, pos.y, &r);
+                        }
+                        
                     }
                 }
             }
@@ -174,7 +189,7 @@ bool Map::CleanUp()
         item2 = item2->next;
     }
     mapInfo.layers.clear();
-
+    backgroudPos.SetToZero();
 
     mapFile.reset();
 
