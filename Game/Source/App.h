@@ -16,6 +16,7 @@ class Scene;
 class Map;
 class Player;
 class ModuleCollision;
+class FadeInFadeOut;
 
 class App
 {
@@ -87,7 +88,7 @@ public:
 	Map* map;
 	Player* player;
 	ModuleCollision* collision;
-
+	FadeInFadeOut* fade;
 private:
 
 	int argc;

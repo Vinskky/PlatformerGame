@@ -7,6 +7,7 @@
 #include "Scene.h"
 #include "Map.h"
 #include "Player.h"
+#include "FadeInFadeOut.h"
 #include "Defs.h"
 #include "Log.h"
 
@@ -127,7 +128,11 @@ bool Scene::Update(float dt)
 		app->render->DrawTexture(introScene, 0, 0);
 
 		if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+		{
 			introKey = false;
+			app->fade->FadeToBlack();
+		}
+			
 	}
     
 	SString title("Map:%dx%d Tiles:%dx%d Tilesets:%d", app->map->mapInfo.width, app->map->mapInfo.height, app->map->mapInfo.tileWidth, app->map->mapInfo.tileHeight, app->map->mapInfo.tileSets.count());

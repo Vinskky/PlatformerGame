@@ -62,4 +62,5 @@
     </animations>
     <maxSpeed x ="1" y ="5" />
   </player>
+  <fadeInFadeOut  width="1280" height="720" scale="3"/>
 </config>
