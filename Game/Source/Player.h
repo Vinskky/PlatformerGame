@@ -20,6 +20,10 @@ struct PlayerData
 	Animation walk;
 
 	iPoint position;
+	int speedL;
+	int speedR;
+	float speedY = 0.001f;
+	int jHeight = 1;
 	//iPoint posOnWin;
 };
 
@@ -47,9 +51,14 @@ public:
 
 	void Draw();
 
+	void Gravity(int &y, int jHeight);
+
+	void OnCollision(Collider* c1, Collider* c2);
+
 public:
 	PlayerData playerInfo;
 	Collider* playerCollider = nullptr;
+	bool onGround;
 	
 private:	
 	SDL_Texture* texture;

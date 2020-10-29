@@ -67,7 +67,9 @@ bool Scene::Update(float dt)
 
 		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 		{
-			app->player->playerInfo.position.x -= 1;
+			if (app->player->playerInfo.speedR == 0)
+				app->player->playerInfo.speedR = 1;
+			app->player->playerInfo.position.x -= 1 * app->player->playerInfo.speedL;
 			if (app->render->camera.x < 0 /*&& app->player->playerInfo.position.x <= MAX_LEFT_DISTANCE*/) {
 				app->render->camera.x += 3;
 			}
@@ -75,7 +77,9 @@ bool Scene::Update(float dt)
 
 		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
 		{
-			app->player->playerInfo.position.x += 1;
+			if (app->player->playerInfo.speedL == 0)
+				app->player->playerInfo.speedL = 1;
+			app->player->playerInfo.position.x += 1 * app->player->playerInfo.speedR;
 			if (app->render->camera.x > -2559 /*&& app->player->playerInfo.position.x >= MAX_RIGHT_DISTANCE*/) {
 				app->render->camera.x -= 3;
 			}

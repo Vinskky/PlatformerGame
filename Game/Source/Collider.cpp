@@ -2,11 +2,12 @@
 #include "Input.h"
 #include "Render.h"
 #include "Collider.h"
+#include "Player.h"
 
 #include "Defs.h"
 #include "Log.h"
 
-#define MAX_COLLIDERS 400
+struct Collider;
 
 // ModuleCollision Class
 
@@ -17,7 +18,6 @@ ModuleCollision::ModuleCollision()
 
 	matrix[WALL][WALL] = false;
 	matrix[WALL][PLAYER] = true;
-	matrix[WALL][ENEMY] = false;
 	matrix[WALL][START] = true;
 	matrix[WALL][END] = true;
 	matrix[WALL][DIE] = false;
@@ -25,22 +25,13 @@ ModuleCollision::ModuleCollision()
 
 	matrix[PLAYER][WALL] = true;
 	matrix[PLAYER][PLAYER] = false;
-	matrix[PLAYER][ENEMY] = true;
 	matrix[PLAYER][START] = true;
 	matrix[PLAYER][END] = true;
 	matrix[PLAYER][DIE] = true;
 	matrix[PLAYER][BOOST] = true;
 
-	matrix[ENEMY][WALL] = false;
-	matrix[ENEMY][PLAYER] = true;
-	matrix[ENEMY][ENEMY] = false;
-	matrix[ENEMY][START] = false;
-	matrix[ENEMY][END] = false;
-	matrix[ENEMY][DIE] = false;
-
 	matrix[START][WALL] = false;
 	matrix[START][PLAYER] = true;
-	matrix[START][ENEMY] = false;
 	matrix[START][START] = false;
 	matrix[START][END] = false;
 	matrix[START][DIE] = false;
@@ -48,7 +39,6 @@ ModuleCollision::ModuleCollision()
 
 	matrix[END][WALL] = false;
 	matrix[END][PLAYER] = true;
-	matrix[END][ENEMY] = false;
 	matrix[END][START] = false;
 	matrix[END][END] = false;
 	matrix[END][DIE] = false;
@@ -56,7 +46,6 @@ ModuleCollision::ModuleCollision()
 
 	matrix[DIE][WALL] = false;
 	matrix[DIE][PLAYER] = true;
-	matrix[DIE][ENEMY] = false;
 	matrix[DIE][START] = false;
 	matrix[DIE][END] = false;
 	matrix[DIE][DIE] = false;
@@ -64,7 +53,6 @@ ModuleCollision::ModuleCollision()
 
 	matrix[BOOST][WALL] = false;
 	matrix[BOOST][PLAYER] = true;
-	matrix[BOOST][ENEMY] = false;
 	matrix[BOOST][START] = false;
 	matrix[BOOST][END] = false;
 	matrix[BOOST][DIE] = false;
@@ -85,49 +73,85 @@ bool ModuleCollision::PreUpdate()
 			colliders[i] = nullptr;
 		}
 	}
+	return true;
+}
 
+bool ModuleCollision::Update(float dt)
+{
+	DebugDraw();
 	Collider* c1;
 	Collider* c2;
 
 	for (uint i = 0; i < MAX_COLLIDERS; ++i)
 	{
+
 		// skip empty colliders
 		if (colliders[i] == nullptr)
 			continue;
 
 		c1 = colliders[i];
 
-		// avoid checking collisions already checked
-		for (uint k = i + 1; k < MAX_COLLIDERS; ++k)
-		{
-			// skip empty colliders
+		for (uint k = i + 1; k < MAX_COLLIDERS; ++k) {
+
+			// avoid checking collisions already checked
 			if (colliders[k] == nullptr)
 				continue;
 
 			c2 = colliders[k];
 
-			if (c1->OnCollision(c2->rect) == true)
+			if (c1->CheckCollision(c2->rect) == true)
 			{
 				if (matrix[c1->type][c2->type] && c1->listener)
+				{
 					c1->listener->OnCollision(c1, c2);
+				}
 
 				if (matrix[c2->type][c1->type] && c2->listener)
+				{
 					c2->listener->OnCollision(c2, c1);
+				}
 			}
 		}
 	}
-
-	return true;
-
-}
-
-bool ModuleCollision::Update(float dt)
-{
 
 	Draw();
 
 	return true;
 }
+
+//TEST
+void ModuleCollision::DebugDraw()
+{
+	if (app->input->GetKey(SDL_SCANCODE_F8) == KEY_DOWN)
+		debug = !debug;
+
+	if (debug == false)
+		return;
+
+	Uint8 alpha = 80;
+	for (uint i = 0; i < MAX_COLLIDERS; ++i)
+	{
+		if (colliders[i] == nullptr)
+			continue;
+
+		switch (colliders[i]->type)
+		{
+		case NONE: // white
+			app->render->DrawRectangle(colliders[i]->rect, 255, 255, 255, alpha);
+			break;
+		case PLAYER: // green
+			app->render->DrawRectangle(colliders[i]->rect, 0, 0, 255, alpha);
+			break;
+		case WALL: // red
+			app->render->DrawRectangle(colliders[i]->rect, 0, 255, 0, alpha);
+			break;
+		case DIE: // yellow
+			app->render->DrawRectangle(colliders[i]->rect, 255, 255, 0, alpha);
+			break;
+		}
+	}
+}
+//TEST
 
 void ModuleCollision::Draw()
 {
@@ -166,7 +190,7 @@ bool ModuleCollision::CleanUp()
 	return true;
 }
 
-Collider* ModuleCollision::AddCollider(SDL_Rect rect, Type type, Module* listener)
+Collider* ModuleCollision::AddCollider(SDL_Rect rect, Type type, Player* listener)
 {
 	Collider* ret = nullptr;
 
@@ -175,7 +199,7 @@ Collider* ModuleCollision::AddCollider(SDL_Rect rect, Type type, Module* listene
 		if (colliders[i] == nullptr) 
 		{
 			ret = colliders[i] = new Collider(rect, type, listener);
-			++numColliders;
+			numColliders++;
 			break;
 		}
 	}
@@ -199,11 +223,6 @@ void ModuleCollision::RemoveCollider(Collider* collider)
 
 // Collider Struct
 
-Collider::Collider(SDL_Rect rectangle, Type type, Module* listener) : rect(rectangle), type(type), listener(listener)
-{
-
-}
-
 void Collider::SetPosition(int x, int y) {
 
 	rect.x = x;
@@ -211,11 +230,7 @@ void Collider::SetPosition(int x, int y) {
 
 }
 
-bool Collider::OnCollision(const SDL_Rect& r) const
+bool Collider::CheckCollision(const SDL_Rect& r) const
 {
-	if (rect.x > r.x + r.w || rect.x + rect.w < r.x || rect.y > r.y + r.h || rect.y + rect.h < r.y)
-		return false;
-
-	LOG("COLLIDING");
-	return true;
+	return (rect.x <= r.x + r.w && rect.x + rect.w >= r.x && rect.y <= r.y + r.h && rect.h + rect.y >= r.y);
 }

@@ -7,6 +7,8 @@
 #include "Player.h"
 #include "window.h"
 #include "Collider.h"
+#include "Scene.h"
+
 
 #include "Defs.h"
 #include "Log.h"
@@ -79,9 +81,11 @@ bool Player::Awake(pugi::xml_node& config)
 
 bool Player::Start() 
 {
-	playerInfo.position = { 32,110 };
+	playerInfo.position = { 63,100 }; //32, 110
+	playerInfo.speedL = 1;
+	playerInfo.speedR = 1;
 
-	playerCollider = app->collision->AddCollider({playerInfo.position.x + collPlayer.x, playerInfo.position.y + collPlayer.y, 10, 27}, Type::PLAYER, app->player);
+	playerCollider = app->collision->AddCollider({playerInfo.position.x + collPlayer.x, playerInfo.position.y + collPlayer.y, 10, 27}, Type::PLAYER, this);
 
 	texture = app->tex->Load(textPath.GetString());
 
@@ -95,6 +99,9 @@ bool Player::Update(float dt)
 	//Draw();
 	playerCollider->SetPosition(playerInfo.position.x + collPlayer.x, playerInfo.position.y + collPlayer.y);
 
+	LOG("onGround: %d", onGround);
+
+	Gravity(playerInfo.position.y, playerInfo.jHeight);
 	return true;
 }
 
@@ -117,4 +124,28 @@ void Player::Jump()
 void Player::Draw()
 {
 	app->render->DrawTexture(texture, playerInfo.position.x, playerInfo.position.y, &(playerInfo.currentAnimation->GetCurrentFrame()));
+}
+
+void Player::Gravity(int &y, int jHeight)
+{
+	y = playerInfo.position.y + (jHeight / (2 * deltaTime * deltaTime))*playerInfo.speedY;
+}
+
+void Player::OnCollision(Collider* c1, Collider* c2)
+{
+	if (c2->type == WALL && c1->type == PLAYER) {
+		if (c1->rect.x > c2->rect.x + c2->rect.w)
+		{
+			playerInfo.speedL = 0;
+		}
+		else if (c1->rect.x + c1->rect.w < c2->rect.x)
+		{
+			playerInfo.speedR = 0;
+		}
+		else if (c1->rect.y + c1->rect.h == c2->rect.y)
+		{
+			playerInfo.position.y = c2->rect.y - c1->rect.h - 2;
+			playerInfo.position.y--;
+		}
+	}
 }

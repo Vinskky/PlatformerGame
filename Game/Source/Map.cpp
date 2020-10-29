@@ -421,26 +421,25 @@ TileSet* Map::GetTilesetFromTileId(int id) const
 
 void Map::ColliderAsign(MapLayer* layer)
 {
-    for(uint i = 0; i < (layer->height * layer->width); ++i)
+    for (int y = 0; y < mapInfo.height; ++y)
     {
-        int id = layer->data[i];
-
-        if(id > 0)
+        for (int x = 0; x < mapInfo.width; ++x)
         {
-            int x = i;
-            int y = layer->width;
-
-            TileSet* set = mapInfo.tileSets.start->data;
-
-            SDL_Rect r = set->GetTileRect(id);
-
-            iPoint pos = MapToWorld(x, y);
-
-            r.x = pos.x;
-            r.y = pos.y;
-
-            switch(id)
+            uint tileId = layer->Get(x, y);
+            if (tileId > 0)
             {
+
+                TileSet* set = mapInfo.tileSets.start->data;
+
+                SDL_Rect r = set->GetTileRect(tileId);
+
+                iPoint pos = MapToWorld(x, y);
+
+                r.x = pos.x;
+                r.y = pos.y;
+
+                switch (tileId)
+                {
                 case 273:
                     app->collision->AddCollider(r, Type::DIE);
                     break;
@@ -460,6 +459,7 @@ void Map::ColliderAsign(MapLayer* layer)
                 case 277:
                     app->collision->AddCollider(r, Type::BOOST);
                     break;
+                }
             }
         }
     }

@@ -5,14 +5,15 @@
 #include "App.h"
 #include "SDL/include/SDL.h"
 
-#define MAX_COLLIDERS 400
+#define MAX_COLLIDERS 302
+
+class Player;
 
 enum Type
 {
 	NONE = -1,
 	WALL,
 	PLAYER,
-	ENEMY,
 	START,
 	END,
 	DIE,
@@ -25,15 +26,15 @@ struct Collider
 {
 public:
 
-	Collider(SDL_Rect rectangle, Type type, Module* listener = nullptr);
+	Collider(SDL_Rect rectangle, Type type, Player* listener = nullptr) : rect(rectangle), type(type), listener(listener) {}
 
 	void SetPosition(int x, int y);
 
-	bool OnCollision(const SDL_Rect& r) const;
+	bool CheckCollision(const SDL_Rect& r) const;
 
 	SDL_Rect rect;
 	Type type;
-	Module* listener = nullptr;
+	Player* listener = nullptr;
 	bool to_delete = false;
 
 };
@@ -52,7 +53,9 @@ public:
 
 	void Draw();
 
-	Collider* AddCollider(SDL_Rect rectangle, Type type, Module* listener = nullptr);
+	void DebugDraw();
+
+	Collider* AddCollider(SDL_Rect rectangle, Type type, Player* listener = nullptr);
 
 	void RemoveCollider(Collider* collider);
 
