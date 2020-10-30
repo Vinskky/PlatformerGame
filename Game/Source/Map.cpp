@@ -40,7 +40,8 @@ bool Map::Awake(pugi::xml_node& config)
     bool ret = true;
 
     folder.Create(config.child("folder").child_value());
-    level2Load.Create(config.child("level").child_value());
+    level1.Create(config.child("level1").child_value());
+    level2.Create(config.child("level2").child_value());
     return ret;
 }
 
@@ -242,7 +243,7 @@ bool Map::Load(const char* filename)
     if(ret == true)
     {
         // L03: TODO 5: LOG all the data loaded iterate all tilesets and LOG everything
-        LOG("Successfully parsed map XML file : %s", level2Load.GetString());
+        LOG("Successfully parsed map XML file : %s", GetLevel2Load(1)); // change 1 to the type inside player of which its the current level 
         LOG(" width : %d height : %d", mapInfo.width, mapInfo.height);
         LOG(" tile_width : %d tile_height : %d", mapInfo.tileWidth, mapInfo.tileHeight);
 
@@ -284,7 +285,7 @@ bool Map::LoadMapData()
 {
     bool ret = false;
     SString path = folder.GetString();
-    path += level2Load.GetString();
+    path += GetLevel2Load(1); // change 1 to the type inside player of which its the current level
     pugi::xml_node mapNode;
     pugi::xml_parse_result result = mapFile.load_file(path.GetString());
 

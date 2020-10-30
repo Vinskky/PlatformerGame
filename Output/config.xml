@@ -24,7 +24,8 @@
   </scene>
   <map>
     <folder>Assets/maps/</folder>
-    <level>Level_1_Platformer.tmx</level>
+    <level1>Level_1_Platformer.tmx</level1>
+    <level2>Level_2_Platformer.tmx</level2>
   </map>
   <player>
     <source name="Assets/textures/Character.png"/>

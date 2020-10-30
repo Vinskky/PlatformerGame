@@ -37,7 +37,7 @@ bool Scene::Start()
 {
 	introScene = app->tex->Load(sourceIntro.GetString());
 	//app->audio->PlayMusic("Assets/audio/music/music_spy.ogg");
-	app->map->Load(app->map->GetLevel2Load().GetString());
+	app->map->Load(app->map->GetLevel2Load(1).GetString());
 	
 	return true;
 }

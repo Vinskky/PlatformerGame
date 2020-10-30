@@ -134,9 +134,12 @@ public:
     // Load new map
     bool Load(const char* path);
 
-    inline SString GetLevel2Load()const
+    inline SString GetLevel2Load(int level)const
     {
-        return level2Load;
+        if (level == 1)
+            return level1;
+        else
+            return level2;
     }
 	// L04: DONE 8: Create a method that translates x,y coordinates from map positions to world positions
 	iPoint MapToWorld(int x, int y) const;
@@ -165,7 +168,8 @@ private:
     fPoint backgroudPos;
     pugi::xml_document mapFile;
     SString folder;
-    SString level2Load;
+    SString level1;
+    SString level2;
     bool mapLoaded;
 };
 
