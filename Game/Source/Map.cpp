@@ -465,3 +465,36 @@ void Map::ColliderAsign(MapLayer* layer)
         }
     }
 }
+
+iPoint Map::GetPlayerInitialPos()
+{
+    bool founded = false;
+    iPoint initPos = { 0,0 };
+    ListItem<MapLayer*>* iteratorLayer = app->map->mapInfo.layers.start;
+    while (iteratorLayer != NULL)
+    {
+        MapLayer* layer = iteratorLayer->data;
+        if (strcmp(layer->name.GetString(), "Colision Layer") == 0)
+        {
+            for (int y = 0; y < app->map->mapInfo.height; y++)
+            {
+                for (int x = 0; x < app->map->mapInfo.width; x++)
+                {
+                    uint tileId = layer->Get(x, y);
+                    if (tileId == 275)//275 = Start tile
+                    {
+                        TileSet* set = app->map->GetTilesetFromTileId(tileId);
+                        iPoint pos = app->map->MapToWorld(x, y);
+                        initPos = pos;
+                        founded = true;
+                    }
+                    if (founded == true) break;
+                }
+                if (founded == true) break;
+            }
+        }
+        iteratorLayer = iteratorLayer->next;
+    }
+
+    return initPos;
+}

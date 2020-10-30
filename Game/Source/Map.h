@@ -147,7 +147,7 @@ public:
     iPoint WorldToMap(int x, int y) const;
 
     void ColliderAsign(MapLayer* layer);
-
+    iPoint GetPlayerInitialPos();
     // L03: TODO 1: Add your struct for map info as public for now
     MapData mapInfo;
     TileSet* GetTilesetFromTileId(int id) const;
