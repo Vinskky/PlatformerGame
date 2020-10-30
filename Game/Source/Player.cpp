@@ -133,17 +133,17 @@ bool Player::Start()
 bool Player::Update(float dt) 
 {
 	//Draw();
-	playerCollider->SetPosition(playerInfo.position.x + collPlayer.x, playerInfo.position.y + collPlayer.y);
+	//playerCollider->SetPosition(playerInfo.position.x + collPlayer.x, playerInfo.position.y + collPlayer.y);
 
-	LOG("onGround: %d", onGround);
-
-	Gravity(playerInfo.position.y, playerInfo.jHeight);
+	//LOG("onGround: %d", onGround);
+	//Gravity(playerInfo.position.y, playerInfo.jHeight);
+	
 	return true;
 }
 
 bool Player::PostUpdate() 
 {
-
+	
 	return true;
 }
 
@@ -185,6 +185,9 @@ bool Player::Save(pugi::xml_node& saveNode) const
 
 void Player::Jump()
 {
+	onGround = false;
+	playerInfo.position.y += 10;
+	playerCollider->rect.y += 10;
 }
 
 void Player::Draw()
@@ -192,9 +195,10 @@ void Player::Draw()
 	app->render->DrawTexture(texture, playerInfo.position.x, playerInfo.position.y, &(playerInfo.currentAnimation->GetCurrentFrame()));
 }
 
-void Player::Gravity(int &y, int jHeight)
+void Player::Gravity(int jHeight)
 {
-	y = playerInfo.position.y + (jHeight / (2 * deltaTime * deltaTime))*playerInfo.speedY;
+	playerInfo.position.y += (jHeight / (2 * deltaTime * deltaTime))*playerInfo.speedY;
+	playerCollider->rect.y = playerInfo.position.y;
 }
 
 void Player::OnCollision(Collider* c1, Collider* c2)

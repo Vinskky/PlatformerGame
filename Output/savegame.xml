@@ -1,13 +1,15 @@
 <?xml version="1.0"?>
 <save_state>
 	<renderer>
-		<camera x="-114" y="0" />
+		<camera x="-111" y="0" />
 	</renderer>
 	<fadeInFadeOut />
 	<moduleCollision />
 	<player>
-		<position x="101" y="114" />
-		<collider x="108" y="117" />
+		<position x="100" y="100" />
+		<collider x="107" y="103" />
+		<level value="0" />
+		<direction value="1" />
 	</player>
 	<map />
 	<scene />

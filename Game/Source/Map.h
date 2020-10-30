@@ -150,7 +150,7 @@ public:
 
     // L03: TODO 1: Add your struct for map info as public for now
     MapData mapInfo;
-
+    TileSet* GetTilesetFromTileId(int id) const;
 private:
     bool LoadMapData();
     bool LoadTileSet(pugi::xml_node&, TileSet*);
@@ -161,7 +161,7 @@ private:
 	bool LoadProperties(pugi::xml_node& node, Properties& properties);
 
 	// L06: TODO 3: Pick the right Tileset based on a tile id
-	TileSet* GetTilesetFromTileId(int id) const;
+	//TileSet* GetTilesetFromTileId(int id) const;
 
 private:
 

@@ -37,6 +37,7 @@ private:
 	SString sourceIntro;
 	SDL_Texture* introScene;
 	SDL_Texture* deathScene;
+	SDL_Rect tempRectPlayer;
 	bool introKey;
 	uint collisionLayer;
 	bool collision;

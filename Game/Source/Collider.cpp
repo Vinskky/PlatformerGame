@@ -235,12 +235,8 @@ void Collider::SetPosition(int x, int y) {
 
 bool ModuleCollision::CheckCollision(SDL_Rect& r1, SDL_Rect& r2) const
 {
-	bool collision = false;
-
-	int dx = abs((r1.x + r1.w / 2) - (r2.x + r2.w / 2));
-	int dy = abs((r1.y + r1.h / 2) - (r2.h + r2.h / 2));
-
-	if ((dx <= (r1.w/2 + r2.w/2)) && (dy <= (r1.h/2 + r2.h/2))) collision = true;
-
-	return collision;
+	return (r1.x < r2.x + r2.w &&
+		r1.x + r1.w > r2.x &&
+		r1.y < r2.y + r2.h &&
+		r1.h + r1.y > r2.y);
 }

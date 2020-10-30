@@ -72,7 +72,7 @@ public:
 
 	void Draw();
 
-	void Gravity(int &y, int jHeight);
+	void Gravity(int jHeight);
 
 	void OnCollision(Collider* c1, Collider* c2);
 
@@ -82,7 +82,7 @@ public:
 public:
 	PlayerData playerInfo;
 	Collider* playerCollider = nullptr;
-	bool onGround;
+	bool onGround = true;
 	
 private:	
 	SDL_Texture* texture;
