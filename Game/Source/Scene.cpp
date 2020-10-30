@@ -8,6 +8,9 @@
 #include "Map.h"
 #include "Player.h"
 #include "FadeInFadeOut.h"
+#include "Map.h"
+#include "Collider.h"
+
 #include "Defs.h"
 #include "Log.h"
 
@@ -66,6 +69,10 @@ bool Scene::Update(float dt)
 		if (app->input->GetKey(SDL_SCANCODE_KP_MINUS) == KEY_DOWN)
 			app->audio->SetVolume(1);
 
+		//PLAYER MOVEMENT + COLLISIONS
+
+		tempPlayerPosition = app->player->playerInfo.position;
+
 		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 		{
 			app->player->UpdateAnimation("walkLeft");
@@ -88,6 +95,36 @@ bool Scene::Update(float dt)
 			}
 
 		}
+
+
+		for (int i = 0; i < 9; i++) {
+			if (strcmp(app->map->mapInfo.layers[i]->name.GetString(), "Colision Layer") == 0)
+			{
+				collisionLayer = i;
+				break;
+			}
+
+		}
+
+		for (int y = 0; y < app->map->mapInfo.height; y++) 
+		{
+			for(int x = 0; x < app->map->mapInfo.width; x++)
+			{
+				ListItem<TileSet*>* item = app->map->mapInfo.tileSets.start;
+
+				if (app->collision->CheckCollision(item->data->GetTileRect(app->map->mapInfo.layers[collisionLayer]->Get(x, y)), app->player->playerCollider->rect))
+				{
+					collision = true;
+					break;
+				}
+				item = item->next;
+			}
+		}
+
+		if (collision) 
+			app->player->playerInfo.position = tempPlayerPosition;
+
+		//PLAYER MOVEMENT + COLLISIONS
 
 		if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
 		{

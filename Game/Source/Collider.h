@@ -30,8 +30,6 @@ public:
 
 	void SetPosition(int x, int y);
 
-	bool CheckCollision(const SDL_Rect& r) const;
-
 	SDL_Rect rect;
 	Type type;
 	Player* listener = nullptr;
@@ -60,6 +58,8 @@ public:
 	void RemoveCollider(Collider* collider);
 
 	Collider* colliders[MAX_COLLIDERS] = { nullptr };
+
+	bool CheckCollision(SDL_Rect& r1, SDL_Rect& r2) const; //TRY: DO NOT ADD REFERENCE (&)
 
 private:
 

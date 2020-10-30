@@ -199,6 +199,7 @@ void Player::Gravity(int &y, int jHeight)
 
 void Player::OnCollision(Collider* c1, Collider* c2)
 {
+	/*
 	if (c2->type == WALL && c1->type == PLAYER) 
 	{
 		if (c1->rect.x > c2->rect.x + c2->rect.w)
@@ -215,6 +216,7 @@ void Player::OnCollision(Collider* c1, Collider* c2)
 			playerInfo.position.y--;
 		}
 	}
+	*/
 }
 
 void Player::ChangeLevel(Level currentLvl)

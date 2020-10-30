@@ -83,7 +83,7 @@ bool ModuleCollision::Update(float dt)
 	DebugDraw();
 	Collider* c1;
 	Collider* c2;
-
+	/*
 	for (uint i = 0; i < MAX_COLLIDERS; ++i)
 	{
 
@@ -115,6 +115,7 @@ bool ModuleCollision::Update(float dt)
 			}
 		}
 	}
+	*/
 
 	Draw();
 
@@ -232,7 +233,14 @@ void Collider::SetPosition(int x, int y) {
 
 }
 
-bool Collider::CheckCollision(const SDL_Rect& r) const
+bool ModuleCollision::CheckCollision(SDL_Rect& r1, SDL_Rect& r2) const
 {
-	return (rect.x <= r.x + r.w && rect.x + rect.w >= r.x && rect.y <= r.y + r.h && rect.h + rect.y >= r.y);
+	bool collision = false;
+
+	int dx = abs((r1.x + r1.w / 2) - (r2.x + r2.w / 2));
+	int dy = abs((r1.y + r1.h / 2) - (r2.h + r2.h / 2));
+
+	if ((dx <= (r1.w/2 + r2.w/2)) && (dy <= (r1.h/2 + r2.h/2))) collision = true;
+
+	return collision;
 }

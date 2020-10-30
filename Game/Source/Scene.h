@@ -33,10 +33,13 @@ public:
 	bool CleanUp();
 
 private:
+	iPoint tempPlayerPosition;
 	SString sourceIntro;
 	SDL_Texture* introScene;
 	SDL_Texture* deathScene;
 	bool introKey;
+	uint collisionLayer;
+	bool collision;
 };
 
 #endif // __SCENE_H__
