@@ -235,7 +235,7 @@ bool Audio::Load(pugi::xml_node &loadNode)
 	return true;
 }
 
-bool Audio::Save(pugi::xml_node &saveNode)
+bool Audio::Save(pugi::xml_node &saveNode)const
 {
 
 	bool ret = true;

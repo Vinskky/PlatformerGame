@@ -99,7 +99,7 @@ bool Render::Load(pugi::xml_node& load)
 }
 // L02: TODO 8: Create a method to save the state of the renderer
 // using append_child and append_attribute
-bool Render::Save(pugi::xml_node& saveNode)
+bool Render::Save(pugi::xml_node& saveNode)const
 {
 	pugi::xml_node cam = saveNode.append_child("camera");
 	

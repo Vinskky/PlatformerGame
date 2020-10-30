@@ -11,6 +11,17 @@
 struct SDL_Texture;
 class Collider;
 
+enum Direction
+{
+	RIGHT_DIR = 1,
+	LEFT_DIR
+};
+
+enum Level
+{
+	LVL_1 = 1,
+	LVL_2
+};
 struct PlayerData
 {
 	Animation* currentAnimation;
@@ -18,12 +29,18 @@ struct PlayerData
 	Animation jump;
 	Animation die;
 	Animation walk;
+	Animation idleLeft;
+	Animation jumpLeft;
+	Animation dieLeft;
+	Animation walkLeft;
 
 	iPoint position;
 	int speedL;
 	int speedR;
 	float speedY = 0.001f;
 	int jHeight = 1;
+	Direction currentDir;
+	Level currentLevel;
 	//iPoint posOnWin;
 };
 
@@ -47,6 +64,10 @@ public:
 
 	bool CleanUp();
 
+	//Save and load Methods
+	bool Load(pugi::xml_node&);
+	bool Save(pugi::xml_node&)const;
+
 	void Jump();
 
 	void Draw();
@@ -55,6 +76,9 @@ public:
 
 	void OnCollision(Collider* c1, Collider* c2);
 
+	void ChangeLevel(Level currentLvl);
+
+	void UpdateAnimation(char* anim);
 public:
 	PlayerData playerInfo;
 	Collider* playerCollider = nullptr;

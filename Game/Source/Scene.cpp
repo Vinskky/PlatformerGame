@@ -54,10 +54,10 @@ bool Scene::Update(float dt)
 	if (introKey == false)
 	{
 		// L02: TODO 3: Request Load / Save when pressing L/S
-		if (app->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
+		if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
 			app->LoadRequest("savegame.xml");
 
-		if (app->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
+		if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
 			app->SaveRequest("savegame.xml");
 		//L02: BONUS CODE
 		if (app->input->GetKey(SDL_SCANCODE_KP_PLUS) == KEY_DOWN)
@@ -68,6 +68,7 @@ bool Scene::Update(float dt)
 
 		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 		{
+			app->player->UpdateAnimation("walkLeft");
 			if (app->player->playerInfo.speedR == 0)
 				app->player->playerInfo.speedR = 1;
 			app->player->playerInfo.position.x -= 1 * app->player->playerInfo.speedL;
@@ -78,6 +79,7 @@ bool Scene::Update(float dt)
 
 		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
 		{
+			app->player->UpdateAnimation("walk");
 			if (app->player->playerInfo.speedL == 0)
 				app->player->playerInfo.speedL = 1;
 			app->player->playerInfo.position.x += 1 * app->player->playerInfo.speedR;

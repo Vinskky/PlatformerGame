@@ -1,10 +1,14 @@
 <?xml version="1.0"?>
 <save_state>
 	<renderer>
-		<camera x="-81" y="0" />
+		<camera x="-114" y="0" />
 	</renderer>
-	<:anonymous />
-	<player />
+	<fadeInFadeOut />
+	<moduleCollision />
+	<player>
+		<position x="101" y="114" />
+		<collider x="108" y="117" />
+	</player>
 	<map />
 	<scene />
 	<audio>
