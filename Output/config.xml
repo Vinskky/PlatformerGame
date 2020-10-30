@@ -41,7 +41,7 @@
       <animation name="idle" loop="true" speed="0.05">
           <frame height="30" width="21" x ="0" y="0"/>
           <frame height="30" width="21" x ="21" y="0"/>
-          <frame height="30" width="21" x ="42" y="0"/>
+          <frame height="30" width="21" x ="44" y="0"/>
           <frame height="30" width="21" x ="64" y="0"/>
       </animation>
       <animation name="die" loop="true" speed="0.015">
@@ -69,16 +69,16 @@
         <frame height="28" width="24" x ="135" y="32"/>
       </animation>
       <animation name="idleLeft" loop="true" speed="0.05">
-        <frame height="30" width="21" x ="0" y="0"/>
-        <frame height="30" width="21" x ="21" y="0"/>
-        <frame height="30" width="21" x ="42" y="0"/>
-        <frame height="30" width="21" x ="64" y="0"/>
+        <frame height="31" width="30" x ="167" y="124"/>
+        <frame height="31" width="21" x ="144" y="124"/>
+        <frame height="31" width="21" x ="123" y="124"/>
+        <frame height="31" width="21" x ="102" y="124"/>
       </animation>
       <animation name="dieLeft" loop="true" speed="0.015">
-        <frame height="25" width="20" x ="0" y="62"/>
-        <frame height="25" width="20" x ="27" y="62"/>
-        <frame height="25" width="20" x ="53" y="62"/>
-        <frame height="25" width="20" x ="79" y="62"/>
+        <frame height="22" width="20" x ="167" y="188"/>
+        <frame height="22" width="20" x ="142" y="188"/>
+        <frame height="22" width="20" x ="116" y="188"/>
+        <frame height="22" width="20" x ="90" y="188"/>
       </animation>
       <animation name="jumpLeft" loop="true" speed="0.015">
         <frame height="36" width="21" x ="0" y="88"/>
