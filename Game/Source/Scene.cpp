@@ -58,6 +58,7 @@ bool Scene::Update(float dt)
 	{
 		if(app->player->onGround == false)
 			app->player->Gravity(1);
+
 		// L02: TODO 3: Request Load / Save when pressing L/S
 		if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
 			app->LoadRequest("savegame.xml");
@@ -83,6 +84,7 @@ bool Scene::Update(float dt)
 				app->player->playerInfo.speedR = 1;
 			app->player->playerInfo.position.x -= 1 * app->player->playerInfo.speedL;
 			app->player->playerCollider->rect.x -= 1 * app->player->playerInfo.speedL;
+			app->player->colliderY->rect.x -= 1 * app->player->playerInfo.speedL;
 			if (app->render->camera.x < 0 /*&& app->player->playerInfo.position.x <= MAX_LEFT_DISTANCE*/) {
 				app->render->camera.x += 3;
 			}
@@ -95,6 +97,7 @@ bool Scene::Update(float dt)
 				app->player->playerInfo.speedL = 1;
 			app->player->playerInfo.position.x += 1 * app->player->playerInfo.speedR;
 			app->player->playerCollider->rect.x += 1 * app->player->playerInfo.speedR;
+			app->player->colliderY->rect.x += 1 * app->player->playerInfo.speedR;
 			if (app->render->camera.x > -2559 /*&& app->player->playerInfo.position.x >= MAX_RIGHT_DISTANCE*/) {
 				app->render->camera.x -= 3;
 			}
@@ -107,6 +110,7 @@ bool Scene::Update(float dt)
 				app->player->playerInfo.speedL = 1;
 			app->player->playerInfo.position.y += 1 * app->player->playerInfo.speedR;
 			app->player->playerCollider->rect.y += 1 * app->player->playerInfo.speedR;
+			app->player->colliderY->rect.y += 1 * app->player->playerInfo.speedR;
 		}
 		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
 		{
@@ -147,6 +151,7 @@ bool Scene::Update(float dt)
 									break;
 
 								case 275://Start
+									collision = false;
 									//do nothing
 									break;
 
@@ -159,27 +164,64 @@ bool Scene::Update(float dt)
 									break;
 								}
 							}
-							
+							else if (app->collision->CheckCollision(collider, app->player->colliderY->rect)) 
+							{
+								switch (tileId)
+								{
+								case 273://Die
+									collisionY = true;// activate death
+									break;
+
+								case 274://Wall
+									collisionY = true;
+									break;
+
+								case 275://Start
+									collisionY = false;
+									//do nothing
+									break;
+
+								case 276://End
+									collisionY = true;//change level
+									break;
+
+								case 277: //Boost
+									//boost player y++
+									break;
+								}
+							}
 						}
-						if (collision == true) break;
+						if (collision || collisionY) break;
 					}
-					if (collision == true) break;
+					if (collision || collisionY) break;
 				}
+				if (collision || collisionY) break;
 			}
+			if (collision || collisionY) break;
 			iteratorLayer = iteratorLayer->next;
 		}
 
-
-		
-
-		if (collision)
+		if (collisionY) 
 		{
 			app->player->onGround = true;
-			app->player->playerInfo.position = tempPlayerPosition;
-			
+			app->player->playerInfo.position.y = tempPlayerPosition.y;
+			app->player->playerCollider->rect.y = app->player->playerInfo.position.y;
+			app->player->colliderY->rect.y = app->player->playerInfo.position.y;
+
+			collisionY = false;
+		}
+		else if (collision) 
+		{
+			app->player->playerInfo.position.x = tempPlayerPosition.x;
 			app->player->playerCollider->rect = tempRectPlayer;
+			app->player->colliderY->rect.x = app->player->playerCollider->rect.x;
+
 
 			collision = false;
+		}
+		else if (collisionY == false)
+		{
+			app->player->onGround = false;
 		}
 			
 

@@ -16,6 +16,7 @@
 #include <math.h>
 
 #define JUMPSPEED 50.0f
+#define TILEHEIGHT 16
 const float gravity = 10.0f;
 const float deltaTime = 1.0f / 60.0f;
 
@@ -117,15 +118,7 @@ bool Player::Awake(pugi::xml_node& config)
 
 bool Player::Start() 
 {
-	playerInfo.position = { 63,100 }; //32, 110
-	playerInfo.speedL = 1;
-	playerInfo.speedR = 1;
-	playerInfo.currentDir = RIGHT_DIR;
-	playerCollider = app->collision->AddCollider({playerInfo.position.x + collPlayer.x, playerInfo.position.y + collPlayer.y, 10, 27}, Type::PLAYER, this);
-
-	texture = app->tex->Load(textPath.GetString());
-
-	playerInfo.currentAnimation = &playerInfo.idle;
+	SetInitialPlayer();
 
 	return true;
 }
@@ -136,7 +129,7 @@ bool Player::Update(float dt)
 	//playerCollider->SetPosition(playerInfo.position.x + collPlayer.x, playerInfo.position.y + collPlayer.y);
 
 	//LOG("onGround: %d", onGround);
-	//Gravity(playerInfo.position.y, playerInfo.jHeight);
+	//Gravity(1);
 	
 	return true;
 }
@@ -158,6 +151,7 @@ bool Player::Load(pugi::xml_node& load)
 	playerInfo.position.x = load.child("position").attribute("x").as_int();
 	playerInfo.position.y = load.child("position").attribute("y").as_int();
 	playerCollider->SetPosition(load.child("collider").attribute("x").as_int(), load.child("collider").attribute("y").as_int());
+	colliderY->SetPosition(load.child("collider").attribute("x").as_int(), load.child("collider").attribute("y").as_int());
 	playerInfo.currentLevel = (Level)load.child("level").attribute("value").as_int();
 	playerInfo.currentDir = (Direction)load.child("direction").attribute("value").as_int();
 
@@ -177,6 +171,9 @@ bool Player::Save(pugi::xml_node& saveNode) const
 	rect.append_attribute("x").set_value(playerCollider->rect.x);
 	rect.append_attribute("y").set_value(playerCollider->rect.y);
 
+	rect.append_attribute("x").set_value(colliderY->rect.x);
+	rect.append_attribute("y").set_value(colliderY->rect.y);
+
 	currentLvl.append_attribute("value").set_value(playerInfo.currentLevel);
 	currentDir.append_attribute("value").set_value(playerInfo.currentDir);
 
@@ -186,8 +183,25 @@ bool Player::Save(pugi::xml_node& saveNode) const
 void Player::Jump()
 {
 	onGround = false;
-	playerInfo.position.y += 10;
-	playerCollider->rect.y += 10;
+	playerInfo.position.y -= 10;
+	playerCollider->rect.y -= 10;
+	colliderY->rect.y -= 10;
+}
+
+void Player::SetInitialPlayer() 
+{
+	playerInfo.position = { app->map->GetPlayerInitialPos() }; //32, 110
+	playerInfo.speedL = 1;
+	playerInfo.speedR = 1;
+	playerInfo.currentDir = RIGHT_DIR;
+	playerCollider = app->collision->AddCollider({ playerInfo.position.x + collPlayer.x, playerInfo.position.y + collPlayer.y, 10, 27 }, Type::PLAYER, this);
+	colliderY = app->collision->AddCollider({ playerInfo.position.x + collPlayer.x, playerInfo.position.y + collPlayer.y, 10, 28 }, Type::PLAYER, this);
+	playerInfo.position.y = playerInfo.position.y + (TILEHEIGHT - app->player->playerCollider->rect.h);
+	playerCollider->rect.y = playerInfo.position.y;
+	colliderY->rect.y = playerCollider->rect.y;
+	texture = app->tex->Load(textPath.GetString());
+
+	playerInfo.currentAnimation = &playerInfo.idle;
 }
 
 void Player::Draw()
@@ -197,8 +211,10 @@ void Player::Draw()
 
 void Player::Gravity(int jHeight)
 {
-	playerInfo.position.y += (jHeight / (2 * deltaTime * deltaTime))*playerInfo.speedY;
+	//playerInfo.position.y += (jHeight * 2 * deltaTime*deltaTime)*playerInfo.speedY;
+	playerInfo.position.y++;
 	playerCollider->rect.y = playerInfo.position.y;
+	colliderY->rect.y = playerInfo.position.y;
 }
 
 void Player::OnCollision(Collider* c1, Collider* c2)

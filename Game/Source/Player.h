@@ -70,6 +70,8 @@ public:
 
 	void Jump();
 
+	void SetInitialPlayer();
+
 	void Draw();
 
 	void Gravity(int jHeight);
@@ -82,6 +84,7 @@ public:
 public:
 	PlayerData playerInfo;
 	Collider* playerCollider = nullptr;
+	Collider* colliderY = nullptr;
 	bool onGround = true;
 	
 private:	

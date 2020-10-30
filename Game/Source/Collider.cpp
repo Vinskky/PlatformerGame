@@ -151,6 +151,7 @@ void ModuleCollision::DebugDraw()
 		case DIE: // yellow
 			app->render->DrawRectangle(colliders[i]->rect, 255, 255, 0, alpha);
 			break;
+		
 		}
 	}
 }
@@ -236,7 +237,6 @@ void Collider::SetPosition(int x, int y) {
 bool ModuleCollision::CheckCollision(SDL_Rect& r1, SDL_Rect& r2) const
 {
 	return (r1.x < r2.x + r2.w &&
-		r1.x + r1.w > r2.x &&
-		r1.y < r2.y + r2.h &&
+		r1.x + r1.w > r2.x && r1.y < r2.y + r2.h &&
 		r1.h + r1.y > r2.y);
 }

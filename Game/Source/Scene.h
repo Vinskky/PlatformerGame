@@ -41,6 +41,7 @@ private:
 	bool introKey;
 	uint collisionLayer;
 	bool collision;
+	bool collisionY;
 };
 
 #endif // __SCENE_H__
