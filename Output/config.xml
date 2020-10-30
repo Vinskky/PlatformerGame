@@ -19,7 +19,7 @@
     <volume value="64"/>
   </audio>
   <scene>
-    <title name="Assets/textures/Title_Screen_Platformer.png">
+    <title name="Assets/textures/Title_Screen_Platformer.png"/>
     <intro name="Assets/textures/IntroPlaceholder.png" />
     <death name="Assets/textures/Die_Screen_Platformer.png"/>
   </scene>
