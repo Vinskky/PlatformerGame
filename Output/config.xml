@@ -21,7 +21,7 @@
   <scene>
     <title name="Assets/textures/Title_Screen_Platformer.png">
     <intro name="Assets/textures/IntroPlaceholder.png" />
-    <death />
+    <death name="Assets/textures/Die_Screen_Platformer.png"/>
   </scene>
   <map>
     <folder>Assets/maps/</folder>
