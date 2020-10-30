@@ -1,27 +1,41 @@
-# {Project Name}
+# Platformer Game
 
-## Description
+## Undefault Boy
 
-{project description}
+Platformer game developed during the course 2020-21 for the subject of development.
 
 ## Key Features
 
- - {Feature01}
- - {Feature02}
- - {Feature03}
- - {Feature04}
+ - Xml config file loading for different modules.
+ - Load/Save game state using XML file.
+ - Tiled TMX map loading and drawing (orthographic)
+ - Map collisions detection (platforms, boost, end level, and die colliders)
+ - Map navigation: player movement and jumping
+ - Intro logo, Title screen with fade-in fade-out
+ - Title screen (press Enter to start)
+ - 2 levels
+ - Background with parallax on level 2
  
 ## Controls
 
- - {ControlsScheme}
+ - A: Moves left
+ - D: Moves Right
+ - Spacebar: Jump
+ 
+ ## Debug keys
+ 
+ - F1: Start from the first level
+ - F2: Start from the second level
+ - F5: Start from the beggining of the current level
+ - F6: Load the previous state (even across levels)
+ - F9: View colliders / logic
+ - F10: God Mode
 
 ## Developers
 
- - {Dev01} - {Role(s)}
- - Martí Buxeda - {IDK}
- - {Dev03} - {Role(s)}
- - {Dev04} - {Role(s)}
- - {Dev05} - {Role(s)}
+ - Sebastián Delgado - [Github](https://github.com/Vinskky)
+ - Martí Buxeda - [Github](https://github.com/BooStarGamer)
+
 
 ## License
 
