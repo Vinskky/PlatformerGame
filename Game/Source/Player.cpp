@@ -17,8 +17,7 @@
 
 #define JUMPSPEED 50.0f
 #define TILEHEIGHT 16
-const float gravity = 10.0f;
-const float deltaTime = 1.0f / 60.0f;
+#define GRAVITY_LIMITER 0.0297f
 
 Player::Player():Module(),texture(nullptr)
 {
@@ -209,12 +208,26 @@ void Player::Draw()
 	app->render->DrawTexture(texture, playerInfo.position.x, playerInfo.position.y, &(playerInfo.currentAnimation->GetCurrentFrame()));
 }
 
-void Player::Gravity(int jHeight)
+void Player::Gravity(float time)
 {
-	//playerInfo.position.y += (jHeight * 2 * deltaTime*deltaTime)*playerInfo.speedY;
-	playerInfo.position.y++;
+	//playerInfo.position.y++;
+
+	playerInfo.position.y = playerInfo.position.y + (time + (1 / 2) * 9.8f * time * time) * GRAVITY_LIMITER;
+
 	playerCollider->rect.y = playerInfo.position.y;
 	colliderY->rect.y = playerInfo.position.y;
+}
+
+float Player::StepTime(float time) 
+{
+	if (onGround == true)
+		time = 0.0f;
+	else 
+	{
+		time = time + 1;
+	}
+
+	return time;
 }
 
 void Player::OnCollision(Collider* c1, Collider* c2)

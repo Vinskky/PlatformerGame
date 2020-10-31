@@ -74,18 +74,22 @@ public:
 
 	void Draw();
 
-	void Gravity(int jHeight);
+	void Gravity(float time);
 
 	void OnCollision(Collider* c1, Collider* c2);
 
 	void ChangeLevel(Level currentLvl);
 
 	void UpdateAnimation(char* anim);
+
+	float StepTime(float time);
+
 public:
 	PlayerData playerInfo;
 	Collider* playerCollider = nullptr;
 	Collider* colliderY = nullptr;
 	bool onGround = true;
+	float time = 0.0f;
 	
 private:	
 	SDL_Texture* texture;

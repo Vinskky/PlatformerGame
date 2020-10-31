@@ -16,6 +16,7 @@
 
 #define MAX_RIGHT_DISTANCE 320
 #define MAX_LEFT_DISTANCE 50
+const float deltaTime = 1.0f / 60.0f;
 
 Scene::Scene() : Module(), introKey(true),introScene(nullptr), deathScene(nullptr)
 {
@@ -56,8 +57,10 @@ bool Scene::Update(float dt)
 {
 	if (introKey == false)
 	{
+		app->player->time = app->player->StepTime(app->player->time);
+
 		if(app->player->onGround == false)
-			app->player->Gravity(1);
+			app->player->Gravity(app->player->time);
 
 		// L02: TODO 3: Request Load / Save when pressing L/S
 		if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
