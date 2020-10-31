@@ -57,10 +57,12 @@ bool Scene::Update(float dt)
 {
 	if (introKey == false)
 	{
-		app->player->time = app->player->StepTime(app->player->time);
+		if (app->player->onGround == true) {
+			app->player->jumpOn = true;
+		}
 
 		if(app->player->onGround == false)
-			app->player->Gravity(app->player->time);
+			app->player->Gravity();
 
 		// L02: TODO 3: Request Load / Save when pressing L/S
 		if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
@@ -112,19 +114,6 @@ bool Scene::Update(float dt)
 			}
 
 		}
-		if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
-		{
-			app->player->UpdateAnimation("walk");
-			if (app->player->playerInfo.speedL == 0)
-				app->player->playerInfo.speedL = 1;
-			app->player->playerInfo.position.y += 1 * app->player->playerInfo.speedR;
-			app->player->playerCollider->rect.y += 1 * app->player->playerInfo.speedR;
-			app->player->colliderY->rect.y += 1 * app->player->playerInfo.speedR;
-		}
-		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
-		{
-			app->player->Jump();
-		}
 
 		//tempPlayerPosition = app->player->playerInfo.position;
 
@@ -157,6 +146,7 @@ bool Scene::Update(float dt)
 
 								case 274://Wall
 									collision = true;
+									GetCollider(collider);
 									break;
 
 								case 275://Start
@@ -233,7 +223,9 @@ bool Scene::Update(float dt)
 									break;
 								}
 							}
+
 						}
+						FixPlayerPosition(ColliderFix, app->player->playerCollider->rect);
 						if (collision || collisionY) break;
 					}
 					if (collision || collisionY) break;
@@ -244,16 +236,17 @@ bool Scene::Update(float dt)
 			iteratorLayer = iteratorLayer->next;
 		}
 
+
 		if (collisionY) 
 		{
 			app->player->onGround = true;
 			app->player->playerInfo.position.y = tempPlayerPosition.y;
-			app->player->playerCollider->rect.y = app->player->playerInfo.position.y;
-			app->player->colliderY->rect.y = app->player->playerInfo.position.y;
+			app->player->playerCollider->rect.y = app->player->playerInfo.position.y + 5;
+			app->player->colliderY->rect.y = app->player->playerInfo.position.y + 19;
 
 			collisionY = false;
 		}
-		else if (collision) 
+		else if (collision && app->player->jumpOn == true) 
 		{
 			app->player->playerInfo.position.x = tempPlayerPosition.x;
 			app->player->playerCollider->rect = tempRectPlayer;
@@ -262,16 +255,29 @@ bool Scene::Update(float dt)
 
 			collision = false;
 		}
-		else if (collisionY == false)
+		else if (!collisionY)
 		{
 			app->player->onGround = false;
 		}
-			
+		else if (!collisionY && collision) 
+		{
+			app->player->onGround == false;
+		}
+		else if (collision && !collisionY && app->player->jumpOn)
+		{
+			collision = false;
+		}
 
 		//PLAYER MOVEMENT + COLLISIONS
 
 		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
-			app->player->Jump();
+		{
+			if (app->player->jumpOn == true && app->player->onGround == true)
+			{
+				app->player->jumpHeight = app->player->playerInfo.position.y;
+				app->player->Jump(app->player->jumpHeight);
+			}
+		}
 
 		app->map->Draw();
 		app->player->Draw();
@@ -314,4 +320,17 @@ bool Scene::CleanUp()
 	LOG("Freeing scene");
 
 	return true;
+}
+
+void Scene::FixPlayerPosition(SDL_Rect& r1, SDL_Rect& rp) 
+{
+	/*if (rp.y < r1.y + r1.h) 
+	{
+		app->player->playerInfo.position.y = 
+	}*/
+}
+
+void Scene::GetCollider(SDL_Rect& r) 
+{
+	ColliderFix = r;
 }

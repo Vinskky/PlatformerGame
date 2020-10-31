@@ -68,13 +68,13 @@ public:
 	bool Load(pugi::xml_node&);
 	bool Save(pugi::xml_node&)const;
 
-	void Jump();
+	void Jump(int jupmHeight);
 
 	void SetInitialPlayer(Level lvl);
 
 	void Draw();
 
-	void Gravity(float time);
+	void Gravity();
 
 	void OnCollision(Collider* c1, Collider* c2);
 
@@ -83,19 +83,23 @@ public:
 
 	void UpdateAnimation(char* anim);
 
-	float StepTime(float time);
-
 public:
 	PlayerData playerInfo;
 	Collider* playerCollider = nullptr;
 	Collider* colliderY = nullptr;
 	bool onGround = true;
-	float time = 0.0f;
+	bool jumpOn = true;
+	uint jumpHeight = 0;
 	
 private:	
 	SDL_Texture* texture;
 	SString textPath;
 	iPoint collPlayer = { 7, 3 };
+	uint jumpForce = 8;
+	uint jumpForceValue = 8;
+
+	uint gravity = 11;
+	uint gravityValue = 11;
 };
 
 #endif

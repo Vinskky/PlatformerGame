@@ -32,6 +32,12 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	void FixPlayerPosition(SDL_Rect& r1, SDL_Rect& r2);
+
+	void GetCollider(SDL_Rect& r);
+
+	SDL_Rect ColliderFix;
+
 private:
 	iPoint tempPlayerPosition;
 	SString sourceIntro;

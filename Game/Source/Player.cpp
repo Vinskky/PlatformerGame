@@ -15,7 +15,7 @@
 
 #include <math.h>
 
-#define JUMPSPEED 50.0f
+#define MAX_JUMP_HEIGHT 50
 #define TILEHEIGHT 16
 #define GRAVITY_LIMITER 0.0297f
 
@@ -181,13 +181,6 @@ bool Player::Save(pugi::xml_node& saveNode) const
 	return true;
 }
 
-void Player::Jump()
-{
-	onGround = false;
-	playerInfo.position.y -= 10;
-	playerCollider->rect.y -= 10;
-	colliderY->rect.y -= 10;
-}
 
 void Player::SetInitialPlayer(Level lvl)
 {
@@ -196,11 +189,11 @@ void Player::SetInitialPlayer(Level lvl)
 	playerInfo.speedR = 1;
 	playerInfo.currentLevel = lvl;
 	playerInfo.currentDir = RIGHT_DIR;
-	playerCollider = app->collision->AddCollider({ playerInfo.position.x + collPlayer.x, playerInfo.position.y + collPlayer.y, 10, 27 }, Type::PLAYER, this);
-	colliderY = app->collision->AddCollider({ playerInfo.position.x + collPlayer.x, playerInfo.position.y + collPlayer.y, 10, 28 }, Type::PLAYER, this);
-	playerInfo.position.y = playerInfo.position.y + (TILEHEIGHT - app->player->playerCollider->rect.h);
-	playerCollider->rect.y = playerInfo.position.y;
-	colliderY->rect.y = playerCollider->rect.y;
+	playerCollider = app->collision->AddCollider({ playerInfo.position.x + collPlayer.x, playerInfo.position.y + collPlayer.y + 5, 10, 17 }, Type::PLAYER, this);
+	colliderY = app->collision->AddCollider({ playerInfo.position.x + collPlayer.x, playerInfo.position.y + collPlayer.y, 10,10 }, Type::PLAYER, this);
+	playerInfo.position.y = playerInfo.position.y + (TILEHEIGHT - app->player->colliderY->rect.h - 19);
+	playerCollider->rect.y = playerInfo.position.y + 5;
+	colliderY->rect.y = playerInfo.position.y + 19;
 	texture = app->tex->Load(textPath.GetString());
 
 	playerInfo.currentAnimation = &playerInfo.idle;
@@ -211,26 +204,34 @@ void Player::Draw()
 	app->render->DrawTexture(texture, playerInfo.position.x, playerInfo.position.y, &(playerInfo.currentAnimation->GetCurrentFrame()));
 }
 
-void Player::Gravity(float time)
+void Player::Gravity()
 {
-	//playerInfo.position.y++;
+	playerInfo.position.y += gravity;
+	//jumpForce = 0;
 
-	playerInfo.position.y = playerInfo.position.y + (time + (1 / 2) * 9.8f * time * time) * GRAVITY_LIMITER;
+	playerInfo.position.y -= jumpForce;
 
-	playerCollider->rect.y = playerInfo.position.y;
-	colliderY->rect.y = playerInfo.position.y;
+	playerCollider->rect.y = playerInfo.position.y + 5;
+	colliderY->rect.y = playerInfo.position.y + 19;
 }
 
-float Player::StepTime(float time) 
+void Player::Jump(int jumpHeight)
 {
-	if (onGround == true)
-		time = 0.0f;
-	else 
-	{
-		time = time + 1;
-	}
+	if (playerInfo.position.y <= jumpHeight) {
+		playerInfo.position.y -= jumpForce + 40;
+		playerCollider->rect.y = playerInfo.position.y + 5;
+		colliderY->rect.y = playerInfo.position.y + 19;
 
-	return time;
+		playerInfo.position.y += gravity;
+
+		playerCollider->rect.y = playerInfo.position.y + 5;
+		colliderY->rect.y = playerInfo.position.y + 19;
+	}
+	else if (playerInfo.position.y < jumpHeight - MAX_JUMP_HEIGHT)
+	{
+		jumpOn = true;
+		onGround = false;
+	}
 }
 
 void Player::OnCollision(Collider* c1, Collider* c2)
