@@ -151,7 +151,9 @@ void ModuleCollision::DebugDraw()
 		case DIE: // yellow
 			app->render->DrawRectangle(colliders[i]->rect, 255, 255, 0, alpha);
 			break;
-		
+		case START: // yellow
+			app->render->DrawRectangle(colliders[i]->rect, 255, 255, 0, alpha);
+			break;
 		}
 	}
 }

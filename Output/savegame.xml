@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <save_state>
 	<renderer>
-		<camera x="-111" y="0" />
+		<camera x="-138" y="0" />
 	</renderer>
 	<fadeInFadeOut />
 	<moduleCollision />
 	<player>
-		<position x="100" y="100" />
-		<collider x="107" y="103" />
-		<level value="0" />
+		<position x="77" y="117" />
+		<collider x="84" y="117" x="84" y="117" />
+		<level value="1" />
 		<direction value="1" />
 	</player>
 	<map />

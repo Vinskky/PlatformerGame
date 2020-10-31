@@ -70,7 +70,7 @@ public:
 
 	void Jump();
 
-	void SetInitialPlayer();
+	void SetInitialPlayer(Level lvl);
 
 	void Draw();
 
@@ -79,6 +79,7 @@ public:
 	void OnCollision(Collider* c1, Collider* c2);
 
 	void ChangeLevel(Level currentLvl);
+	void LoadCurrentLevel(Level currentLvl);
 
 	void UpdateAnimation(char* anim);
 

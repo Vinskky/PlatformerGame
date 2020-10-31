@@ -4,7 +4,7 @@
 #include "Textures.h"
 #include "Map.h"
 #include "Collider.h"
-
+#include "Player.h"
 #include "Defs.h"
 #include "Log.h"
 
@@ -243,7 +243,7 @@ bool Map::Load(const char* filename)
     if(ret == true)
     {
         // L03: TODO 5: LOG all the data loaded iterate all tilesets and LOG everything
-        LOG("Successfully parsed map XML file : %s", GetLevel2Load(1)); // change 1 to the type inside player of which its the current level 
+        LOG("Successfully parsed map XML file : %s", GetLevel2Load().GetString());  
         LOG(" width : %d height : %d", mapInfo.width, mapInfo.height);
         LOG(" tile_width : %d tile_height : %d", mapInfo.tileWidth, mapInfo.tileHeight);
 
@@ -281,11 +281,16 @@ bool Map::Load(const char* filename)
     return ret;
 }
 
+SString Map::GetFolder() const
+{
+    return folder;
+}
+
 bool Map::LoadMapData()
 {
     bool ret = false;
     SString path = folder.GetString();
-    path += GetLevel2Load(1); // change 1 to the type inside player of which its the current level
+    path += GetLevel2Load(); // change 1 to the type inside player of which its the current level
     pugi::xml_node mapNode;
     pugi::xml_parse_result result = mapFile.load_file(path.GetString());
 
@@ -460,6 +465,21 @@ void Map::ColliderAsign(MapLayer* layer)
                 case 277:
                     app->collision->AddCollider(r, Type::BOOST);
                     break;
+                case 1:
+                    app->collision->AddCollider(r, Type::DIE); //  level 2
+                    break;
+
+                case 2:
+                    app->collision->AddCollider(r, Type::WALL); //  level 2
+                    break;
+
+                case 3:
+                    app->collision->AddCollider(r, Type::START); //  level 2
+                    break;
+
+                case 4:
+                    app->collision->AddCollider(r, Type::END); //  level 2
+                    break;
                 }
             }
         }
@@ -481,7 +501,7 @@ iPoint Map::GetPlayerInitialPos()
                 for (int x = 0; x < app->map->mapInfo.width; x++)
                 {
                     uint tileId = layer->Get(x, y);
-                    if (tileId == 275)//275 = Start tile
+                    if (tileId == 275 || tileId == 3)//275 or 3 = Start tile for lvl 1 and 2
                     {
                         TileSet* set = app->map->GetTilesetFromTileId(tileId);
                         iPoint pos = app->map->MapToWorld(x, y);

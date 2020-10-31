@@ -9683,7 +9683,7 @@
    <tile gid="32"/>
   </data>
  </layer>
- <layer id="5" name="Colision Layer" width="80" height="15" visible="0">
+ <layer id="5" name="Colision Layer" width="80" height="15" opacity="0.4">
   <properties>
    <property name="Drawable" type="bool" value="false"/>
   </properties>

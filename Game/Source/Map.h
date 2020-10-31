@@ -133,12 +133,14 @@ public:
 
     // Load new map
     bool Load(const char* path);
+    
+    SString GetFolder()const;
 
-    inline SString GetLevel2Load(int level)const
+    inline SString GetLevel2Load()const
     {
-        if (level == 1)
+        if (lvl1 && !lvl2)
             return level1;
-        else
+        else if(lvl2 && !lvl1)
             return level2;
     }
 	// L04: DONE 8: Create a method that translates x,y coordinates from map positions to world positions
@@ -151,6 +153,9 @@ public:
     // L03: TODO 1: Add your struct for map info as public for now
     MapData mapInfo;
     TileSet* GetTilesetFromTileId(int id) const;
+    
+    bool lvl1 = true;
+    bool lvl2 = false;
 private:
     bool LoadMapData();
     bool LoadTileSet(pugi::xml_node&, TileSet*);
@@ -171,6 +176,7 @@ private:
     SString level1;
     SString level2;
     bool mapLoaded;
+    
 };
 
 #endif // __MAP_H__

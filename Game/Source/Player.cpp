@@ -117,7 +117,7 @@ bool Player::Awake(pugi::xml_node& config)
 
 bool Player::Start() 
 {
-	SetInitialPlayer();
+	SetInitialPlayer(LVL_1);
 
 	return true;
 }
@@ -154,6 +154,8 @@ bool Player::Load(pugi::xml_node& load)
 	playerInfo.currentLevel = (Level)load.child("level").attribute("value").as_int();
 	playerInfo.currentDir = (Direction)load.child("direction").attribute("value").as_int();
 
+	LoadCurrentLevel(playerInfo.currentLevel);
+
 	return true;
 }
 
@@ -187,11 +189,12 @@ void Player::Jump()
 	colliderY->rect.y -= 10;
 }
 
-void Player::SetInitialPlayer() 
+void Player::SetInitialPlayer(Level lvl)
 {
-	playerInfo.position = { app->map->GetPlayerInitialPos() }; //32, 110
+	playerInfo.position = { app->map->GetPlayerInitialPos() }; 
 	playerInfo.speedL = 1;
 	playerInfo.speedR = 1;
+	playerInfo.currentLevel = lvl;
 	playerInfo.currentDir = RIGHT_DIR;
 	playerCollider = app->collision->AddCollider({ playerInfo.position.x + collPlayer.x, playerInfo.position.y + collPlayer.y, 10, 27 }, Type::PLAYER, this);
 	colliderY = app->collision->AddCollider({ playerInfo.position.x + collPlayer.x, playerInfo.position.y + collPlayer.y, 10, 28 }, Type::PLAYER, this);
@@ -257,18 +260,55 @@ void Player::ChangeLevel(Level currentLvl)
 	if (currentLvl == LVL_1)
 	{
 		app->map->CleanUp();
-		SString path = app->map->GetLevel2Load(LVL_1);
-		path += app->map->GetLevel2Load(LVL_2);
-		app->map->Load(path.GetString());
-		//TODO MARTI: Reset player acording to level 2
+		app->map->lvl1 = false;
+		app->map->lvl2 = true;
+		app->collision->CleanUp();
+
+		if (app->map->Load(app->map->GetLevel2Load().GetString()));
+		{
+			SetInitialPlayer(LVL_2);
+		}
+			
 	}
 	else if (currentLvl == LVL_2)
 	{
 		app->map->CleanUp();
-		SString path = app->map->GetLevel2Load(LVL_2);
-		path += app->map->GetLevel2Load(LVL_1);
-		app->map->Load(path.GetString());
-		//TODO MARTI: Reset player acording to level 1
+		app->map->lvl1 = false;
+		app->map->lvl2 = true;
+		app->collision->CleanUp();
+
+		if (app->map->Load(app->map->GetLevel2Load().GetString()));
+		{
+			SetInitialPlayer(LVL_1);
+		}
+	}
+}
+
+void Player::LoadCurrentLevel(Level currentLvl)
+{
+	if (currentLvl == LVL_1)
+	{
+		app->map->CleanUp();
+		app->map->lvl1 = true;
+		app->map->lvl2 = false;
+		app->collision->CleanUp();
+
+		if (app->map->Load(app->map->GetLevel2Load().GetString()));
+		{
+			SetInitialPlayer(LVL_1);
+		}
+	}
+	else if (currentLvl == LVL_2)
+	{
+		app->map->CleanUp();
+		app->map->lvl1 = false;
+		app->map->lvl2 = true;
+		app->collision->CleanUp();
+
+		if(app->map->Load(app->map->GetLevel2Load().GetString()));
+		{
+			SetInitialPlayer(LVL_2);
+		}
 	}
 }
 

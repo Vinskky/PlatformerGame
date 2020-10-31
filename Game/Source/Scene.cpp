@@ -41,7 +41,7 @@ bool Scene::Start()
 {
 	introScene = app->tex->Load(sourceIntro.GetString());
 	//app->audio->PlayMusic("Assets/audio/music/music_spy.ogg");
-	app->map->Load(app->map->GetLevel2Load(1).GetString());
+	app->map->Load(app->map->GetLevel2Load().GetString());
 	
 	return true;
 }
@@ -63,11 +63,17 @@ bool Scene::Update(float dt)
 			app->player->Gravity(app->player->time);
 
 		// L02: TODO 3: Request Load / Save when pressing L/S
+		if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+			app->player->LoadCurrentLevel(LVL_1);
+		if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
+			app->player->LoadCurrentLevel(LVL_2);
 		if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
-			app->LoadRequest("savegame.xml");
+			app->player->LoadCurrentLevel(app->player->playerInfo.currentLevel);
 
 		if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
 			app->SaveRequest("savegame.xml");
+		if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN)
+			app->LoadRequest("savegame.xml");
 		//L02: BONUS CODE
 		if (app->input->GetKey(SDL_SCANCODE_KP_PLUS) == KEY_DOWN)
 			app->audio->SetVolume(0);
@@ -165,6 +171,24 @@ bool Scene::Update(float dt)
 								case 277: //Boost
 									//boost player y++
 									break;
+
+								case 1://Die
+									collision = true;// activate death
+									break;
+
+								case 2://Wall
+									collision = false;
+									//do nothing
+									break;
+
+								case 3://Start
+									collision = false;
+									//do nothing
+									break;
+
+								case 4: //end
+									collision = true;//change level
+									break;
 								}
 							}
 							else if (app->collision->CheckCollision(collider, app->player->colliderY->rect)) 
@@ -190,6 +214,22 @@ bool Scene::Update(float dt)
 
 								case 277: //Boost
 									//boost player y++
+									break;
+								case 1://Die
+									collisionY = true;// activate death
+									break;
+
+								case 2://Wall
+									collisionY = true;
+									break;
+
+								case 3://Start
+									collisionY = false;
+									//do nothing
+									break;
+
+								case 4://End
+									collisionY = true;//change level
 									break;
 								}
 							}
@@ -229,34 +269,6 @@ bool Scene::Update(float dt)
 			
 
 		//PLAYER MOVEMENT + COLLISIONS
-
-		if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
-		{
-			ListItem<MapLayer*>* item = app->map->mapInfo.layers.start;
-			while (item != NULL)
-			{
-				if (item->data->name == "Colision Layer")
-				{
-					ListItem<Properties::Property*>* item2 = item->data->properties.list.start;
-					while (item2 != NULL)
-					{
-						if (item2->data->name == "Drawable")
-						{
-							if (item2->data->value == "true")
-							{
-								item2->data->value = "false";
-							}
-							else
-							{
-								item2->data->value = "true";
-							}
-						}
-						item2 = item2->next;
-					}
-				}
-				item = item->next;
-			}
-		}
 
 		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 			app->player->Jump();
