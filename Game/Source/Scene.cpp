@@ -32,14 +32,18 @@ bool Scene::Awake(pugi::xml_node& conf)
 {
 	LOG("Loading Scene");
 	bool ret = true;
+	sourceTitle = conf.child("title").attribute("name").as_string();
 	sourceIntro = conf.child("intro").attribute("name").as_string();
+	sourceDeath = conf.child("death").attribute("name").as_string();
 	return ret;
 }
 
 // Called before the first frame
 bool Scene::Start()
 {
+	titleScene = app->tex->Load(sourceTitle.GetString());
 	introScene = app->tex->Load(sourceIntro.GetString());
+	deathScene = app->tex->Load(sourceDeath.GetString());
 	//app->audio->PlayMusic("Assets/audio/music/music_spy.ogg");
 	app->map->Load(app->map->GetLevel2Load().GetString());
 	
@@ -55,7 +59,7 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
-	if (introKey == false)
+	if (introKey == false && titleKey == true)
 	{
 		if (app->player->onGround == true) {
 			app->player->jumpOn = true;
@@ -90,7 +94,10 @@ bool Scene::Update(float dt)
 
 		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 		{
-			app->player->UpdateAnimation("walkLeft");
+			app->player->playerInfo.currentDir = LEFT_DIR;
+			app->player->UpdateAnimation("walk");
+			app->player->isMoving = true;
+
 			if (app->player->playerInfo.speedR == 0)
 				app->player->playerInfo.speedR = 1;
 			app->player->playerInfo.position.x -= 1 * app->player->playerInfo.speedL;
@@ -103,7 +110,10 @@ bool Scene::Update(float dt)
 
 		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
 		{
+			app->player->playerInfo.currentDir = RIGHT_DIR;
 			app->player->UpdateAnimation("walk");
+			app->player->isMoving = true;
+
 			if (app->player->playerInfo.speedL == 0)
 				app->player->playerInfo.speedL = 1;
 			app->player->playerInfo.position.x += 1 * app->player->playerInfo.speedR;
@@ -274,6 +284,8 @@ bool Scene::Update(float dt)
 		{
 			if (app->player->jumpOn == true && app->player->onGround == true)
 			{
+				app->player->UpdateAnimation("jump");
+				app->player->isMoving = true;
 				app->player->jumpHeight = app->player->playerInfo.position.y;
 				app->player->Jump(app->player->jumpHeight);
 			}
@@ -282,9 +294,18 @@ bool Scene::Update(float dt)
 		app->map->Draw();
 		app->player->Draw();
 
-		
+		//IDLE ANIMATION
+		if (strcmp(app->player->playerInfo.currentAnimation->name.GetString(), "idle") != 0 || strcmp(app->player->playerInfo.currentAnimation->name.GetString(), "idle") != 0)
+		{
+			if (!app->player->playerInfo.currentAnimation->Finished())
+			{
+				app->player->playerInfo.currentAnimation->FinishAnimation();
+				app->player->UpdateAnimation("idle");
+				app->player->isMoving = false;
+			}
+		}
 	}
-	else
+	else if(titleKey)
 	{
 		app->render->DrawTexture(introScene, 0, 0);
 
@@ -294,6 +315,16 @@ bool Scene::Update(float dt)
 			app->fade->FadeToBlack();
 		}
 			
+	}
+	else
+	{
+		app->render->DrawTexture(titleScene, 0, 0);
+
+		if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+		{
+			titleKey = true;
+			app->fade->FadeToBlack();
+		}
 	}
     
 	SString title("Map:%dx%d Tiles:%dx%d Tilesets:%d", app->map->mapInfo.width, app->map->mapInfo.height, app->map->mapInfo.tileWidth, app->map->mapInfo.tileHeight, app->map->mapInfo.tileSets.count());

@@ -69,21 +69,34 @@ void Map::Draw()
                         SDL_Rect r = set->GetTileRect(tileId);
                         iPoint pos = MapToWorld(x, y);
 
-                        if (strcmp(layer->name.GetString(),"Parallax 0")== 0 || strcmp(layer->name.GetString(), "Parallax 2") == 0) // Player moves to right
+                        if (strcmp(layer->name.GetString(), "Parallax 0") == 0 || strcmp(layer->name.GetString(), "Parallax 2") == 0) // Player moves to right
                         {
-                            backgroudPos.x += PARALLAX_VEL;
-                            app->render->DrawTexture(set->imageSource, pos.x + backgroudPos.x, pos.y, &r);
+                            if (app->player->isMoving == true && app->player->playerInfo.currentDir == RIGHT_DIR)
+                            {
+                                backgroudPos.x += PARALLAX_VEL;
+                                app->render->DrawTexture(set->imageSource, pos.x + backgroudPos.x, pos.y, &r);
+                            }
+                            else
+                            {
+                                app->render->DrawTexture(set->imageSource, pos.x + backgroudPos.x, pos.y, &r);
+                            }
                         }
                         else if (strcmp(layer->name.GetString(), "Parallax 1") == 0 || strcmp(layer->name.GetString(), "Parallax 3") == 0) // Player moves to left
                         {
-                            backgroudPos.x -= PARALLAX_VEL;
-                            app->render->DrawTexture(set->imageSource, pos.x - backgroudPos.x, pos.y, &r);
+                            if (app->player->isMoving == true && app->player->playerInfo.currentDir == LEFT_DIR)
+                            {
+                                backgroudPos.x -= PARALLAX_VEL;
+                                app->render->DrawTexture(set->imageSource, pos.x + backgroudPos.x, pos.y, &r);
+                            }
+                            else
+                            {
+                                app->render->DrawTexture(set->imageSource, pos.x + backgroudPos.x, pos.y, &r);
+                            }
                         }
                         else
                         {
-                            app->render->DrawTexture(set->imageSource, pos.x, pos.y, &r);
-                        }
-                        
+                            app->render->DrawTexture(set->imageSource, pos.x , pos.y, &r);
+                        }                        
                     }
                 }
             }

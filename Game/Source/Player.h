@@ -90,7 +90,7 @@ public:
 	bool onGround = true;
 	bool jumpOn = true;
 	uint jumpHeight = 0;
-	
+	bool isMoving;
 private:	
 	SDL_Texture* texture;
 	SString textPath;

@@ -40,14 +40,19 @@ public:
 
 private:
 	iPoint tempPlayerPosition;
+	SString sourceTitle;
+	SString sourceDeath;
 	SString sourceIntro;
+	SDL_Texture* titleScene;
 	SDL_Texture* introScene;
 	SDL_Texture* deathScene;
 	SDL_Rect tempRectPlayer;
 	bool introKey;
+	bool titleKey;
 	uint collisionLayer;
 	bool collision;
 	bool collisionY;
+
 };
 
 #endif // __SCENE_H__

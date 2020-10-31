@@ -31,7 +31,7 @@
   <player>
     <source name="Assets/textures/Character.png"/>
     <animations>
-      <animation name ="walk" loop="true" speed="0.03">     
+      <animation name ="walk" loop="true" speed="0.125">     
           <frame height="28" width="24" x ="0" y="32"/>
           <frame height="28" width="24" x ="24" y="32"/>
           <frame height="28" width="24" x ="48" y="32"/>
@@ -39,7 +39,7 @@
           <frame height="28" width="24" x ="105" y="32"/>
           <frame height="28" width="24" x ="135" y="32"/>
       </animation>
-      <animation name="idle" loop="true" speed="0.05">
+      <animation name="idle" loop="true" speed="0.065">
           <frame height="30" width="21" x ="0" y="0"/>
           <frame height="30" width="21" x ="21" y="0"/>
           <frame height="30" width="21" x ="44" y="0"/>
@@ -51,7 +51,7 @@
         <frame height="25" width="20" x ="53" y="62"/>
         <frame height="25" width="20" x ="79" y="62"/>
       </animation>
-      <animation name="jump" loop="true" speed="0.015">
+      <animation name="jump" loop="false" speed="0.165">
         <frame height="36" width="21" x ="0" y="88"/>
         <frame height="36" width="21" x ="26" y="88"/>
         <frame height="36" width="21" x ="53" y="88"/>
@@ -61,19 +61,19 @@
         <frame height="36" width="20" x ="142" y="88"/>
         <frame height="36" width="20" x ="164" y="88"/>
       </animation>
-      <animation name ="walkLeft" loop="true" speed="0.03">
-        <frame height="28" width="24" x ="0" y="32"/>
-        <frame height="28" width="24" x ="24" y="32"/>
-        <frame height="28" width="24" x ="48" y="32"/>
-        <frame height="28" width="24" x ="76" y="32"/>
-        <frame height="28" width="24" x ="105" y="32"/>
-        <frame height="28" width="24" x ="135" y="32"/>
+      <animation name ="walkLeft" loop="true" speed="0.125">
+        <frame height="28" width="24" x ="165" y="157"/>
+        <frame height="28" width="24" x ="141" y="157"/>
+        <frame height="28" width="24" x ="118" y="157"/>
+        <frame height="28" width="24" x ="87" y="157"/>
+        <frame height="28" width="24" x ="60" y="157"/>
+        <frame height="28" width="24" x ="31" y="157"/>
       </animation>
-      <animation name="idleLeft" loop="true" speed="0.05">
-        <frame height="31" width="30" x ="167" y="124"/>
-        <frame height="31" width="21" x ="144" y="124"/>
-        <frame height="31" width="21" x ="123" y="124"/>
-        <frame height="31" width="21" x ="102" y="124"/>
+      <animation name="idleLeft" loop="true" speed="0.065">
+        <frame height="30" width="21" x ="167" y="124"/>
+        <frame height="30" width="21" x ="144" y="124"/>
+        <frame height="30" width="21" x ="120" y="124"/>
+        <frame height="30" width="21" x ="98" y="124"/>
       </animation>
       <animation name="dieLeft" loop="true" speed="0.015">
         <frame height="22" width="20" x ="167" y="188"/>
@@ -81,15 +81,15 @@
         <frame height="22" width="20" x ="116" y="188"/>
         <frame height="22" width="20" x ="90" y="188"/>
       </animation>
-      <animation name="jumpLeft" loop="true" speed="0.015">
-        <frame height="36" width="21" x ="0" y="88"/>
-        <frame height="36" width="21" x ="26" y="88"/>
-        <frame height="36" width="21" x ="53" y="88"/>
-        <frame height="36" width="21" x ="77" y="88"/>
-        <frame height="36" width="18" x ="103" y="88"/>
-        <frame height="36" width="18" x ="122" y="88"/>
-        <frame height="36" width="20" x ="142" y="88"/>
-        <frame height="36" width="20" x ="164" y="88"/>
+      <animation name="jumpLeft" loop="false" speed="0.165">
+        <frame height="33" width="21" x ="165" y="214"/>
+        <frame height="33" width="21" x ="139" y="214"/>
+        <frame height="33" width="21" x ="114" y="214"/>
+        <frame height="33" width="21" x ="88" y="214"/>
+        <frame height="33" width="18" x ="67" y="214"/>
+        <frame height="33" width="18" x ="48" y="214"/>
+        <frame height="33" width="20" x ="24" y="214"/>
+        <frame height="33" width="20" x ="1" y="214"/>
       </animation>
     </animations>
     <maxSpeed x ="1" y ="5" />

@@ -11,10 +11,10 @@ public:
 	bool loop = true;
 	float speed = 1.0f;
 	SDL_Rect frames[MAX_FRAMES];
-
+	SString name;
 private:
-	float current_frame;
-	int last_frame = 0;
+	float currentFrame;
+	int lastFrame = 0;
 	int loops = 0;
 
 public:
@@ -23,21 +23,22 @@ public:
 		loops = a;
 	}
 
-	void PushBack(const SDL_Rect& rect)
+	void PushBack(const SDL_Rect& rect , SString nameAnim)
 	{
-		frames[last_frame++] = rect;
+		name = nameAnim;
+		frames[lastFrame++] = rect;
 	}
 
 	SDL_Rect& GetCurrentFrame()
 	{
-		current_frame += speed;
-		if (current_frame >= last_frame)
+		currentFrame += speed;
+		if (currentFrame >= lastFrame)
 		{
-			current_frame = (loop) ? 0.0f : last_frame - 1;
+			currentFrame = (loop) ? 0.0f : lastFrame - 1;
 			loops++;
 		}
 
-		return frames[(int)current_frame];
+		return frames[(int)currentFrame];
 	}
 
 	bool Finished() const
@@ -48,6 +49,16 @@ public:
 	void Reset()
 	{
 		loops = 0;
+	}
+
+	bool FinishAnimation()
+	{
+		if (currentFrame >= lastFrame - 0.5f)
+		{
+			currentFrame = 0;
+			return true;
+		}
+		return false;
 	}
 };
 

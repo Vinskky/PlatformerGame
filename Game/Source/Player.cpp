@@ -42,7 +42,7 @@ bool Player::Awake(pugi::xml_node& config)
 		{
 			for (frame = anim.child("frame"); frame; frame = frame.next_sibling("frame"))
 			{
-				playerInfo.walk.PushBack({ frame.attribute("x").as_int(),frame.attribute("y").as_int(), frame.attribute("width").as_int(), frame.attribute("height").as_int() });
+				playerInfo.walk.PushBack({ frame.attribute("x").as_int(),frame.attribute("y").as_int(), frame.attribute("width").as_int(), frame.attribute("height").as_int() }, tmp);
 			}
 			playerInfo.walk.speed = anim.attribute("speed").as_float();
 			playerInfo.walk.loop = anim.attribute("loop").as_bool();
@@ -51,7 +51,7 @@ bool Player::Awake(pugi::xml_node& config)
 		{
 			for (frame = anim.child("frame"); frame; frame = frame.next_sibling("frame"))
 			{
-				playerInfo.idle.PushBack({ frame.attribute("x").as_int(),frame.attribute("y").as_int(), frame.attribute("width").as_int(), frame.attribute("height").as_int() });
+				playerInfo.idle.PushBack({ frame.attribute("x").as_int(),frame.attribute("y").as_int(), frame.attribute("width").as_int(), frame.attribute("height").as_int() }, tmp);
 			}
 			playerInfo.idle.speed = anim.attribute("speed").as_float();
 			playerInfo.idle.loop = anim.attribute("loop").as_bool();
@@ -60,7 +60,7 @@ bool Player::Awake(pugi::xml_node& config)
 		{
 			for (frame = anim.child("frame"); frame; frame = frame.next_sibling("frame"))
 			{
-				playerInfo.jump.PushBack({ frame.attribute("x").as_int(),frame.attribute("y").as_int(), frame.attribute("width").as_int(), frame.attribute("height").as_int() });
+				playerInfo.jump.PushBack({ frame.attribute("x").as_int(),frame.attribute("y").as_int(), frame.attribute("width").as_int(), frame.attribute("height").as_int() }, tmp);
 			}
 			playerInfo.jump.speed = anim.attribute("speed").as_float();
 			playerInfo.jump.loop = anim.attribute("loop").as_bool();
@@ -69,7 +69,7 @@ bool Player::Awake(pugi::xml_node& config)
 		{
 			for (frame = anim.child("frame"); frame; frame = frame.next_sibling("frame"))
 			{
-				playerInfo.die.PushBack({ frame.attribute("x").as_int(),frame.attribute("y").as_int(), frame.attribute("width").as_int(), frame.attribute("height").as_int() });
+				playerInfo.die.PushBack({ frame.attribute("x").as_int(),frame.attribute("y").as_int(), frame.attribute("width").as_int(), frame.attribute("height").as_int() }, tmp);
 			}
 			playerInfo.die.speed = anim.attribute("speed").as_float();
 			playerInfo.die.loop = anim.attribute("loop").as_bool();
@@ -78,7 +78,7 @@ bool Player::Awake(pugi::xml_node& config)
 		{
 			for (frame = anim.child("frame"); frame; frame = frame.next_sibling("frame"))
 			{
-				playerInfo.walkLeft.PushBack({ frame.attribute("x").as_int(),frame.attribute("y").as_int(), frame.attribute("width").as_int(), frame.attribute("height").as_int() });
+				playerInfo.walkLeft.PushBack({ frame.attribute("x").as_int(),frame.attribute("y").as_int(), frame.attribute("width").as_int(), frame.attribute("height").as_int() }, tmp);
 			}
 			playerInfo.walkLeft.speed = anim.attribute("speed").as_float();
 			playerInfo.walkLeft.loop = anim.attribute("loop").as_bool();
@@ -87,7 +87,7 @@ bool Player::Awake(pugi::xml_node& config)
 		{
 			for (frame = anim.child("frame"); frame; frame = frame.next_sibling("frame"))
 			{
-				playerInfo.idleLeft.PushBack({ frame.attribute("x").as_int(),frame.attribute("y").as_int(), frame.attribute("width").as_int(), frame.attribute("height").as_int() });
+				playerInfo.idleLeft.PushBack({ frame.attribute("x").as_int(),frame.attribute("y").as_int(), frame.attribute("width").as_int(), frame.attribute("height").as_int() }, tmp);
 			}
 			playerInfo.idleLeft.speed = anim.attribute("speed").as_float();
 			playerInfo.idleLeft.loop = anim.attribute("loop").as_bool();
@@ -96,7 +96,7 @@ bool Player::Awake(pugi::xml_node& config)
 		{
 			for (frame = anim.child("frame"); frame; frame = frame.next_sibling("frame"))
 			{
-				playerInfo.jumpLeft.PushBack({ frame.attribute("x").as_int(),frame.attribute("y").as_int(), frame.attribute("width").as_int(), frame.attribute("height").as_int() });
+				playerInfo.jumpLeft.PushBack({ frame.attribute("x").as_int(),frame.attribute("y").as_int(), frame.attribute("width").as_int(), frame.attribute("height").as_int() }, tmp);
 			}
 			playerInfo.jumpLeft.speed = anim.attribute("speed").as_float();
 			playerInfo.jumpLeft.loop = anim.attribute("loop").as_bool();
@@ -105,7 +105,7 @@ bool Player::Awake(pugi::xml_node& config)
 		{
 			for (frame = anim.child("frame"); frame; frame = frame.next_sibling("frame"))
 			{
-				playerInfo.dieLeft.PushBack({ frame.attribute("x").as_int(),frame.attribute("y").as_int(), frame.attribute("width").as_int(), frame.attribute("height").as_int() });
+				playerInfo.dieLeft.PushBack({ frame.attribute("x").as_int(),frame.attribute("y").as_int(), frame.attribute("width").as_int(), frame.attribute("height").as_int() }, tmp);
 			}
 			playerInfo.dieLeft.speed = anim.attribute("speed").as_float();
 			playerInfo.dieLeft.loop = anim.attribute("loop").as_bool();
@@ -298,37 +298,45 @@ void Player::UpdateAnimation(char* anim)
 	{
 		if (strcmp(anim, "idle") == 0)
 		{
+			playerInfo.currentAnimation->FinishAnimation();
 			playerInfo.currentAnimation = &playerInfo.idle;
 		}
 		else if (strcmp(anim, "jump") == 0)
 		{
+			playerInfo.currentAnimation->FinishAnimation();
 			playerInfo.currentAnimation = &playerInfo.jump;
 		}
 		else if (strcmp(anim, "walk") == 0)
 		{
+			playerInfo.currentAnimation->FinishAnimation();
 			playerInfo.currentAnimation = &playerInfo.walk;
 		}
 		else if (strcmp(anim, "die") == 0)
 		{
+			playerInfo.currentAnimation->FinishAnimation();
 			playerInfo.currentAnimation = &playerInfo.die;
 		}
 	}
 	else if (playerInfo.currentDir == LEFT_DIR)
 	{
-		if (strcmp(anim, "idleLeft") == 0)
+		if (strcmp(anim, "idle") == 0)
 		{
+			playerInfo.currentAnimation->FinishAnimation();
 			playerInfo.currentAnimation = &playerInfo.idleLeft;
 		}
-		else if (strcmp(anim, "jumpLeft") == 0)
+		else if (strcmp(anim, "jump") == 0)
 		{
+			playerInfo.currentAnimation->FinishAnimation();
 			playerInfo.currentAnimation = &playerInfo.jumpLeft;
 		}
-		else if (strcmp(anim, "walkLeft") == 0)
+		else if (strcmp(anim, "walk") == 0)
 		{
+			playerInfo.currentAnimation->FinishAnimation();
 			playerInfo.currentAnimation = &playerInfo.walkLeft;
 		}
-		else if (strcmp(anim, "dieLeft") == 0)
+		else if (strcmp(anim, "die") == 0)
 		{
+			playerInfo.currentAnimation->FinishAnimation();
 			playerInfo.currentAnimation = &playerInfo.dieLeft;
 		}
 	}
