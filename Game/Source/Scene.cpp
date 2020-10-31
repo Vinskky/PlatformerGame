@@ -177,8 +177,7 @@ bool Scene::Update(float dt)
 									break;
 
 								case 2://Wall
-									collision = false;
-									//do nothing
+									collision = true;
 									break;
 
 								case 3://Start
@@ -186,7 +185,7 @@ bool Scene::Update(float dt)
 									//do nothing
 									break;
 
-								case 4: //end
+								case 4://End
 									collision = true;//change level
 									break;
 								}
@@ -215,6 +214,7 @@ bool Scene::Update(float dt)
 								case 277: //Boost
 									//boost player y++
 									break;
+
 								case 1://Die
 									collisionY = true;// activate death
 									break;
