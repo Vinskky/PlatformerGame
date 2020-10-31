@@ -26,7 +26,8 @@ Platformer game developed during the course 2020-21 for the subject of developme
  
  - F1: Start from the first level
  - F2: Start from the second level
- - F5: Start from the beggining of the current level
+ - F3: Start from the beggining of the current level
+ - F5: Save current state of the game
  - F6: Load the previous state (even across levels)
  - F9: View colliders / logic
  - F10: God Mode
