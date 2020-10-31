@@ -184,9 +184,10 @@ bool Player::Save(pugi::xml_node& saveNode) const
 
 void Player::SetInitialPlayer(Level lvl)
 {
-	playerInfo.position = { app->map->GetPlayerInitialPos() }; 
-	playerInfo.speedL = 1;
-	playerInfo.speedR = 1;
+	app->render->camera.x = 0;
+	playerInfo.position = { app->map->GetPlayerInitialPos() };
+	playerInfo.speedL = 2;
+	playerInfo.speedR = 2;
 	playerInfo.currentLevel = lvl;
 	playerInfo.currentDir = RIGHT_DIR;
 	playerCollider = app->collision->AddCollider({ playerInfo.position.x + collPlayer.x, playerInfo.position.y + collPlayer.y + 5, 10, 17 }, Type::PLAYER, this);
@@ -227,33 +228,11 @@ void Player::Jump(int jumpHeight)
 		playerCollider->rect.y = playerInfo.position.y + 5;
 		colliderY->rect.y = playerInfo.position.y + 19;
 	}
-	else if (playerInfo.position.y < jumpHeight - MAX_JUMP_HEIGHT)
-	{
-		jumpOn = true;
-		onGround = false;
-	}
 }
 
 void Player::OnCollision(Collider* c1, Collider* c2)
 {
-	/*
-	if (c2->type == WALL && c1->type == PLAYER) 
-	{
-		if (c1->rect.x > c2->rect.x + c2->rect.w)
-		{
-			playerInfo.speedL = 0;
-		}
-		else if (c1->rect.x + c1->rect.w < c2->rect.x)
-		{
-			playerInfo.speedR = 0;
-		}
-		else if (c1->rect.y + c1->rect.h == c2->rect.y)
-		{
-			playerInfo.position.y = c2->rect.y - c1->rect.h - 2;
-			playerInfo.position.y--;
-		}
-	}
-	*/
+
 }
 
 void Player::ChangeLevel(Level currentLvl)

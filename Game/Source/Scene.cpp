@@ -97,7 +97,7 @@ bool Scene::Update(float dt)
 			app->player->playerCollider->rect.x -= 1 * app->player->playerInfo.speedL;
 			app->player->colliderY->rect.x -= 1 * app->player->playerInfo.speedL;
 			if (app->render->camera.x < 0 /*&& app->player->playerInfo.position.x <= MAX_LEFT_DISTANCE*/) {
-				app->render->camera.x += 3;
+				app->render->camera.x += 6;
 			}
 		}
 
@@ -110,7 +110,7 @@ bool Scene::Update(float dt)
 			app->player->playerCollider->rect.x += 1 * app->player->playerInfo.speedR;
 			app->player->colliderY->rect.x += 1 * app->player->playerInfo.speedR;
 			if (app->render->camera.x > -2559 /*&& app->player->playerInfo.position.x >= MAX_RIGHT_DISTANCE*/) {
-				app->render->camera.x -= 3;
+				app->render->camera.x -= 6;
 			}
 
 		}
@@ -225,7 +225,7 @@ bool Scene::Update(float dt)
 							}
 
 						}
-						FixPlayerPosition(ColliderFix, app->player->playerCollider->rect);
+						//FixPlayerPosition(ColliderFix, app->player->playerCollider->rect);
 						if (collision || collisionY) break;
 					}
 					if (collision || collisionY) break;
@@ -324,10 +324,12 @@ bool Scene::CleanUp()
 
 void Scene::FixPlayerPosition(SDL_Rect& r1, SDL_Rect& rp) 
 {
-	/*if (rp.y < r1.y + r1.h) 
+	if (rp.y < r1.y + r1.h) 
 	{
-		app->player->playerInfo.position.y = 
-	}*/
+		app->player->playerInfo.position.y = r1.y + r1.h;
+		app->player->playerCollider->rect.y = app->player->playerInfo.position.y + 5;
+		app->player->colliderY->rect.y = app->player->playerInfo.position.y + 19;
+	}
 }
 
 void Scene::GetCollider(SDL_Rect& r) 
