@@ -53,6 +53,8 @@ private:
 	bool collision;
 	bool collisionY;
 
+	Uint32 currentTime;
+	Uint32 timeTitle = 3000;
 };
 
 #endif // __SCENE_H__

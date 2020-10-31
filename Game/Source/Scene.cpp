@@ -320,7 +320,8 @@ bool Scene::Update(float dt)
 	{
 		app->render->DrawTexture(titleScene, 0, 0);
 
-		if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+		currentTime = SDL_GetTicks();
+		if (currentTime > timeTitle)
 		{
 			titleKey = true;
 			app->fade->FadeToBlack();
