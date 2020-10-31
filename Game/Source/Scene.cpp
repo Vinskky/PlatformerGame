@@ -59,7 +59,7 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
-	if (introKey == false && titleKey == true)
+	if (introKey == false && titleKey == true && app->player->IsDead() == false)
 	{
 		if (app->player->onGround == true) {
 			app->player->jumpOn = true;
@@ -151,7 +151,10 @@ bool Scene::Update(float dt)
 								switch (tileId)
 								{
 								case 273://Die
+								{
 									collision = true;// activate death
+									
+								}
 									break;
 
 								case 274://Wall
@@ -195,7 +198,10 @@ bool Scene::Update(float dt)
 								switch (tileId)
 								{
 								case 273://Die
+								{
 									collisionY = true;// activate death
+									app->player->Dead();
+								}
 									break;
 
 								case 274://Wall
@@ -216,7 +222,10 @@ bool Scene::Update(float dt)
 									break;
 
 								case 1://Die
+								{
 									collisionY = true;// activate death
+									app->player->Dead();
+								}
 									break;
 
 								case 2://Wall
@@ -305,7 +314,7 @@ bool Scene::Update(float dt)
 			}
 		}
 	}
-	else if(titleKey)
+	else if(titleKey && app->player->IsDead() == false)
 	{
 		app->render->DrawTexture(introScene, 0, 0);
 
@@ -313,8 +322,21 @@ bool Scene::Update(float dt)
 		{
 			introKey = false;
 			app->fade->FadeToBlack();
+			
 		}
 			
+	}
+	else if (app->player->IsDead())
+	{
+		app->render->camera = { 0,0 };
+		app->render->DrawTexture(deathScene, 0, 0);
+
+		if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+		{
+			app->player->LoadCurrentLevel(app->player->playerInfo.currentLevel);
+			app->player->SetIsDead(false);
+			app->fade->FadeToBlack();
+		}
 	}
 	else
 	{
@@ -325,6 +347,7 @@ bool Scene::Update(float dt)
 		{
 			titleKey = true;
 			app->fade->FadeToBlack();
+			currentTime = 0;
 		}
 	}
     

@@ -216,6 +216,24 @@ void Player::Gravity()
 	colliderY->rect.y = playerInfo.position.y + 19;
 }
 
+void Player::Dead()
+{
+	app->player->UpdateAnimation("die");
+	app->player->isMoving = false;
+	
+	isDead = true;
+}
+
+bool Player::IsDead() const
+{
+	return isDead;
+}
+
+void Player::SetIsDead(bool set)
+{
+	isDead = set;
+}
+
 void Player::Jump(int jumpHeight)
 {
 	if (playerInfo.position.y <= jumpHeight) {

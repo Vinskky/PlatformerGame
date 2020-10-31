@@ -45,7 +45,7 @@
           <frame height="30" width="21" x ="44" y="0"/>
           <frame height="30" width="21" x ="64" y="0"/>
       </animation>
-      <animation name="die" loop="true" speed="0.015">
+      <animation name="die" loop="true" speed="0.25">
         <frame height="25" width="20" x ="0" y="62"/>
         <frame height="25" width="20" x ="27" y="62"/>
         <frame height="25" width="20" x ="53" y="62"/>
@@ -75,7 +75,7 @@
         <frame height="30" width="21" x ="120" y="124"/>
         <frame height="30" width="21" x ="98" y="124"/>
       </animation>
-      <animation name="dieLeft" loop="true" speed="0.015">
+      <animation name="dieLeft" loop="true" speed="0.25">
         <frame height="22" width="20" x ="167" y="188"/>
         <frame height="22" width="20" x ="142" y="188"/>
         <frame height="22" width="20" x ="116" y="188"/>

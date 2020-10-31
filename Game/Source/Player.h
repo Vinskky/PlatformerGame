@@ -76,6 +76,10 @@ public:
 
 	void Gravity();
 
+	void Dead();
+	bool IsDead()const;
+	void SetIsDead(bool set);
+
 	void OnCollision(Collider* c1, Collider* c2);
 
 	void ChangeLevel(Level currentLvl);
@@ -100,6 +104,7 @@ private:
 
 	uint gravity = 11;
 	uint gravityValue = 11;
+	bool isDead = false;
 };
 
 #endif
