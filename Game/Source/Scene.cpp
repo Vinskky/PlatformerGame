@@ -214,7 +214,10 @@ bool Scene::Update(float dt)
 									break;
 
 								case 276://End
+								{
 									collisionY = true;//change level
+									app->player->ChangeLevel(app->player->playerInfo.currentLevel);
+								}
 									break;
 
 								case 277: //Boost
@@ -238,7 +241,10 @@ bool Scene::Update(float dt)
 									break;
 
 								case 4://End
+								{
 									collisionY = true;//change level
+									app->player->ChangeLevel(app->player->playerInfo.currentLevel);
+								}
 									break;
 								}
 							}
