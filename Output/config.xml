@@ -17,6 +17,10 @@
   </window>
   <audio>
     <volume value="64"/>
+    <fx>
+      <jump name="Assets/audio/fx/jump.wav" />
+      <volume value="64"/>
+    </fx>
   </audio>
   <scene>
     <title name="Assets/textures/Title_Screen_Platformer.png"/>

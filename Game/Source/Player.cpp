@@ -436,6 +436,7 @@ void Player::Jump()
 {
 	if (godMode == false)
 	{
+		app->audio->PlayFx(1);
 		int tempY = playerInfo.position.y;
 		UpdateAnimation("jump");
 		for (int i = 1; i < 32; i++)

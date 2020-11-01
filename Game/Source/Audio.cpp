@@ -58,6 +58,8 @@ bool Audio::Awake(pugi::xml_node& config)
 	if (config != NULL)
 	{
 		volume = config.child("volume").attribute("value").as_int();
+		LoadFx(config.child("fx").child("jump").attribute("name").as_string());
+		fxVolume = config.child("fx").child("volume").attribute("value").as_int();
 	}
 	return ret;
 }
@@ -79,6 +81,13 @@ bool Audio::PostUpdate()
 	bool ret = true;
 
 	Mix_VolumeMusic(volume);
+	ListItem< Mix_Chunk*>* item = fx.start;
+	while (item != NULL)
+	{
+		Mix_VolumeChunk(item->data, fxVolume);
+		item = item->next;
+	}
+	
 	return ret;
 }
 // Called before quitting
@@ -206,9 +215,11 @@ void Audio::SetVolume(uint value)
 	{
 		//increase volume
 		volume += 10;
+		fxVolume += 10;
 		if (volume > 128)
 		{
 			volume = 128;
+			fxVolume = 128;
 			LOG("Max. volume reached!");
 		}
 	}
@@ -216,9 +227,11 @@ void Audio::SetVolume(uint value)
 	{
 		//increase volume
 		volume -= 10;
+		fxVolume -= 10;
 		if (volume < 0)
 		{
 			volume = 0;
+			fxVolume = 0;
 			LOG("Min. volume reached!");
 		}
 	}

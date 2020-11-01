@@ -18,7 +18,7 @@
 #define MAX_LEFT_DISTANCE 50
 const float deltaTime = 1.0f / 60.0f;
 
-Scene::Scene() : Module(), titleScene(nullptr),introScene(nullptr), deathScene(nullptr), currentScreen(Screens::PLAYING)
+Scene::Scene() : Module(), titleScene(nullptr),introScene(nullptr), deathScene(nullptr), currentScreen(Screens::TITLE_SCREEN)
 {
 	name.Create("scene");
 }
@@ -44,7 +44,7 @@ bool Scene::Start()
 	titleScene = app->tex->Load(sourceTitle.GetString());
 	introScene = app->tex->Load(sourceIntro.GetString());
 	deathScene = app->tex->Load(sourceDeath.GetString());
-	//app->audio->PlayMusic("Assets/audio/music/music_spy.ogg");
+	app->audio->PlayMusic("Assets/audio/music/music_spy.ogg");
 	app->map->Load(app->map->GetLevel2Load().GetString());
 	
 	return true;
