@@ -42,7 +42,7 @@ Platformer game developed during the course 2020-21 for the subject of developme
 ## Developers
 
  - Sebastián Delgado - [Github](https://github.com/Vinskky)
- - Martí Buxeda - [Github](https://github.com/BooStarGamer)
+ - Martí Buxeda (Raxer Sound) - [Github](https://github.com/BooStarGamer)
 
 
 ## License
@@ -53,3 +53,4 @@ This project is licensed under an unmodified MIT license, which is an OSI-certif
 - [Parallax PNG's details](https://github.com/Vinskky/PlatformerGame/blob/master/Output/Assets/maps/licence%20skill-desc%20png's)
 - [Character PNG details](https://github.com/Vinskky/PlatformerGame/blob/master/Output/Assets/textures/Licence%20Character.png)
 - [Jumping wav details](https://github.com/Vinskky/PlatformerGame/blob/master/Output/Assets/audio/fx/jump.wav%20licence)
+- [Music by Raxer Sound](https://lnkfi.re/EhBCPZ4v)
