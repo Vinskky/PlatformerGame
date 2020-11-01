@@ -1,6 +1,6 @@
 # Platformer Game
 
-## Undefault Boy
+## Undefault Platformer
 
 Platformer game developed during the course 2020-21 for the subject of development.
 
@@ -22,8 +22,8 @@ Platformer game developed during the course 2020-21 for the subject of developme
  - A: Moves left
  - D: Moves Right
  - Spacebar: Jump
- - "+": Increase volume of the game
- - "-": Decrease volume of the game
+ - "+": Increase volume of the game and sound fx
+ - "-": Decrease volume of the game and sound fx
  
  - Aditional controls in GOD MODE:
  - W: Moves Up (with height limitations)
@@ -39,7 +39,7 @@ Platformer game developed during the course 2020-21 for the subject of developme
  - F9: View colliders / logic
  - F10: God Mode
 
-## Developers
+## Developers (Undefault Boys)
 
  - Sebastián Delgado - [Github](https://github.com/Vinskky)
  - Martí Buxeda (Raxer Sound) - [Github](https://github.com/BooStarGamer)
