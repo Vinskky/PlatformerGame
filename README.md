@@ -21,6 +21,12 @@ Platformer game developed during the course 2020-21 for the subject of developme
  - A: Moves left
  - D: Moves Right
  - Spacebar: Jump
+ - "+": Increase volume of the game
+ - "-": Decrease volume of the game
+ 
+ - Aditional controls in GOD MODE:
+ - W: Moves Up (with height limitations)
+ - S: Moves Down (with height limitations)
  
  ## Debug keys
  
@@ -42,4 +48,7 @@ Platformer game developed during the course 2020-21 for the subject of developme
 
 This project is licensed under an unmodified MIT license, which is an OSI-certified license that allows static linking with closed source software. Check [LICENSE](LICENSE) for further details.
 
-{AdditionalLicenses}
+- [Steampunk PNG's details](https://github.com/Vinskky/PlatformerGame/blob/master/Output/Assets/maps/licence%20Steampunk%20png's)
+- [Parallax PNG's details](https://github.com/Vinskky/PlatformerGame/blob/master/Output/Assets/maps/licence%20skill-desc%20png's)
+- [Character PNG details](https://github.com/Vinskky/PlatformerGame/blob/master/Output/Assets/textures/Licence%20Character.png)
+- [Jumping wav details](https://github.com/Vinskky/PlatformerGame/blob/master/Output/Assets/audio/fx/jump.wav%20licence)
