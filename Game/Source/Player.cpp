@@ -19,7 +19,7 @@
 #define TILEHEIGHT 16
 #define GRAVITY_LIMITER 0.0297f
 #define WINDOW_MIDDLE_S 213
-#define WINDOW_MIDDLE_E 2316
+#define WINDOW_MIDDLE_E 1065
 
 Player::Player():Module(),texture(nullptr)
 {
@@ -133,21 +133,38 @@ bool Player::Update(float dt)
 		playerColider.x = playerInfo.position.x;
 		playerColider.y = playerInfo.position.y;
 
+		//GodMode
+		if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
+			godMode = !godMode;
 		// Player Controls
 		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 		{
-			playerColider.x -= 1 * playerInfo.speedR;
-			if (CheckCollision() == false && godMode == false)
+			if (godMode == false)
 			{
-				playerInfo.position.x = playerColider.x;
-				isMoving = true;
-				if (playerInfo.position.x >= WINDOW_MIDDLE_S && playerInfo.position.x <= WINDOW_MIDDLE_E)
-					app->render->camera.x += 6;
+				playerColider.x -= 1 * playerInfo.speedR;
+				if (CheckCollision() == false)
+				{
+					playerInfo.position.x = playerColider.x;
+					isMoving = true;
+					if (playerInfo.position.x >= WINDOW_MIDDLE_S && playerInfo.position.x <= WINDOW_MIDDLE_E)
+						app->render->camera.x += 6;
+				}
+				else if (godMode == false)
+				{
+					playerColider.x = playerInfo.position.x;
+					isMoving = false;
+				}
 			}
 			else
 			{
-				playerColider.x = playerInfo.position.x;
-				isMoving = false;
+				if (playerInfo.position.x > 0)
+				{
+					playerColider.x -= 1 * playerInfo.speedR;
+					playerInfo.position.x = playerColider.x;
+					isMoving = true;
+					if (playerInfo.position.x >= WINDOW_MIDDLE_S && playerInfo.position.x <= WINDOW_MIDDLE_E)
+						app->render->camera.x += 6;
+				}
 			}
 			UpdateAnimation("walk");
 			playerInfo.currentDir = LEFT_DIR;
@@ -155,19 +172,34 @@ bool Player::Update(float dt)
 
 		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
 		{
-			playerColider.x += 1 * playerInfo.speedR;
-			if (CheckCollision() == false && godMode == false)
+			if (godMode == false)
 			{
-				playerInfo.position.x = playerColider.x;
-				isMoving = true;
-				if (playerInfo.position.x >= WINDOW_MIDDLE_S && playerInfo.position.x <= WINDOW_MIDDLE_E)
-					app->render->camera.x -= 6;
+				playerColider.x += 1 * playerInfo.speedR;
+				if (CheckCollision() == false)
+				{
+					playerInfo.position.x = playerColider.x;
+					isMoving = true;
+					if (playerInfo.position.x >= WINDOW_MIDDLE_S && playerInfo.position.x <= WINDOW_MIDDLE_E)
+						app->render->camera.x -= 6;
+				}
+				else
+				{
+					playerColider.x = playerInfo.position.x;
+					isMoving = false;
+				}
 			}
 			else
 			{
-				playerColider.x = playerInfo.position.x;
-				isMoving = false;
+				if (playerInfo.position.x < 1255)
+				{
+					playerColider.x += 1 * playerInfo.speedR;
+					playerInfo.position.x = playerColider.x;
+					isMoving = true;
+					if (playerInfo.position.x >= WINDOW_MIDDLE_S && playerInfo.position.x <= WINDOW_MIDDLE_E)
+						app->render->camera.x -= 6;
+				}
 			}
+			
 			playerInfo.currentDir = RIGHT_DIR;
 			UpdateAnimation("walk");
 		
@@ -220,9 +252,30 @@ bool Player::Update(float dt)
 				isMoving = false;
 			}
 		}
+
+		if (godMode)
+		{
+			if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
+			{
+				if (playerInfo.position.y > 0)
+				{
+					playerInfo.position.y -= playerInfo.speedR;
+					playerColider.y = playerInfo.position.y;
+				}
+			}
+
+			if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
+			{
+				if (playerInfo.position.y < 210)
+				{
+					playerInfo.position.y += playerInfo.speedR;
+					playerColider.y = playerInfo.position.y;
+				}
+			}
+		}
 	}
 		
-	
+	//LOG("player X: %d", playerInfo.position.y);
 	return true;
 }
 
@@ -296,17 +349,20 @@ void Player::Draw()
 
 void Player::Gravity()
 {
-	playerColider.y += 1 * playerInfo.speedR;
-	if (CheckCollision() == false && godMode == false)
+	if (godMode == false)
 	{
-		playerInfo.position.y = playerColider.y;
-		//isMoving = true;
-	}
-	else
-	{
-		playerColider.y = playerInfo.position.y;
-		//isMoving = false;
-		onGround = true;
+		playerColider.y += 1 * playerInfo.speedR;
+		if (CheckCollision() == false)
+		{
+			playerInfo.position.y = playerColider.y;
+			//isMoving = true;
+		}
+		else
+		{
+			playerColider.y = playerInfo.position.y;
+			//isMoving = false;
+			onGround = true;
+		}
 	}
 }
 
@@ -377,24 +433,27 @@ bool Player::CheckWin()
 
 void Player::Jump()
 {
-	int tempY = playerInfo.position.y;
-	UpdateAnimation("jump");
-	for (int i = 1; i < 32; i++)
+	if (godMode == false)
 	{
-		playerColider.y -= i;
-		if (CheckCollision() == false)
+		int tempY = playerInfo.position.y;
+		UpdateAnimation("jump");
+		for (int i = 1; i < 32; i++)
 		{
-			playerInfo.position.y = playerColider.y;
-			onGround = false;
+			playerColider.y -= i;
+			if (CheckCollision() == false)
+			{
+				playerInfo.position.y = playerColider.y;
+				onGround = false;
+			}
+			else
+			{
+				playerColider.y = playerInfo.position.y;
+				break;
+			}
+			Draw();
+			if (playerInfo.position.y <= tempY - 32)
+				break;
 		}
-		else
-		{
-			playerColider.y = playerInfo.position.y;
-			break;
-		}
-		Draw();
-		if (playerInfo.position.y <= tempY - 32)
-			break;
 	}
 }
 
@@ -416,8 +475,8 @@ void Player::ChangeLevel(Level currentLvl)
 	else if (currentLvl == LVL_2)
 	{
 		app->map->CleanUp();
-		app->map->lvl1 = false;
-		app->map->lvl2 = true;
+		app->map->lvl1 = true;
+		app->map->lvl2 = false;
 		app->collision->CleanUp();
 
 		if (app->map->Load(app->map->GetLevel2Load().GetString()));

@@ -119,10 +119,18 @@ bool Scene::Update(float dt)
 	default:
 		break;
 	}
+	if (app->player->godMode == false)
+	{
+		SString title("Map:%dx%d Tiles:%dx%d Tilesets:%d", app->map->mapInfo.width, app->map->mapInfo.height, app->map->mapInfo.tileWidth, app->map->mapInfo.tileHeight, app->map->mapInfo.tileSets.count());
 
-	SString title("Map:%dx%d Tiles:%dx%d Tilesets:%d", app->map->mapInfo.width, app->map->mapInfo.height, app->map->mapInfo.tileWidth, app->map->mapInfo.tileHeight, app->map->mapInfo.tileSets.count());
+		app->win->SetTitle(title.GetString());
+	}
+	else
+	{
+		SString title("¡GOD MODE ACTIVATED!");
 
-	app->win->SetTitle(title.GetString());
+		app->win->SetTitle(title.GetString());
+	}
 
 	return true;
 }
