@@ -336,6 +336,11 @@ bool App::LoadGame()
 	return ret;
 }
 
+bool App::IsLoading() const
+{
+	return loadRequest;
+}
+
 // L02: TODO 7: Implement the xml save method for current state
 bool App::SaveGame()const
 {

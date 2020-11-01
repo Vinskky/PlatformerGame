@@ -275,7 +275,6 @@ bool Player::Update(float dt)
 		}
 	}
 		
-	//LOG("player X: %d", playerInfo.position.y);
 	return true;
 }
 
@@ -328,15 +327,17 @@ bool Player::Save(pugi::xml_node& saveNode) const
 void Player::SetInitialPlayer(Level lvl)
 {
 	app->render->camera.x = 0;
-	playerInfo.position = { app->map->GetPlayerInitialPos() };
-	playerInfo.position.y += 2;
-	playerColider = { playerInfo.position.x, playerInfo.position.y, 16, 30 };
+	if (app->IsLoading() == false)
+	{
+		playerInfo.position = { app->map->GetPlayerInitialPos() };
+		playerInfo.position.y += 2;
+		playerColider = { playerInfo.position.x, playerInfo.position.y, 16, 30 };
 
-	playerInfo.speedL = 2;
-	playerInfo.speedR = 2;
-	playerInfo.currentLevel = lvl;
-	playerInfo.currentDir = RIGHT_DIR;
-
+		playerInfo.speedL = 2;
+		playerInfo.speedR = 2;
+		playerInfo.currentLevel = lvl;
+		playerInfo.currentDir = RIGHT_DIR;
+	}
 	texture = app->tex->Load(textPath.GetString());
 
 	playerInfo.currentAnimation = &playerInfo.idle;
