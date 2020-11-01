@@ -41,7 +41,7 @@ public:
 	bool CleanUp();
 
 private:
-	int timer;
+	int timer = 0;
 	iPoint tempPlayerPosition;
 	SString sourceTitle;
 	SString sourceDeath;

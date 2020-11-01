@@ -1,20 +1,20 @@
 <?xml version="1.0"?>
 <saveState>
 	<renderer>
-		<camera x="-108" y="0" />
+		<camera x="0" y="0" />
 	</renderer>
-	<fadeInFadeOut />
+	<transition />
 	<collisions />
 	<player>
-		<position x="214" y="129" />
-		<collider x="214" y="129" />
+		<position x="94" y="114" />
+		<collider x="94" y="114" />
 		<level value="1" />
 		<direction value="1" />
 	</player>
 	<map />
 	<scene />
 	<audio>
-		<volume value="64" />
+		<volume value="14" />
 	</audio>
 	<textures />
 	<window />
