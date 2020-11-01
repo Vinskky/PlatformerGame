@@ -9,12 +9,13 @@ Platformer game developed during the course 2020-21 for the subject of developme
  - Xml config file loading for different modules.
  - Load/Save game state using XML file.
  - Tiled TMX map loading and drawing (orthographic)
- - Map collisions detection (platforms, boost, end level, and die colliders)
+ - Map collisions detection (no walkable tiles, starting tile for each level, die tiles, end level tiles)
  - Map navigation: player movement and jumping
  - Intro logo, Title screen with fade-in fade-out
  - Title screen (press Enter to start)
+ - Death screen (press Enter to try again)
  - 2 levels
- - Background with parallax on level 2
+ - Background with parallax on both levels
  
 ## Controls
 
