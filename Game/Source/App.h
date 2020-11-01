@@ -16,7 +16,7 @@ class Scene;
 class Map;
 class Player;
 class Collisions;
-class FadeInFadeOut;
+class Transition;
 
 class App
 {
@@ -90,7 +90,7 @@ public:
 	Map* map;
 	Player* player;
 	Collisions* collision;
-	FadeInFadeOut* fade;
+	Transition* fade;
 private:
 
 	int argc;
@@ -112,8 +112,8 @@ private:
 
 	// L02: TODO 1: Create required variables to request load / save and 
 	// the filename for save / load
-	bool loadRequest;
-	mutable bool saveRequest;
+	bool loadRequest = false;
+	mutable bool saveRequest = false;
 	SString loadFileName;
 	mutable SString saveFileName;
 };

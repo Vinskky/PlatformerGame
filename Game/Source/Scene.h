@@ -41,6 +41,7 @@ public:
 
 
 private:
+	int timer;
 	iPoint tempPlayerPosition;
 	SString sourceTitle;
 	SString sourceDeath;

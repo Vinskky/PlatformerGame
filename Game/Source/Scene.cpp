@@ -7,7 +7,7 @@
 #include "Scene.h"
 #include "Map.h"
 #include "Player.h"
-#include "FadeInFadeOut.h"
+#include "Transition.h"
 #include "Map.h"
 #include "Collider.h"
 
@@ -65,37 +65,40 @@ bool Scene::Update(float dt)
 	{
 		app->render->DrawTexture(titleScene, 0, 0);
 
-		currentTime = SDL_GetTicks();
-		if (currentTime > timeTitle)
+		if (timer < 200)
 		{
-			app->fade->FadeToBlack();
+			timer++;
+		}
+		else
+		{
+			app->fade->FadeEffect(false, 30.0f);
 			currentScreen = START_SCREEN;
 		}
+
 	}
-		break;
+	break;
 	case START_SCREEN:
 	{
+		
 		app->render->DrawTexture(introScene, 0, 0);
 
 		if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
 		{
-			app->fade->FadeToBlack();
 			currentScreen = PLAYING;
 		}
 	}
-		break;
+	break;
 	case DEAD_SCREEN:
 	{
 		app->render->DrawTexture(deathScene, 0, 0);
 
 		if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
 		{
-			app->fade->FadeToBlack();
 			currentScreen = PLAYING;
 			app->player->LoadCurrentLevel(app->player->playerInfo.currentLevel);
 		}
 	}
-		break;
+	break;
 	case PLAYING:
 	{
 		if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)

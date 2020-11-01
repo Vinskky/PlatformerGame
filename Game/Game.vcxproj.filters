@@ -18,7 +18,7 @@
     <ClCompile Include="Source\Map.cpp" />
     <ClCompile Include="Source\Player.cpp" />
     <ClCompile Include="Source\Collider.cpp" />
-    <ClCompile Include="Source\FadeInFadeOut.cpp" />
+    <ClCompile Include="Source\Transition.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Window.h" />
@@ -57,7 +57,7 @@
     <ClInclude Include="Source\Player.h" />
     <ClInclude Include="Source\Animation.h" />
     <ClInclude Include="Source\Collider.h" />
-    <ClInclude Include="Source\FadeInFadeOut.h" />
+    <ClInclude Include="Source\Transition.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="External">

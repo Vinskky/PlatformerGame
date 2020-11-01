@@ -8,7 +8,7 @@
 #include "Map.h"
 #include "Player.h"
 #include "Collider.h"
-#include "FadeInFadeOut.h"
+#include "Transition.h"
 #include "Defs.h"
 #include "Log.h"
 
@@ -29,7 +29,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	map = new Map();
 	player = new Player();
 	collision = new Collisions();
-	fade = new FadeInFadeOut();
+	fade = new Transition();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
