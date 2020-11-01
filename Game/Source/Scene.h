@@ -4,7 +4,13 @@
 #include "Module.h"
 
 struct SDL_Texture;
-
+enum Screens
+{
+	TITLE_SCREEN = 1,
+	START_SCREEN,
+	DEAD_SCREEN,
+	PLAYING
+};
 class Scene : public Module
 {
 public:
@@ -32,11 +38,7 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	void FixPlayerPosition(SDL_Rect& r1, SDL_Rect& r2);
 
-	void GetCollider(SDL_Rect& r);
-
-	SDL_Rect ColliderFix;
 
 private:
 	iPoint tempPlayerPosition;
@@ -46,15 +48,11 @@ private:
 	SDL_Texture* titleScene;
 	SDL_Texture* introScene;
 	SDL_Texture* deathScene;
-	SDL_Rect tempRectPlayer;
-	bool introKey;
-	bool titleKey;
-	uint collisionLayer;
-	bool collision;
-	bool collisionY;
 
 	Uint32 currentTime;
 	Uint32 timeTitle = 3000;
+public:
+	Screens currentScreen;
 };
 
 #endif // __SCENE_H__

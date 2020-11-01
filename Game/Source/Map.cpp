@@ -459,39 +459,39 @@ void Map::ColliderAsign(MapLayer* layer)
 
                 switch (tileId)
                 {
-                case 273:
-                    app->collision->AddCollider(r, Type::DIE);
+                case 273: //  DIE
+                    app->collision->TriggerDeath(r);
                     break;
 
                 case 274:
-                    app->collision->AddCollider(r, Type::WALL);
+                    app->collision->NoWalkable(r);
                     break;
 
                 case 275:
-                    app->collision->AddCollider(r, Type::START);
+                    app->collision->InitPos(r);
                     break;
 
                 case 276:
-                    app->collision->AddCollider(r, Type::END);
+                    app->collision->TriggerWin(r);
                     break;
 
                 case 277:
-                    app->collision->AddCollider(r, Type::BOOST);
+                    //app->collision->AddCollider(r, Type::BOOST);
                     break;
                 case 1:
-                    app->collision->AddCollider(r, Type::DIE); //  level 2
+                    app->collision->TriggerDeath(r); //  DIE lvl 2
                     break;
 
                 case 2:
-                    app->collision->AddCollider(r, Type::WALL); //  level 2
+                    app->collision->NoWalkable(r); //  level 2
                     break;
 
                 case 3:
-                    app->collision->AddCollider(r, Type::START); //  level 2
+                    app->collision->InitPos(r); //  level 2
                     break;
 
                 case 4:
-                    app->collision->AddCollider(r, Type::END); //  level 2
+                    app->collision->TriggerWin(r);; //  level 2
                     break;
                 }
             }

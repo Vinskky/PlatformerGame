@@ -15,7 +15,7 @@ class Audio;
 class Scene;
 class Map;
 class Player;
-class ModuleCollision;
+class Collisions;
 class FadeInFadeOut;
 
 class App
@@ -87,7 +87,7 @@ public:
 	Scene* scene;
 	Map* map;
 	Player* player;
-	ModuleCollision* collision;
+	Collisions* collision;
 	FadeInFadeOut* fade;
 private:
 

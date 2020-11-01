@@ -28,7 +28,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	scene = new Scene();
 	map = new Map();
 	player = new Player();
-	collision = new ModuleCollision();
+	collision = new Collisions();
 	fade = new FadeInFadeOut();
 
 	// Ordered for awake / Start / Update

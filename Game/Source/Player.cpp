@@ -124,24 +124,109 @@ bool Player::Start()
 
 bool Player::Update(float dt) 
 {
-	//Draw();
-	//playerCollider->SetPosition(playerInfo.position.x + collPlayer.x, playerInfo.position.y + collPlayer.y);
+	bool ret = true;
 
-	//LOG("onGround: %d", onGround);
-	//Gravity(1);
+	if (app->scene->currentScreen == Screens::PLAYING)
+	{
+		playerColider.x = playerInfo.position.x;
+		playerColider.y = playerInfo.position.y;
+
+		// Player Controls
+		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+		{
+			playerColider.x -= 1 * playerInfo.speedR;
+			if (CheckCollision() == false && godMode == false)
+			{
+				playerInfo.position.x = playerColider.x;
+				isMoving = true;
+			}
+			else
+			{
+				playerColider.x = playerInfo.position.x;
+				isMoving = false;
+			}
+			UpdateAnimation("walk");
+			playerInfo.currentDir = LEFT_DIR;
+		}
+
+		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+		{
+			playerColider.x += 1 * playerInfo.speedR;
+			if (CheckCollision() == false && godMode == false)
+			{
+				playerInfo.position.x = playerColider.x;
+				isMoving = true;
+			}
+			else
+			{
+				playerColider.x = playerInfo.position.x;
+				isMoving = false;
+			}
+			playerInfo.currentDir = RIGHT_DIR;
+			UpdateAnimation("walk");
+		
+		}
+
+		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && onGround && !jumpOn)
+		{
+			Jump();
+		}
+
+		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT && !doubleJump && jumpOn)
+		{
+			Jump();	
+		}
+		else
+		{
+			Gravity();
+		}
+
+		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_UP)
+		{
+			jumpOn = false;
+			doubleJump = false;
+		}
+
+		if (CheckDeath() == true && godMode == false)
+		{
+			isDead = true;
+			doubleJump = false;
+			onGround = true;
+			jumpOn = false;
+			Dead();
+		}
+
+		if (CheckWin() == true)
+		{
+			ChangeLevel(playerInfo.currentLevel);
+		}
+
+	
+		app->map->Draw();
+		app->player->Draw();
+		//IDLE ANIMATION
+		if (strcmp(playerInfo.currentAnimation->name.GetString(), "idle") != 0 || strcmp(playerInfo.currentAnimation->name.GetString(), "idleLeft") != 0)
+		{
+			if (!playerInfo.currentAnimation->Finished())
+			{
+				playerInfo.currentAnimation->FinishAnimation();
+				UpdateAnimation("idle");
+				isMoving = false;
+			}
+		}
+	}
+		
 	
 	return true;
 }
 
 bool Player::PostUpdate() 
 {
-	
 	return true;
 }
 
 bool Player::CleanUp() 
 {
-
 	return true;
 }
 
@@ -149,8 +234,9 @@ bool Player::Load(pugi::xml_node& load)
 {
 	playerInfo.position.x = load.child("position").attribute("x").as_int();
 	playerInfo.position.y = load.child("position").attribute("y").as_int();
-	playerCollider->SetPosition(load.child("collider").attribute("x").as_int(), load.child("collider").attribute("y").as_int());
-	colliderY->SetPosition(load.child("collider").attribute("x").as_int(), load.child("collider").attribute("y").as_int());
+
+	playerColider.x = load.child("collider").attribute("x").as_int();
+	playerColider.y = load.child("collider").attribute("y").as_int();
 	playerInfo.currentLevel = (Level)load.child("level").attribute("value").as_int();
 	playerInfo.currentDir = (Direction)load.child("direction").attribute("value").as_int();
 
@@ -169,11 +255,9 @@ bool Player::Save(pugi::xml_node& saveNode) const
 	position.append_attribute("x").set_value(playerInfo.position.x);
 	position.append_attribute("y").set_value(playerInfo.position.y);
 
-	rect.append_attribute("x").set_value(playerCollider->rect.x);
-	rect.append_attribute("y").set_value(playerCollider->rect.y);
+	rect.append_attribute("x").set_value(playerColider.x);
+	rect.append_attribute("y").set_value(playerColider.y);
 
-	rect.append_attribute("x").set_value(colliderY->rect.x);
-	rect.append_attribute("y").set_value(colliderY->rect.y);
 
 	currentLvl.append_attribute("value").set_value(playerInfo.currentLevel);
 	currentDir.append_attribute("value").set_value(playerInfo.currentDir);
@@ -186,15 +270,14 @@ void Player::SetInitialPlayer(Level lvl)
 {
 	app->render->camera.x = 0;
 	playerInfo.position = { app->map->GetPlayerInitialPos() };
+	playerInfo.position.y += 2;
+	playerColider = { playerInfo.position.x, playerInfo.position.y, 16, 30 };
+
 	playerInfo.speedL = 2;
 	playerInfo.speedR = 2;
 	playerInfo.currentLevel = lvl;
 	playerInfo.currentDir = RIGHT_DIR;
-	playerCollider = app->collision->AddCollider({ playerInfo.position.x + collPlayer.x, playerInfo.position.y + collPlayer.y + 5, 10, 17 }, Type::PLAYER, this);
-	colliderY = app->collision->AddCollider({ playerInfo.position.x + collPlayer.x, playerInfo.position.y + collPlayer.y, 10,10 }, Type::PLAYER, this);
-	playerInfo.position.y = playerInfo.position.y + (TILEHEIGHT - app->player->colliderY->rect.h - 19);
-	playerCollider->rect.y = playerInfo.position.y + 5;
-	colliderY->rect.y = playerInfo.position.y + 19;
+
 	texture = app->tex->Load(textPath.GetString());
 
 	playerInfo.currentAnimation = &playerInfo.idle;
@@ -207,20 +290,26 @@ void Player::Draw()
 
 void Player::Gravity()
 {
-	playerInfo.position.y += gravity;
-	//jumpForce = 0;
-
-	playerInfo.position.y -= jumpForce;
-
-	playerCollider->rect.y = playerInfo.position.y + 5;
-	colliderY->rect.y = playerInfo.position.y + 19;
+	playerColider.y += 1 * playerInfo.speedR;
+	if (CheckCollision() == false && godMode == false)
+	{
+		playerInfo.position.y = playerColider.y;
+		isMoving = true;
+	}
+	else
+	{
+		playerColider.y = playerInfo.position.y;
+		isMoving = false;
+		onGround = true;
+	}
 }
 
 void Player::Dead()
 {
 	app->player->UpdateAnimation("die");
 	app->player->isMoving = false;
-	
+	app->scene->currentScreen = DEAD_SCREEN;
+	LoadCurrentLevel(app->player->playerInfo.currentLevel);
 	isDead = true;
 }
 
@@ -234,23 +323,73 @@ void Player::SetIsDead(bool set)
 	isDead = set;
 }
 
-void Player::Jump(int jumpHeight)
+bool Player::CheckCollision()
 {
-	if (playerInfo.position.y <= jumpHeight) {
-		playerInfo.position.y -= jumpForce + 40;
-		playerCollider->rect.y = playerInfo.position.y + 5;
-		colliderY->rect.y = playerInfo.position.y + 19;
 
-		playerInfo.position.y += gravity;
+	bool ret = false;
+	ListItem<SDL_Rect>* item = app->collision->noWalkable.start;
 
-		playerCollider->rect.y = playerInfo.position.y + 5;
-		colliderY->rect.y = playerInfo.position.y + 19;
+	for (item; item != app->collision->noWalkable.end; item = item->next)
+	{
+		ret = app->collision->CheckCollision(playerColider, item->data);
+		if (ret)
+			return ret;
 	}
+
+	return ret;
 }
 
-void Player::OnCollision(Collider* c1, Collider* c2)
+bool Player::CheckDeath()
 {
+	bool ret = false;
+	ListItem<SDL_Rect>* item = app->collision->deathTriggers.start;
 
+	for (item; item != app->collision->deathTriggers.end; item = item->next)
+	{
+		ret = app->collision->CheckCollision(playerColider, item->data);
+		if (ret)
+			return ret;
+	}
+
+	return ret;
+}
+
+bool Player::CheckWin()
+{
+	bool ret = false;
+	ListItem<SDL_Rect>* item = app->collision->winTriggers.start;
+
+	for (item; item != app->collision->winTriggers.end; item = item->next)
+	{
+		ret = app->collision->CheckCollision(playerColider, item->data);
+		if (ret)
+			return ret;
+	}
+
+	return ret;
+}
+
+void Player::Jump()
+{
+	int tempY = playerInfo.position.y;
+	for (int i = 1; i < 32; i++)
+	{
+		playerColider.y -= i;
+		if (CheckCollision() == false)
+		{
+			playerInfo.position.y = playerColider.y;
+			isMoving = true;
+			onGround = false;
+		}
+		else
+		{
+			playerColider.y = playerInfo.position.y;
+			break;
+		}
+		Draw();
+		if (playerInfo.position.y <= tempY - 32)
+			break;
+	}
 }
 
 void Player::ChangeLevel(Level currentLvl)

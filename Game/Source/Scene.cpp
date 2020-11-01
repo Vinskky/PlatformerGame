@@ -18,7 +18,7 @@
 #define MAX_LEFT_DISTANCE 50
 const float deltaTime = 1.0f / 60.0f;
 
-Scene::Scene() : Module(), introKey(true),introScene(nullptr), deathScene(nullptr)
+Scene::Scene() : Module(), titleScene(nullptr),introScene(nullptr), deathScene(nullptr), currentScreen(Screens::PLAYING)
 {
 	name.Create("scene");
 }
@@ -59,16 +59,45 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
-	if (introKey == false && titleKey == true && app->player->IsDead() == false)
+	switch (currentScreen)
 	{
-		if (app->player->onGround == true) {
-			app->player->jumpOn = true;
+	case TITLE_SCREEN:
+	{
+		app->render->DrawTexture(titleScene, 0, 0);
+
+		currentTime = SDL_GetTicks();
+		if (currentTime > timeTitle)
+		{
+			app->fade->FadeToBlack();
+			currentScreen = START_SCREEN;
 		}
+	}
+		break;
+	case START_SCREEN:
+	{
+		app->render->DrawTexture(introScene, 0, 0);
 
-		if(app->player->onGround == false)
-			app->player->Gravity();
+		if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+		{
+			app->fade->FadeToBlack();
+			currentScreen = PLAYING;
+		}
+	}
+		break;
+	case DEAD_SCREEN:
+	{
+		app->render->DrawTexture(deathScene, 0, 0);
 
-		// L02: TODO 3: Request Load / Save when pressing L/S
+		if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+		{
+			app->fade->FadeToBlack();
+			currentScreen = PLAYING;
+			app->player->LoadCurrentLevel(app->player->playerInfo.currentLevel);
+		}
+	}
+		break;
+	case PLAYING:
+	{
 		if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
 			app->player->LoadCurrentLevel(LVL_1);
 		if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
@@ -86,277 +115,11 @@ bool Scene::Update(float dt)
 
 		if (app->input->GetKey(SDL_SCANCODE_KP_MINUS) == KEY_DOWN)
 			app->audio->SetVolume(1);
-
-		//PLAYER MOVEMENT + COLLISIONS
-
-		tempPlayerPosition = app->player->playerInfo.position;
-		tempRectPlayer = app->player->playerCollider->rect;
-
-		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
-		{
-			app->player->playerInfo.currentDir = LEFT_DIR;
-			app->player->UpdateAnimation("walk");
-			app->player->isMoving = true;
-
-			if (app->player->playerInfo.speedR == 0)
-				app->player->playerInfo.speedR = 1;
-			app->player->playerInfo.position.x -= 1 * app->player->playerInfo.speedL;
-			app->player->playerCollider->rect.x -= 1 * app->player->playerInfo.speedL;
-			app->player->colliderY->rect.x -= 1 * app->player->playerInfo.speedL;
-			if (app->render->camera.x < 0 /*&& app->player->playerInfo.position.x <= MAX_LEFT_DISTANCE*/) {
-				app->render->camera.x += 6;
-			}
-		}
-
-		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
-		{
-			app->player->playerInfo.currentDir = RIGHT_DIR;
-			app->player->UpdateAnimation("walk");
-			app->player->isMoving = true;
-
-			if (app->player->playerInfo.speedL == 0)
-				app->player->playerInfo.speedL = 1;
-			app->player->playerInfo.position.x += 1 * app->player->playerInfo.speedR;
-			app->player->playerCollider->rect.x += 1 * app->player->playerInfo.speedR;
-			app->player->colliderY->rect.x += 1 * app->player->playerInfo.speedR;
-			if (app->render->camera.x > -2559 /*&& app->player->playerInfo.position.x >= MAX_RIGHT_DISTANCE*/) {
-				app->render->camera.x -= 6;
-			}
-
-		}
-
-		//tempPlayerPosition = app->player->playerInfo.position;
-
-		ListItem<MapLayer*>* iteratorLayer = app->map->mapInfo.layers.start;
-		while(iteratorLayer != NULL)
-		{
-			MapLayer* layer = iteratorLayer->data;
-			if (strcmp(layer->name.GetString(), "Colision Layer") == 0)
-			{
-				for (int y = 0; y < app->map->mapInfo.height; y++)
-				{
-					for (int x = 0; x < app->map->mapInfo.width; x++)
-					{
-						uint tileId = layer->Get(x, y);
-						if (tileId > 0)
-						{
-							TileSet* set = app->map->GetTilesetFromTileId(tileId);
-							SDL_Rect collider = set->GetTileRect(tileId);
-							iPoint pos = app->map->MapToWorld(x, y);
-							collider.x = pos.x;
-							collider.y = pos.y;
-
-							if (app->collision->CheckCollision(collider, app->player->playerCollider->rect))
-							{
-								switch (tileId)
-								{
-								case 273://Die
-								{
-									collision = true;// activate death
-									
-								}
-									break;
-
-								case 274://Wall
-									collision = true;
-									GetCollider(collider);
-									break;
-
-								case 275://Start
-									collision = false;
-									//do nothing
-									break;
-
-								case 276://End
-									collision = true;//change level
-									break;
-
-								case 277: //Boost
-									//boost player y++
-									break;
-
-								case 1://Die
-									collision = true;// activate death
-									break;
-
-								case 2://Wall
-									collision = true;
-									break;
-
-								case 3://Start
-									collision = false;
-									//do nothing
-									break;
-
-								case 4://End
-									collision = true;//change level
-									break;
-								}
-							}
-							else if (app->collision->CheckCollision(collider, app->player->colliderY->rect)) 
-							{
-								switch (tileId)
-								{
-								case 273://Die
-								{
-									collisionY = true;// activate death
-									app->player->Dead();
-								}
-									break;
-
-								case 274://Wall
-									collisionY = true;
-									break;
-
-								case 275://Start
-									collisionY = false;
-									//do nothing
-									break;
-
-								case 276://End
-								{
-									collisionY = true;//change level
-									app->player->ChangeLevel(app->player->playerInfo.currentLevel);
-								}
-									break;
-
-								case 277: //Boost
-									//boost player y++
-									break;
-
-								case 1://Die
-								{
-									collisionY = true;// activate death
-									app->player->Dead();
-								}
-									break;
-
-								case 2://Wall
-									collisionY = true;
-									break;
-
-								case 3://Start
-									collisionY = false;
-									//do nothing
-									break;
-
-								case 4://End
-								{
-									collisionY = true;//change level
-									app->player->ChangeLevel(app->player->playerInfo.currentLevel);
-								}
-									break;
-								}
-							}
-
-						}
-						//FixPlayerPosition(ColliderFix, app->player->playerCollider->rect);
-						if (collision || collisionY) break;
-					}
-					if (collision || collisionY) break;
-				}
-				if (collision || collisionY) break;
-			}
-			if (collision || collisionY) break;
-			iteratorLayer = iteratorLayer->next;
-		}
-
-
-		if (collisionY) 
-		{
-			app->player->onGround = true;
-			app->player->playerInfo.position.y = tempPlayerPosition.y;
-			app->player->playerCollider->rect.y = app->player->playerInfo.position.y + 5;
-			app->player->colliderY->rect.y = app->player->playerInfo.position.y + 19;
-
-			collisionY = false;
-		}
-		else if (collision && app->player->jumpOn == true) 
-		{
-			app->player->playerInfo.position.x = tempPlayerPosition.x;
-			app->player->playerCollider->rect = tempRectPlayer;
-			app->player->colliderY->rect.x = app->player->playerCollider->rect.x;
-
-
-			collision = false;
-		}
-		else if (!collisionY)
-		{
-			app->player->onGround = false;
-		}
-		else if (!collisionY && collision) 
-		{
-			app->player->onGround == false;
-		}
-		else if (collision && !collisionY && app->player->jumpOn)
-		{
-			collision = false;
-		}
-
-		//PLAYER MOVEMENT + COLLISIONS
-
-		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
-		{
-			if (app->player->jumpOn == true && app->player->onGround == true)
-			{
-				app->player->UpdateAnimation("jump");
-				app->player->isMoving = true;
-				app->player->jumpHeight = app->player->playerInfo.position.y;
-				app->player->Jump(app->player->jumpHeight);
-			}
-		}
-
-		app->map->Draw();
-		app->player->Draw();
-
-		//IDLE ANIMATION
-		if (strcmp(app->player->playerInfo.currentAnimation->name.GetString(), "idle") != 0 || strcmp(app->player->playerInfo.currentAnimation->name.GetString(), "idle") != 0)
-		{
-			if (!app->player->playerInfo.currentAnimation->Finished())
-			{
-				app->player->playerInfo.currentAnimation->FinishAnimation();
-				app->player->UpdateAnimation("idle");
-				app->player->isMoving = false;
-			}
-		}
 	}
-	else if(titleKey && app->player->IsDead() == false)
-	{
-		app->render->DrawTexture(introScene, 0, 0);
-
-		if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
-		{
-			introKey = false;
-			app->fade->FadeToBlack();
-			
-		}
-			
+	default:
+		break;
 	}
-	else if (app->player->IsDead())
-	{
-		app->render->camera = { 0,0 };
-		app->render->DrawTexture(deathScene, 0, 0);
 
-		if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
-		{
-			app->player->LoadCurrentLevel(app->player->playerInfo.currentLevel);
-			app->player->SetIsDead(false);
-			app->fade->FadeToBlack();
-		}
-	}
-	else
-	{
-		app->render->DrawTexture(titleScene, 0, 0);
-
-		currentTime = SDL_GetTicks();
-		if (currentTime > timeTitle)
-		{
-			titleKey = true;
-			app->fade->FadeToBlack();
-			currentTime = 0;
-		}
-	}
-    
 	SString title("Map:%dx%d Tiles:%dx%d Tilesets:%d", app->map->mapInfo.width, app->map->mapInfo.height, app->map->mapInfo.tileWidth, app->map->mapInfo.tileHeight, app->map->mapInfo.tileSets.count());
 
 	app->win->SetTitle(title.GetString());
@@ -383,17 +146,3 @@ bool Scene::CleanUp()
 	return true;
 }
 
-void Scene::FixPlayerPosition(SDL_Rect& r1, SDL_Rect& rp) 
-{
-	if (rp.y < r1.y + r1.h) 
-	{
-		app->player->playerInfo.position.y = r1.y + r1.h;
-		app->player->playerCollider->rect.y = app->player->playerInfo.position.y + 5;
-		app->player->colliderY->rect.y = app->player->playerInfo.position.y + 19;
-	}
-}
-
-void Scene::GetCollider(SDL_Rect& r) 
-{
-	ColliderFix = r;
-}

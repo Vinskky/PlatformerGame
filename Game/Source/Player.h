@@ -68,7 +68,7 @@ public:
 	bool Load(pugi::xml_node&);
 	bool Save(pugi::xml_node&)const;
 
-	void Jump(int jupmHeight);
+	void Jump();
 
 	void SetInitialPlayer(Level lvl);
 
@@ -80,7 +80,9 @@ public:
 	bool IsDead()const;
 	void SetIsDead(bool set);
 
-	void OnCollision(Collider* c1, Collider* c2);
+	bool CheckCollision();
+	bool CheckDeath();
+	bool CheckWin();
 
 	void ChangeLevel(Level currentLvl);
 	void LoadCurrentLevel(Level currentLvl);
@@ -89,13 +91,15 @@ public:
 
 public:
 	PlayerData playerInfo;
-	Collider* playerCollider = nullptr;
-	Collider* colliderY = nullptr;
+	SDL_Rect playerColider;
 	bool onGround = true;
 	bool jumpOn = true;
+	bool doubleJump = true;
+	bool godMode = false;
 	uint jumpHeight = 0;
 	bool isMoving;
-private:	
+private:
+	
 	SDL_Texture* texture;
 	SString textPath;
 	iPoint collPlayer = { 7, 3 };
