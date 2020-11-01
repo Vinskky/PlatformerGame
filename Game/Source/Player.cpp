@@ -451,7 +451,7 @@ void Player::Jump()
 				break;
 			}
 			Draw();
-			if (playerInfo.position.y <= tempY - 32)
+			if (playerInfo.position.y <= tempY - 42)
 				break;
 		}
 	}
