@@ -73,7 +73,7 @@ void Map::Draw()
                         {
                             if (app->player->isMoving == true && app->player->playerInfo.currentDir == RIGHT_DIR)
                             {
-                                backgroudPos.x += PARALLAX_VEL;
+                                backgroudPos.x -= PARALLAX_VEL;
                                 app->render->DrawTexture(set->imageSource, pos.x + backgroudPos.x, pos.y, &r);
                             }
                             else
@@ -85,7 +85,7 @@ void Map::Draw()
                         {
                             if (app->player->isMoving == true && app->player->playerInfo.currentDir == LEFT_DIR)
                             {
-                                backgroudPos.x -= PARALLAX_VEL;
+                                backgroudPos.x += PARALLAX_VEL;
                                 app->render->DrawTexture(set->imageSource, pos.x + backgroudPos.x, pos.y, &r);
                             }
                             else

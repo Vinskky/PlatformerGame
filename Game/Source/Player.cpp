@@ -18,6 +18,8 @@
 #define MAX_JUMP_HEIGHT 50
 #define TILEHEIGHT 16
 #define GRAVITY_LIMITER 0.0297f
+#define WINDOW_MIDDLE_S 213
+#define WINDOW_MIDDLE_E 2316
 
 Player::Player():Module(),texture(nullptr)
 {
@@ -139,6 +141,8 @@ bool Player::Update(float dt)
 			{
 				playerInfo.position.x = playerColider.x;
 				isMoving = true;
+				if (playerInfo.position.x >= WINDOW_MIDDLE_S && playerInfo.position.x <= WINDOW_MIDDLE_E)
+					app->render->camera.x += 6;
 			}
 			else
 			{
@@ -156,6 +160,8 @@ bool Player::Update(float dt)
 			{
 				playerInfo.position.x = playerColider.x;
 				isMoving = true;
+				if (playerInfo.position.x >= WINDOW_MIDDLE_S && playerInfo.position.x <= WINDOW_MIDDLE_E)
+					app->render->camera.x -= 6;
 			}
 			else
 			{
@@ -294,12 +300,12 @@ void Player::Gravity()
 	if (CheckCollision() == false && godMode == false)
 	{
 		playerInfo.position.y = playerColider.y;
-		isMoving = true;
+		//isMoving = true;
 	}
 	else
 	{
 		playerColider.y = playerInfo.position.y;
-		isMoving = false;
+		//isMoving = false;
 		onGround = true;
 	}
 }
@@ -372,13 +378,13 @@ bool Player::CheckWin()
 void Player::Jump()
 {
 	int tempY = playerInfo.position.y;
+	UpdateAnimation("jump");
 	for (int i = 1; i < 32; i++)
 	{
 		playerColider.y -= i;
 		if (CheckCollision() == false)
 		{
 			playerInfo.position.y = playerColider.y;
-			isMoving = true;
 			onGround = false;
 		}
 		else

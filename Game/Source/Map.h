@@ -4,7 +4,7 @@
 #include "Module.h"
 #include "List.h"
 #include "Point.h"
-#define PARALLAX_VEL 0.001
+#define PARALLAX_VEL 0.0005
 
 
 #include "PugiXml\src\pugixml.hpp"
