@@ -9,15 +9,11 @@
 #include "Collider.h"
 #include "Scene.h"
 
-
 #include "Defs.h"
 #include "Log.h"
 
-#include <math.h>
 
-#define MAX_JUMP_HEIGHT 50
-#define TILEHEIGHT 16
-#define GRAVITY_LIMITER 0.0297f
+#define MAX_JUMP_HEIGHT 42
 #define WINDOW_MIDDLE_S 213
 #define WINDOW_MIDDLE_E 1065
 
@@ -27,7 +23,8 @@ Player::Player():Module(),texture(nullptr)
 }
 
 Player::~Player()
-{}
+{
+}
 
 bool Player::Awake(pugi::xml_node& config)
 {
@@ -120,7 +117,6 @@ bool Player::Awake(pugi::xml_node& config)
 bool Player::Start() 
 {
 	SetInitialPlayer(LVL_1);
-
 	return true;
 }
 
@@ -141,7 +137,7 @@ bool Player::Update(float dt)
 		{
 			if (godMode == false)
 			{
-				playerColider.x -= 1 * playerInfo.speedR;
+				playerColider.x -= 1 * playerInfo.speed;
 				if (CheckCollision() == false)
 				{
 					playerInfo.position.x = playerColider.x;
@@ -159,7 +155,7 @@ bool Player::Update(float dt)
 			{
 				if (playerInfo.position.x > 0)
 				{
-					playerColider.x -= 1 * playerInfo.speedR;
+					playerColider.x -= 1 * playerInfo.speed;
 					playerInfo.position.x = playerColider.x;
 					isMoving = true;
 					if (playerInfo.position.x >= WINDOW_MIDDLE_S && playerInfo.position.x <= WINDOW_MIDDLE_E)
@@ -174,7 +170,7 @@ bool Player::Update(float dt)
 		{
 			if (godMode == false)
 			{
-				playerColider.x += 1 * playerInfo.speedR;
+				playerColider.x += 1 * playerInfo.speed;
 				if (CheckCollision() == false)
 				{
 					playerInfo.position.x = playerColider.x;
@@ -192,17 +188,15 @@ bool Player::Update(float dt)
 			{
 				if (playerInfo.position.x < 1255)
 				{
-					playerColider.x += 1 * playerInfo.speedR;
+					playerColider.x += 1 * playerInfo.speed;
 					playerInfo.position.x = playerColider.x;
 					isMoving = true;
 					if (playerInfo.position.x >= WINDOW_MIDDLE_S && playerInfo.position.x <= WINDOW_MIDDLE_E)
 						app->render->camera.x -= 6;
 				}
 			}
-			
 			playerInfo.currentDir = RIGHT_DIR;
 			UpdateAnimation("walk");
-		
 		}
 
 		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && onGround && !jumpOn)
@@ -212,7 +206,7 @@ bool Player::Update(float dt)
 
 		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT && !doubleJump && jumpOn)
 		{
-			Jump();	
+			//Future implementation of double jump
 		}
 		else
 		{
@@ -239,9 +233,9 @@ bool Player::Update(float dt)
 			ChangeLevel(playerInfo.currentLevel);
 		}
 
-	
 		app->map->Draw();
 		app->player->Draw();
+
 		//IDLE ANIMATION
 		if (strcmp(playerInfo.currentAnimation->name.GetString(), "idle") != 0 || strcmp(playerInfo.currentAnimation->name.GetString(), "idleLeft") != 0)
 		{
@@ -259,7 +253,7 @@ bool Player::Update(float dt)
 			{
 				if (playerInfo.position.y > 0)
 				{
-					playerInfo.position.y -= playerInfo.speedR;
+					playerInfo.position.y -= playerInfo.speed;
 					playerColider.y = playerInfo.position.y;
 				}
 			}
@@ -268,13 +262,12 @@ bool Player::Update(float dt)
 			{
 				if (playerInfo.position.y < 210)
 				{
-					playerInfo.position.y += playerInfo.speedR;
+					playerInfo.position.y += playerInfo.speed;
 					playerColider.y = playerInfo.position.y;
 				}
 			}
 		}
 	}
-		
 	return true;
 }
 
@@ -292,7 +285,6 @@ bool Player::Load(pugi::xml_node& load)
 {
 	playerInfo.position.x = load.child("position").attribute("x").as_int();
 	playerInfo.position.y = load.child("position").attribute("y").as_int();
-
 	playerColider.x = load.child("collider").attribute("x").as_int();
 	playerColider.y = load.child("collider").attribute("y").as_int();
 	playerInfo.currentLevel = (Level)load.child("level").attribute("value").as_int();
@@ -316,7 +308,6 @@ bool Player::Save(pugi::xml_node& saveNode) const
 	rect.append_attribute("x").set_value(playerColider.x);
 	rect.append_attribute("y").set_value(playerColider.y);
 
-
 	currentLvl.append_attribute("value").set_value(playerInfo.currentLevel);
 	currentDir.append_attribute("value").set_value(playerInfo.currentDir);
 
@@ -333,8 +324,7 @@ void Player::SetInitialPlayer(Level lvl)
 		playerInfo.position.y += 2;
 		playerColider = { playerInfo.position.x, playerInfo.position.y, 16, 30 };
 
-		playerInfo.speedL = 2;
-		playerInfo.speedR = 2;
+		playerInfo.speed = 2;
 		playerInfo.currentLevel = lvl;
 		playerInfo.currentDir = RIGHT_DIR;
 	}
@@ -352,16 +342,14 @@ void Player::Gravity()
 {
 	if (godMode == false)
 	{
-		playerColider.y += 1 * playerInfo.speedR;
+		playerColider.y += 1 * playerInfo.speed;
 		if (CheckCollision() == false)
 		{
 			playerInfo.position.y = playerColider.y;
-			//isMoving = true;
 		}
 		else
 		{
 			playerColider.y = playerInfo.position.y;
-			//isMoving = false;
 			onGround = true;
 		}
 	}
@@ -388,10 +376,9 @@ void Player::SetIsDead(bool set)
 
 bool Player::CheckCollision()
 {
-
 	bool ret = false;
-	ListItem<SDL_Rect>* item = app->collision->noWalkable.start;
 
+	ListItem<SDL_Rect>* item = app->collision->noWalkable.start;
 	for (item; item != app->collision->noWalkable.end; item = item->next)
 	{
 		ret = app->collision->CheckCollision(playerColider, item->data);
@@ -405,8 +392,8 @@ bool Player::CheckCollision()
 bool Player::CheckDeath()
 {
 	bool ret = false;
-	ListItem<SDL_Rect>* item = app->collision->deathTriggers.start;
 
+	ListItem<SDL_Rect>* item = app->collision->deathTriggers.start;
 	for (item; item != app->collision->deathTriggers.end; item = item->next)
 	{
 		ret = app->collision->CheckCollision(playerColider, item->data);
@@ -420,8 +407,8 @@ bool Player::CheckDeath()
 bool Player::CheckWin()
 {
 	bool ret = false;
-	ListItem<SDL_Rect>* item = app->collision->winTriggers.start;
 
+	ListItem<SDL_Rect>* item = app->collision->winTriggers.start;
 	for (item; item != app->collision->winTriggers.end; item = item->next)
 	{
 		ret = app->collision->CheckCollision(playerColider, item->data);
@@ -439,7 +426,7 @@ void Player::Jump()
 		app->audio->PlayFx(1);
 		int tempY = playerInfo.position.y;
 		UpdateAnimation("jump");
-		for (int i = 1; i < 32; i++)
+		for (int i = 1; i < MAX_JUMP_HEIGHT; i++)
 		{
 			playerColider.y -= i;
 			if (CheckCollision() == false)
@@ -453,7 +440,7 @@ void Player::Jump()
 				break;
 			}
 			Draw();
-			if (playerInfo.position.y <= tempY - 42)
+			if (playerInfo.position.y <= tempY - MAX_JUMP_HEIGHT)
 				break;
 		}
 	}
@@ -463,12 +450,12 @@ void Player::ChangeLevel(Level currentLvl)
 {
 	if (currentLvl == LVL_1)
 	{
+		app->collision->CleanUp();
 		app->map->CleanUp();
 		app->map->lvl1 = false;
 		app->map->lvl2 = true;
-		app->collision->CleanUp();
 
-		if (app->map->Load(app->map->GetLevel2Load().GetString()));
+		if (app->map->Load(app->map->GetLevelToLoad().GetString()));
 		{
 			SetInitialPlayer(LVL_2);
 		}
@@ -476,12 +463,12 @@ void Player::ChangeLevel(Level currentLvl)
 	}
 	else if (currentLvl == LVL_2)
 	{
+		app->collision->CleanUp();
 		app->map->CleanUp();
 		app->map->lvl1 = true;
 		app->map->lvl2 = false;
-		app->collision->CleanUp();
 
-		if (app->map->Load(app->map->GetLevel2Load().GetString()));
+		if (app->map->Load(app->map->GetLevelToLoad().GetString()));
 		{
 			SetInitialPlayer(LVL_1);
 		}
@@ -492,24 +479,24 @@ void Player::LoadCurrentLevel(Level currentLvl)
 {
 	if (currentLvl == LVL_1)
 	{
+		app->collision->CleanUp();
 		app->map->CleanUp();
 		app->map->lvl1 = true;
 		app->map->lvl2 = false;
-		app->collision->CleanUp();
-
-		if (app->map->Load(app->map->GetLevel2Load().GetString()));
+		
+		if (app->map->Load(app->map->GetLevelToLoad().GetString()));
 		{
 			SetInitialPlayer(LVL_1);
 		}
 	}
 	else if (currentLvl == LVL_2)
 	{
+		app->collision->CleanUp();
 		app->map->CleanUp();
 		app->map->lvl1 = false;
 		app->map->lvl2 = true;
-		app->collision->CleanUp();
 
-		if(app->map->Load(app->map->GetLevel2Load().GetString()));
+		if(app->map->Load(app->map->GetLevelToLoad().GetString()));
 		{
 			SetInitialPlayer(LVL_2);
 		}

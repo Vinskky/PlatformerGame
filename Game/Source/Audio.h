@@ -41,14 +41,14 @@ public:
 
 	//Load & Save for volume 
 	bool Load(pugi::xml_node&);
-	bool Save(pugi::xml_node&)const;
+	bool Save(pugi::xml_node&) const;
 
 
 private:
 	float volume = 0.0f;
 	float fxVolume = 0.0f;
 	_Mix_Music* music;
-	List<Mix_Chunk *>	fx;
+	List<Mix_Chunk *> fx;
 };
 
 #endif // __AUDIO_H__

@@ -42,7 +42,7 @@ public:
 
 	const VALUE& operator[](unsigned int index) const
 	{
-		assert(index < numElements);
+		ASSERT(index < numElements);
 		return data[index];
 	}
 

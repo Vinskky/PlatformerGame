@@ -2,7 +2,6 @@
 #define __RENDER_H__
 
 #include "Module.h"
-
 #include "Point.h"
 
 #include "SDL/include/SDL.h"
@@ -32,7 +31,7 @@ public:
 
 	// L02: TODO 6: Declare Load / Save methods
 	bool Load(pugi::xml_node&);
-	bool Save(pugi::xml_node&)const;
+	bool Save(pugi::xml_node&) const;
 	void SetViewPort(const SDL_Rect& rect);
 	void ResetViewPort();
 

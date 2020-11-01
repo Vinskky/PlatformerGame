@@ -17,7 +17,8 @@ Map::Map() : Module(), mapLoaded(false)
 
 // Destructor
 Map::~Map()
-{}
+{
+}
 
 // L06: TODO 7: Ask for the value of a custom property
 SString Properties::GetProperty(const char* value, int defaultValue) const
@@ -49,7 +50,6 @@ void Map::Draw()
 {
 	if (mapLoaded == false) return;
 
-    
     ListItem<MapLayer*>* item = mapInfo.layers.start; 
 
     while(item != NULL)
@@ -65,7 +65,7 @@ void Map::Draw()
                     uint tileId = layer->Get(x, y);
                     if (tileId > 0)
                     {
-                        TileSet* set = GetTilesetFromTileId(tileId);
+                        TileSet* set = GetTileSetFromTileId(tileId);
                         SDL_Rect r = set->GetTileRect(tileId);
                         iPoint pos = MapToWorld(x, y);
 
@@ -100,12 +100,9 @@ void Map::Draw()
                     }
                 }
             }
-            
         }
         item = item->next;
     }
-
-    
 }
 // L04: DONE 8: Create a method that translates x,y coordinates from map positions to world positions
 iPoint Map::MapToWorld(int x, int y) const
@@ -118,7 +115,8 @@ iPoint Map::MapToWorld(int x, int y) const
             ret.x = x * mapInfo.tileWidth;
             ret.y = y * mapInfo.tileHeight;
             return ret;
-        }break;
+        }
+        break;
             
         case MAPTYPE_ISOMETRIC:
         {
@@ -126,10 +124,9 @@ iPoint Map::MapToWorld(int x, int y) const
             ret2.x = (x - y) * (mapInfo.tileWidth * 0.5);
             ret2.y = (x + y) * (mapInfo.tileHeight * 0.5);
             return ret2;
-        }break;
- 
+        }
+        break;
     }
-	
 }
 
 iPoint Map::WorldToMap(int x, int y) const
@@ -137,29 +134,26 @@ iPoint Map::WorldToMap(int x, int y) const
 	iPoint ret(0, 0);
     switch (mapInfo.type)
     {
-    case MAPTYPE_ORTHOGONAL:
-    {
-        
+        case MAPTYPE_ORTHOGONAL:
+        {
+            // L05: TODO 3: Add the case for isometric maps to WorldToMap
+            ret.x = x / mapInfo.tileWidth;
+            ret.y = y / mapInfo.tileHeight;
 
-        // L05: TODO 3: Add the case for isometric maps to WorldToMap
-        ret.x = x / mapInfo.tileWidth;
-        ret.y = y / mapInfo.tileHeight;
+            return ret;
+        }
+        break;
 
-        return ret;
-    }break;
-
-    case MAPTYPE_ISOMETRIC:
-    {
-        float half_width = mapInfo.tileWidth * 0.5f;
-		float half_height = mapInfo.tileHeight * 0.5f;
-		ret.x = int((x / half_width + y / half_height) / 2);
-		ret.y = int((y / half_height - (x / half_width)) / 2);
-        return ret;
-    }break;
-
+        case MAPTYPE_ISOMETRIC:
+        {
+            float half_width = mapInfo.tileWidth * 0.5f;
+		    float half_height = mapInfo.tileHeight * 0.5f;
+		    ret.x = int((x / half_width + y / half_height) / 2);
+		    ret.y = int((y / half_height - (x / half_width)) / 2);
+            return ret;
+        }
+        break;
     }
-    
-    
 }
 
 // Get relative Tile rectangle
@@ -171,8 +165,6 @@ SDL_Rect TileSet::GetTileRect(int id) const
     rect.h = tileHeight;
     rect.x = margin + ((rect.w + spacing) * (relativeId % (imageWitdth / tileWidth))); // imageWitdth / tileWidth = nº of tiles for the tileset
     rect.y = margin + ((rect.h + spacing) * (relativeId / (imageWitdth / tileWidth)));
-    
-	// L04: TODO 7: Get relative Tile rectangle
 
 	return rect;
 }
@@ -191,7 +183,7 @@ bool Map::CleanUp()
         RELEASE(item->data);
         item = item->next;
     }
-    mapInfo.tileSets.clear();
+    mapInfo.tileSets.Clear();
 
     //Delete list of layers---------------------
     ListItem<MapLayer*>* item2;
@@ -202,7 +194,7 @@ bool Map::CleanUp()
         RELEASE(item2->data);
         item2 = item2->next;
     }
-    mapInfo.layers.clear();
+    mapInfo.layers.Clear();
     backgroudPos.SetToZero();
 
     mapFile.reset();
@@ -240,7 +232,7 @@ bool Map::Load(const char* filename)
         
         if (ret == true) ret = LoadTileSetImage(tiledata, tileSets);
 
-        if (ret == true) mapInfo.tileSets.add(tileSets);
+        if (ret == true) mapInfo.tileSets.Add(tileSets);
     }
 
     for (pugi::xml_node layerdata = mapFile.child("map").child("layer"); layerdata && ret; layerdata = layerdata.next_sibling("layer"))
@@ -249,14 +241,13 @@ bool Map::Load(const char* filename)
 
         if (ret == true) ret = LoadMapLayers(layerdata, lay);
 
-        if (ret == true) mapInfo.layers.add(lay);
-
+        if (ret == true) mapInfo.layers.Add(lay);
     }
 
     if(ret == true)
     {
         // L03: TODO 5: LOG all the data loaded iterate all tilesets and LOG everything
-        LOG("Successfully parsed map XML file : %s", GetLevel2Load().GetString());  
+        LOG("Successfully parsed map XML file : %s", GetLevelToLoad().GetString());  
         LOG(" width : %d height : %d", mapInfo.width, mapInfo.height);
         LOG(" tile_width : %d tile_height : %d", mapInfo.tileWidth, mapInfo.tileHeight);
 
@@ -283,10 +274,8 @@ bool Map::Load(const char* filename)
             {
                 LOG("tile gid: %d", item2->data->data[i]);
             }*/
-
             item2 = item2->prev;
-        }
-        
+        }  
     }
 
     mapLoaded = ret;
@@ -299,11 +288,19 @@ SString Map::GetFolder() const
     return folder;
 }
 
+SString Map::GetLevelToLoad() const
+{
+    if (lvl1 && !lvl2)
+        return level1;
+    else if (lvl2 && !lvl1)
+        return level2;  
+}
+
 bool Map::LoadMapData()
 {
     bool ret = false;
     SString path = folder.GetString();
-    path += GetLevel2Load(); // change 1 to the type inside player of which its the current level
+    path += GetLevelToLoad();
     pugi::xml_node mapNode;
     pugi::xml_parse_result result = mapFile.load_file(path.GetString());
 
@@ -374,7 +371,6 @@ bool Map::LoadMapLayers(pugi::xml_node &node, MapLayer* layer)
     {
         LOG("Error loading node child data, inside LoadMapLayers");
         ret = false;
-
     }
     else
     {
@@ -390,7 +386,6 @@ bool Map::LoadMapLayers(pugi::xml_node &node, MapLayer* layer)
             ColliderAsign(layer);
         }
     }
-    
     return ret;
 }
 
@@ -409,7 +404,7 @@ bool Map::LoadProperties(pugi::xml_node& node, Properties& properties)
             prop->type.Create(p.attribute("type").as_string());
             prop->value.Create(p.attribute("value").as_string());
 
-            properties.list.add(prop);
+            properties.list.Add(prop);
         }
     }
     else
@@ -417,11 +412,10 @@ bool Map::LoadProperties(pugi::xml_node& node, Properties& properties)
         LOG("Error loading the child node properties");
         ret = false;
     }
-
     return ret;
 }
 
-TileSet* Map::GetTilesetFromTileId(int id) const
+TileSet* Map::GetTileSetFromTileId(int id) const
 {
     TileSet* set = mapInfo.tileSets.start->data;
     ListItem<TileSet*>* item = mapInfo.tileSets.start;
@@ -459,41 +453,38 @@ void Map::ColliderAsign(MapLayer* layer)
 
                 switch (tileId)
                 {
-                case 273: //  DIE
-                    app->collision->TriggerDeath(r);
-                    break;
+                    case 273: //  DIE
+                        app->collision->TriggerDeath(r);
+                        break;
 
-                case 274:
-                    app->collision->NoWalkable(r);
-                    break;
+                    case 274:
+                        app->collision->NoWalkable(r);
+                        break;
 
-                case 275:
-                    app->collision->InitPos(r);
-                    break;
+                    case 275:
+                        app->collision->InitPos(r);
+                        break;
 
-                case 276:
-                    app->collision->TriggerWin(r);
-                    break;
+                    case 276:
+                        app->collision->TriggerWin(r);
+                        break;
 
-                case 277:
-                    //app->collision->AddCollider(r, Type::BOOST);
-                    break;
-                case 1:
-                    app->collision->TriggerDeath(r); //  DIE lvl 2
-                    break;
+                    case 1:
+                        app->collision->TriggerDeath(r); //  DIE lvl 2
+                        break;
 
-                case 2:
-                    app->collision->NoWalkable(r); //  level 2
-                    break;
+                    case 2:
+                        app->collision->NoWalkable(r); //  level 2
+                        break;
 
-                case 3:
-                    app->collision->InitPos(r); //  level 2
-                    break;
+                    case 3:
+                        app->collision->InitPos(r); //  level 2
+                        break;
 
-                case 4:
-                    app->collision->TriggerWin(r);; //  level 2
-                    break;
-                }
+                    case 4:
+                        app->collision->TriggerWin(r);; //  level 2
+                        break;
+                    }
             }
         }
     }
@@ -514,9 +505,9 @@ iPoint Map::GetPlayerInitialPos()
                 for (int x = 0; x < app->map->mapInfo.width; x++)
                 {
                     uint tileId = layer->Get(x, y);
-                    if (tileId == 275 || tileId == 3)//275 or 3 = Start tile for lvl 1 and 2
+                    if (tileId == 275 || tileId == 3) //275 or 3 = Start tile for lvl 1 and 2
                     {
-                        TileSet* set = app->map->GetTilesetFromTileId(tileId);
+                        TileSet* set = app->map->GetTileSetFromTileId(tileId);
                         iPoint pos = app->map->MapToWorld(x, y);
                         initPos = pos;
                         founded = true;
@@ -528,6 +519,5 @@ iPoint Map::GetPlayerInitialPos()
         }
         iteratorLayer = iteratorLayer->next;
     }
-
     return initPos;
 }

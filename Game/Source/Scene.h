@@ -4,6 +4,7 @@
 #include "Module.h"
 
 struct SDL_Texture;
+
 enum Screens
 {
 	TITLE_SCREEN = 1,
@@ -11,6 +12,7 @@ enum Screens
 	DEAD_SCREEN,
 	PLAYING
 };
+
 class Scene : public Module
 {
 public:
@@ -38,8 +40,6 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-
-
 private:
 	int timer;
 	iPoint tempPlayerPosition;
@@ -50,8 +50,6 @@ private:
 	SDL_Texture* introScene;
 	SDL_Texture* deathScene;
 
-	Uint32 currentTime;
-	Uint32 timeTitle = 3000;
 public:
 	Screens currentScreen;
 };

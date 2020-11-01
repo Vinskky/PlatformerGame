@@ -6,10 +6,8 @@
 #include "Point.h"
 #define PARALLAX_VEL 0.0005
 
-
 #include "PugiXml\src\pugixml.hpp"
 
-//Homework Tile
 // L03: DONE 1: We create an enum for map type, just for convenience,
 // NOTE: Platformer game will be of type ORTHOGONAL
 enum MapTypes
@@ -25,7 +23,6 @@ struct Properties
 {
 	struct Property
 	{
-		//...
         SString name;
         SString type;
         SString value;
@@ -33,14 +30,13 @@ struct Properties
 	
 	~Properties()
 	{
-		//...
         ListItem<Property*>* item = list.start;
         while (item != list.end)
         {
             RELEASE(item->data);
             item = item->next;
         }
-        list.clear();
+        list.Clear();
 	}
 
 	// L06: TODO 7: Method to ask for the value of a custom property
@@ -61,7 +57,8 @@ struct MapLayer
 	Properties properties;
 
 	MapLayer() : data(NULL)
-	{}
+	{
+    }
 
 	~MapLayer()
 	{
@@ -134,15 +131,10 @@ public:
     // Load new map
     bool Load(const char* path);
     
-    SString GetFolder()const;
+    SString GetFolder() const;
 
-    inline SString GetLevel2Load()const
-    {
-        if (lvl1 && !lvl2)
-            return level1;
-        else if(lvl2 && !lvl1)
-            return level2;
-    }
+    SString GetLevelToLoad() const;
+    
 	// L04: DONE 8: Create a method that translates x,y coordinates from map positions to world positions
 	iPoint MapToWorld(int x, int y) const;
     // L05: TODO 2: Add orthographic world to map coordinates
@@ -152,10 +144,11 @@ public:
     iPoint GetPlayerInitialPos();
     // L03: TODO 1: Add your struct for map info as public for now
     MapData mapInfo;
-    TileSet* GetTilesetFromTileId(int id) const;
+    TileSet* GetTileSetFromTileId(int id) const;
     
     bool lvl1 = true;
     bool lvl2 = false;
+
 private:
     bool LoadMapData();
     bool LoadTileSet(pugi::xml_node&, TileSet*);
@@ -176,8 +169,7 @@ private:
     SString folder;
     SString level1;
     SString level2;
-    bool mapLoaded;
-    
+    bool mapLoaded; 
 };
 
 #endif // __MAP_H__

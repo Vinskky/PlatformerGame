@@ -12,7 +12,8 @@ Transition::Transition() : Module()
 }
 
 Transition::~Transition()
-{}
+{
+}
 
 bool Transition::Start()
 {
@@ -32,17 +33,17 @@ bool Transition::PreUpdate()
 bool Transition::Update(float dt)
 {
 	// Exit this function if we are not performing a fade
-	if (currentStep == Transition_Step::NONE)
+	if (currentStep == TransitionStep::NONE)
 	{
 		return true;
 	}
 
-	if (currentStep == Transition_Step::TO_BLACK)
+	if (currentStep == TransitionStep::TO_BLACK)
 	{
 		++frameCount;
 		if (frameCount >= maxFadeFrames)
 		{
-			currentStep = Transition_Step::FROM_BLACK;
+			currentStep = TransitionStep::FROM_BLACK;
 		}
 	}
 	else
@@ -50,7 +51,7 @@ bool Transition::Update(float dt)
 		--frameCount;
 		if (frameCount <= 0)
 		{
-			currentStep = Transition_Step::NONE;
+			currentStep = TransitionStep::NONE;
 		}
 	}
 	return true;
@@ -59,7 +60,7 @@ bool Transition::Update(float dt)
 bool Transition::PostUpdate()
 {
 	// Exit this function if we are not performing a fade
-	if (currentStep == Transition_Step::NONE)
+	if (currentStep == TransitionStep::NONE)
 	{
 		isFading = false;
 		return true;
@@ -77,25 +78,23 @@ bool Transition::PostUpdate()
 bool Transition::FadeEffect(bool fadeInOnly, float frames)
 {
 	// If we are already in a fade process, ignore this call
-	if (currentStep == Transition_Step::NONE)
+	if (currentStep == TransitionStep::NONE)
 	{
 		if (fadeInOnly == false)
 		{
 			isFading = true;
-			currentStep = Transition_Step::TO_BLACK;
+			currentStep = TransitionStep::TO_BLACK;
 			frameCount = 0;
 			maxFadeFrames = frames;
-
 			return true;
 		}
 		else
 		{
-			currentStep = Transition_Step::FROM_BLACK;
+			currentStep = TransitionStep::FROM_BLACK;
 			frameCount = frames;
 			maxFadeFrames = frames;
 			return true;
 		}
-		
 	}
 
 	return false;

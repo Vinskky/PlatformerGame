@@ -52,7 +52,7 @@ public:
     // L02: TODO 1: Create methods to request Load / Save
 	void LoadRequest(const char* filename);
 	void SaveRequest(const char* filename);
-	bool IsLoading()const;
+	bool IsLoading() const;
 
 private:
 
@@ -77,7 +77,7 @@ private:
 	// L02: TODO 5: Declare methods to load/save game
 	bool LoadGame();
 	
-	bool SaveGame()const;
+	bool SaveGame() const;
 public:
 
 	// Modules

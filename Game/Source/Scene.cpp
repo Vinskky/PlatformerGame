@@ -14,10 +14,6 @@
 #include "Defs.h"
 #include "Log.h"
 
-#define MAX_RIGHT_DISTANCE 320
-#define MAX_LEFT_DISTANCE 50
-const float deltaTime = 1.0f / 60.0f;
-
 Scene::Scene() : Module(), titleScene(nullptr),introScene(nullptr), deathScene(nullptr), currentScreen(Screens::TITLE_SCREEN)
 {
 	name.Create("scene");
@@ -25,7 +21,8 @@ Scene::Scene() : Module(), titleScene(nullptr),introScene(nullptr), deathScene(n
 
 // Destructor
 Scene::~Scene()
-{}
+{
+}
 
 // Called before render is available
 bool Scene::Awake(pugi::xml_node& conf)
@@ -44,8 +41,8 @@ bool Scene::Start()
 	titleScene = app->tex->Load(sourceTitle.GetString());
 	introScene = app->tex->Load(sourceIntro.GetString());
 	deathScene = app->tex->Load(sourceDeath.GetString());
-	app->audio->PlayMusic("Assets/audio/music/music_spy.ogg");
-	app->map->Load(app->map->GetLevel2Load().GetString());
+	app->audio->PlayMusic("Assets/audio/music/Raxer_Sound_-_Pathfinder_Master.ogg");
+	app->map->Load(app->map->GetLevelToLoad().GetString());
 	
 	return true;
 }
@@ -61,76 +58,81 @@ bool Scene::Update(float dt)
 {
 	switch (currentScreen)
 	{
-	case TITLE_SCREEN:
-	{
-		app->render->DrawTexture(titleScene, 0, 0);
-
-		if (timer < 200)
+		case TITLE_SCREEN:
 		{
-			timer++;
+			app->render->DrawTexture(titleScene, 0, 0);
+
+			if (timer < 200)
+			{
+				timer++;
+			}
+			else
+			{
+				app->fade->FadeEffect(false, 30.0f);
+				currentScreen = START_SCREEN;
+			}
+
 		}
-		else
-		{
-			app->fade->FadeEffect(false, 30.0f);
-			currentScreen = START_SCREEN;
-		}
-
-	}
-	break;
-	case START_SCREEN:
-	{
-		
-		app->render->DrawTexture(introScene, 0, 0);
-
-		if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
-		{
-			currentScreen = PLAYING;
-		}
-	}
-	break;
-	case DEAD_SCREEN:
-	{
-		app->render->DrawTexture(deathScene, 0, 0);
-
-		if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
-		{
-			currentScreen = PLAYING;
-			app->player->LoadCurrentLevel(app->player->playerInfo.currentLevel);
-		}
-	}
-	break;
-	case PLAYING:
-	{
-		if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
-			app->player->LoadCurrentLevel(LVL_1);
-		if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
-			app->player->LoadCurrentLevel(LVL_2);
-		if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
-			app->player->LoadCurrentLevel(app->player->playerInfo.currentLevel);
-
-		if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
-			app->SaveRequest("savegame.xml");
-		if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN)
-			app->LoadRequest("savegame.xml");
-		//L02: BONUS CODE
-		if (app->input->GetKey(SDL_SCANCODE_KP_PLUS) == KEY_DOWN)
-			app->audio->SetVolume(0);
-
-		if (app->input->GetKey(SDL_SCANCODE_KP_MINUS) == KEY_DOWN)
-			app->audio->SetVolume(1);
-	}
-	default:
 		break;
+
+		case START_SCREEN:
+		{
+		
+			app->render->DrawTexture(introScene, 0, 0);
+
+			if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+			{
+				currentScreen = PLAYING;
+			}
+		}
+		break;
+
+		case DEAD_SCREEN:
+		{
+			app->render->DrawTexture(deathScene, 0, 0);
+
+			if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+			{
+				currentScreen = PLAYING;
+				app->player->LoadCurrentLevel(app->player->playerInfo.currentLevel);
+			}
+		}
+		break;
+
+		case PLAYING:
+		{
+			if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+				app->player->LoadCurrentLevel(LVL_1);
+			if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
+				app->player->LoadCurrentLevel(LVL_2);
+			if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
+				app->player->LoadCurrentLevel(app->player->playerInfo.currentLevel);
+
+			if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
+				app->SaveRequest("savegame.xml");
+			if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN)
+				app->LoadRequest("savegame.xml");
+			//L02: BONUS CODE
+			if (app->input->GetKey(SDL_SCANCODE_KP_PLUS) == KEY_DOWN)
+				app->audio->SetVolume(0);
+
+			if (app->input->GetKey(SDL_SCANCODE_KP_MINUS) == KEY_DOWN)
+				app->audio->SetVolume(1);
+		}
+		break;
+
+		default:
+			break;
 	}
 	if (app->player->godMode == false)
 	{
-		SString title("Map:%dx%d Tiles:%dx%d Tilesets:%d", app->map->mapInfo.width, app->map->mapInfo.height, app->map->mapInfo.tileWidth, app->map->mapInfo.tileHeight, app->map->mapInfo.tileSets.count());
+		SString title("Map:%dx%d Tiles:%dx%d Tilesets:%d", app->map->mapInfo.width, app->map->mapInfo.height, app->map->mapInfo.tileWidth, app->map->mapInfo.tileHeight, app->map->mapInfo.tileSets.Count());
 
 		app->win->SetTitle(title.GetString());
 	}
 	else
 	{
-		SString title("¡GOD MODE ACTIVATED!");
+		SString title("!!!!GOD MODE ACTIVATED!!!!");
 
 		app->win->SetTitle(title.GetString());
 	}

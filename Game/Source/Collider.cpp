@@ -50,39 +50,30 @@ bool Collisions::CheckCollision(SDL_Rect r1, SDL_Rect r2) const
 
 void Collisions::NoWalkable(SDL_Rect collider)
 {
-	noWalkable.add(collider);
+	noWalkable.Add(collider);
 }
 
 void Collisions::TriggerDeath(SDL_Rect death)
 {
-	deathTriggers.add(death);
+	deathTriggers.Add(death);
 }
 
 void Collisions::TriggerWin(SDL_Rect victory)
 {
-	winTriggers.add(victory);
+	winTriggers.Add(victory);
 }
 
 void Collisions::InitPos(SDL_Rect position)
 {
-	initPos.add(position);
+	initPos.Add(position);
 }
 
 void Collisions::ClearColliders()
 {
-	deathTriggers.clear();
-	winTriggers.clear();
-	noWalkable.clear();
-}
-
-bool Collisions::Save(pugi::xml_node&)
-{
-	return true;
-}
-
-bool Collisions::Load(pugi::xml_node&)
-{
-	return true;
+	deathTriggers.Clear();
+	winTriggers.Clear();
+	noWalkable.Clear();
+	initPos.Clear();
 }
 
 void Collisions::DebugDraw()

@@ -9,7 +9,6 @@
 #include "PugiXml\src\pugixml.hpp"
 
 struct SDL_Texture;
-class Collider;
 
 enum Direction
 {
@@ -35,13 +34,9 @@ struct PlayerData
 	Animation walkLeft;
 
 	iPoint position;
-	int speedL;
-	int speedR;
-	float speedY = 0.001f;
-	int jHeight = 1;
+	uint speed;
 	Direction currentDir;
 	Level currentLevel;
-	//iPoint posOnWin;
 };
 
 class Player : public Module 
@@ -66,7 +61,7 @@ public:
 
 	//Save and load Methods
 	bool Load(pugi::xml_node&);
-	bool Save(pugi::xml_node&)const;
+	bool Save(pugi::xml_node&) const;
 
 	void Jump();
 
@@ -77,7 +72,7 @@ public:
 	void Gravity();
 
 	void Dead();
-	bool IsDead()const;
+	bool IsDead() const;
 	void SetIsDead(bool set);
 
 	bool CheckCollision();
@@ -96,18 +91,12 @@ public:
 	bool jumpOn = true;
 	bool doubleJump = true;
 	bool godMode = false;
-	uint jumpHeight = 0;
 	bool isMoving;
 private:
 	
 	SDL_Texture* texture;
 	SString textPath;
-	iPoint collPlayer = { 7, 3 };
-	uint jumpForce = 8;
-	uint jumpForceValue = 8;
 
-	uint gravity = 11;
-	uint gravityValue = 11;
 	bool isDead = false;
 };
 

@@ -6,7 +6,6 @@
 
 struct SDL_Rect;
 
-
 class Collisions : public Module
 {
 public:
@@ -15,14 +14,12 @@ public:
 	List<SDL_Rect> winTriggers;
 	List<SDL_Rect> initPos;
 
-
 public:
 
 	Collisions();
 
 	// Destructor
 	virtual ~Collisions();
-
 
 	// Called before the first frame
 	bool Start();
@@ -42,10 +39,6 @@ public:
 	void ClearColliders();
 
 	void DebugDraw();
-
-	// Save & Load
-	bool Save(pugi::xml_node&);
-	bool Load(pugi::xml_node&);
 
 private:
 	bool debug = false;

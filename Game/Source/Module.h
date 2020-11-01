@@ -6,7 +6,6 @@
 #include "PugiXml/src/pugixml.hpp"
 
 class App;
-struct Collider;
 
 class Module
 {
@@ -58,7 +57,7 @@ public:
 	}
 
     // L02: TODO 2: Create new virtual methods to Load / Save
-	virtual bool Save(pugi::xml_node&)const
+	virtual bool Save(pugi::xml_node&) const
 	{
 		return true;
 	}
@@ -72,10 +71,6 @@ public:
 
 	SString name;
 	bool active;
-
-	//Listeners
-	virtual void OnCollision(Collider*, Collider*) {}
-
 };
 
 #endif // __MODULE_H__

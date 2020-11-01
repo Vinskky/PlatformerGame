@@ -59,7 +59,7 @@ App::~App()
 		item = item->prev;
 	}
 
-	modules.clear();
+	modules.Clear();
 
 	configFile.reset();
 }
@@ -67,7 +67,7 @@ App::~App()
 void App::AddModule(Module* module)
 {
 	module->Init();
-	modules.add(module);
+	modules.Add(module);
 }
 
 // Called before render is available
@@ -160,12 +160,10 @@ bool App::LoadConfig()
 	return ret;
 }
 
-// ---------------------------------------------
 void App::PrepareUpdate()
 {
 }
 
-// ---------------------------------------------
 void App::FinishUpdate()
 {
 	// L02: TODO 1: This is a good place to call Load / Save methods
@@ -187,7 +185,8 @@ bool App::PreUpdate()
 	{
 		pModule = item->data;
 
-		if(pModule->active == false) {
+		if(pModule->active == false) 
+		{
 			continue;
 		}
 
@@ -209,7 +208,8 @@ bool App::DoUpdate()
 	{
 		pModule = item->data;
 
-		if(pModule->active == false) {
+		if(pModule->active == false) 
+		{
 			continue;
 		}
 
@@ -230,7 +230,8 @@ bool App::PostUpdate()
 	{
 		pModule = item->data;
 
-		if(pModule->active == false) {
+		if(pModule->active == false) 
+		{
 			continue;
 		}
 
@@ -257,13 +258,11 @@ bool App::CleanUp()
 	return ret;
 }
 
-// ---------------------------------------
 int App::GetArgc() const
 {
 	return argc;
 }
 
-// ---------------------------------------
 const char* App::GetArgv(int index) const
 {
 	if(index < argc)
@@ -272,13 +271,11 @@ const char* App::GetArgv(int index) const
 		return NULL;
 }
 
-// ---------------------------------------
 const char* App::GetTitle() const
 {
 	return title.GetString();
 }
 
-// ---------------------------------------
 const char* App::GetOrganization() const
 {
 	return organization.GetString();
@@ -303,7 +300,6 @@ bool App::LoadGame()
 
 	pugi::xml_document data;
 	pugi::xml_node root;
-
 	pugi::xml_parse_result doc = data.load_file(loadFileName.GetString());
 
 	if (doc == NULL)
@@ -312,7 +308,7 @@ bool App::LoadGame()
 	}
 	else
 	{
-		root = data.child("save_state");
+		root = data.child("saveState");
 		ret = true;
 
 		ListItem<Module*>* item;
@@ -342,11 +338,11 @@ bool App::IsLoading() const
 }
 
 // L02: TODO 7: Implement the xml save method for current state
-bool App::SaveGame()const
+bool App::SaveGame() const
 {
 
 	pugi::xml_document saveDoc;
-	pugi::xml_node root = saveDoc.append_child("save_state");
+	pugi::xml_node root = saveDoc.append_child("saveState");
 	pugi::xml_node rootChild;
 
 	bool ret = true;
