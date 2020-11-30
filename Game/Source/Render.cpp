@@ -93,6 +93,8 @@ bool Render::Load(pugi::xml_node& load)
 {
 	camera.x = load.child("camera").attribute("x").as_int();
 	camera.y = load.child("camera").attribute("y").as_int();
+
+	LOG("X: %d", camera.x);
 		
 	return true;
 }

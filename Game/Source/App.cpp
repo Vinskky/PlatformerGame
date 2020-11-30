@@ -241,7 +241,6 @@ bool App::PostUpdate()
 	return ret;
 }
 
-
 // Called before quitting
 bool App::CleanUp()
 {
@@ -325,6 +324,14 @@ bool App::LoadGame()
 			item = item->prev;
 			
 		}
+
+		//Renderer loaded apart
+		ret = app->render->Load(root.child("renderer"));
+		if (ret == false)
+		{
+			LOG("Error loading module: %s", app->render->name.GetString());
+		}
+
 		LOG("Loading finished...");
 	}
 

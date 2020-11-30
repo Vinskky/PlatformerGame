@@ -12,7 +12,6 @@
 #include "Defs.h"
 #include "Log.h"
 
-
 #define MAX_JUMP_HEIGHT 42
 #define WINDOW_MIDDLE_S 213
 #define WINDOW_MIDDLE_E 1065
@@ -313,7 +312,6 @@ bool Player::Save(pugi::xml_node& saveNode) const
 
 	return true;
 }
-
 
 void Player::SetInitialPlayer(Level lvl)
 {
