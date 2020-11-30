@@ -533,7 +533,6 @@ void Player::LoadCurrentLevel(Level currentLvl)
 		
 		if (app->map->Load(app->map->GetLevelToLoad().GetString()));
 		{
-			//RESET CHECKPOINTS
 			SetInitialPlayer(LVL_1);
 		}
 	}
@@ -599,6 +598,62 @@ void Player::UpdateAnimation(char* anim)
 		{
 			playerInfo.currentAnimation->FinishAnimation();
 			playerInfo.currentAnimation = &playerInfo.dieLeft;
+		}
+	}
+}
+
+void Player::TP(Cp cp)
+{
+	if (cp == CP1)
+	{
+		app->collision->CleanUp();
+		app->map->CleanUp();
+		app->map->lvl1 = true;
+		app->map->lvl2 = false;
+		app->scene->checkpoint[0].active = true;
+		app->scene->checkpoint[1].active = false;
+
+		if (app->map->Load(app->map->GetLevelToLoad().GetString()));
+		{
+			app->render->camera.x = -2364;
+			if (app->IsLoading() == false)
+			{
+				playerInfo.position = { app->scene->checkpoint[0].rect.x, app->scene->checkpoint[0].rect.y - 16 };
+				playerColider = { playerInfo.position.x, playerInfo.position.y, 16, 30 };
+
+				playerInfo.speed = 2;
+				playerInfo.currentLevel = LVL_1;
+				playerInfo.currentDir = RIGHT_DIR;
+			}
+			texture = app->tex->Load(textPath.GetString());
+
+			playerInfo.currentAnimation = &playerInfo.idle;
+		}
+	}
+	else if (cp == CP2)
+	{
+		app->collision->CleanUp();
+		app->map->CleanUp();
+		app->map->lvl1 = false;
+		app->map->lvl2 = true;
+		app->scene->checkpoint[0].active = false;
+		app->scene->checkpoint[1].active = true;
+
+		if (app->map->Load(app->map->GetLevelToLoad().GetString()));
+		{
+			app->render->camera.x = -765;
+			if (app->IsLoading() == false)
+			{
+				playerInfo.position = { app->scene->checkpoint[1].rect.x, app->scene->checkpoint[1].rect.y - 16 };
+				playerColider = { playerInfo.position.x, playerInfo.position.y, 16, 30 };
+
+				playerInfo.speed = 2;
+				playerInfo.currentLevel = LVL_2;
+				playerInfo.currentDir = RIGHT_DIR;
+			}
+			texture = app->tex->Load(textPath.GetString());
+
+			playerInfo.currentAnimation = &playerInfo.idle;
 		}
 	}
 }

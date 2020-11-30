@@ -5,6 +5,7 @@
 #include "List.h"
 #include "Point.h"
 #include "Animation.h"
+#include "Scene.h"
 
 #include "PugiXml\src\pugixml.hpp"
 
@@ -84,6 +85,8 @@ public:
 
 	void UpdateAnimation(char* anim);
 
+	void TP(Cp cp);
+
 public:
 	PlayerData playerInfo;
 	SDL_Rect playerColider;
@@ -93,10 +96,8 @@ public:
 	bool godMode = false;
 	bool isMoving;
 private:
-	
 	SDL_Texture* texture;
 	SString textPath;
-
 	bool isDead = false;
 };
 

@@ -22,9 +22,10 @@ enum Cp
 struct Checkpoint
 {
 	SDL_Rect rect;
-	Cp Cp;
+	Cp cp;
 	bool checked;
 	bool active = false;
+	void TP(Cp cp);
 };
 
 class Scene : public Module

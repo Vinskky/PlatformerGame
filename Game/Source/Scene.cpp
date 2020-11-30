@@ -54,7 +54,7 @@ bool Scene::Start()
 	deathScene = app->tex->Load(sourceDeath.GetString());
 	for (int i = 0; i < 2; i++)
 	{
-		checkpoint[i].Cp = (Cp)i;
+		checkpoint[i].cp = (Cp)i;
 		checkpoint[i].checked = false;
 		checkpoint[i].rect.w = 10;
 		checkpoint[i].rect.h = 20;
@@ -168,6 +168,22 @@ bool Scene::Update(float dt)
 
 				app->player->LoadCurrentLevel(app->player->playerInfo.currentLevel);
 			}
+			if (app->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
+			{
+				//RESTART CHECKPOINTS
+				app->scene->checkpoint[0].checked = false;
+				app->scene->checkpoint[1].checked = false;
+
+				app->player->TP(CP1);
+			}
+			if (app->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
+			{
+				//RESTART CHECKPOINTS
+				app->scene->checkpoint[0].checked = false;
+				app->scene->checkpoint[1].checked = false;
+
+				app->player->TP(CP2);
+			}
 
 
 			if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
@@ -230,4 +246,3 @@ bool Scene::CleanUp()
 
 	return true;
 }
-
