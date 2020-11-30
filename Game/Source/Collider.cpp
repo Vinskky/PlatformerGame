@@ -6,6 +6,8 @@
 #include "Render.h"
 #include "Textures.h"
 #include "Collider.h"
+#include "Scene.h"
+#include "Map.h"
 
 Collisions::Collisions():Module()
 {
@@ -115,4 +117,8 @@ void Collisions::DebugDraw()
 	}
 
 	app->render->DrawRectangle(app->player->playerColider, 155, 155, 255, alpha);
+
+	if (app->map->lvl1) app->render->DrawRectangle(app->scene->checkpoint[0].rect, 180, 20, 20, alpha);
+	else if (app->map->lvl2) app->render->DrawRectangle(app->scene->checkpoint[1].rect, 180, 20, 20, alpha);
+
 }

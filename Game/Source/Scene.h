@@ -13,6 +13,20 @@ enum Screens
 	PLAYING
 };
 
+enum Cp
+{
+	CP1 = 0,
+	CP2,
+};
+
+struct Checkpoint
+{
+	SDL_Rect rect;
+	Cp Cp;
+	bool checked;
+	bool active = false;
+};
+
 class Scene : public Module
 {
 public:
@@ -52,6 +66,7 @@ private:
 
 public:
 	Screens currentScreen;
+	Checkpoint checkpoint[2];
 };
 
 #endif // __SCENE_H__

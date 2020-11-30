@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <saveState>
 	<renderer>
-		<camera x="-300" y="0" />
+		<camera x="-126" y="0" />
 	</renderer>
 	<transition />
 	<collisions />
 	<player>
-		<position x="312" y="81" />
-		<collider x="312" y="81" />
+		<position x="254" y="130" />
+		<collider x="254" y="130" />
 		<level value="1" />
 		<direction value="1" />
 	</player>

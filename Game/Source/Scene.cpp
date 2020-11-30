@@ -32,6 +32,17 @@ bool Scene::Awake(pugi::xml_node& conf)
 	sourceTitle = conf.child("title").attribute("name").as_string();
 	sourceIntro = conf.child("intro").attribute("name").as_string();
 	sourceDeath = conf.child("death").attribute("name").as_string();
+
+	pugi::xml_node cp = conf.child("checkpoints");
+
+	//Set Checkpoints
+
+	checkpoint[0].rect.x = cp.child("cp1").attribute("x").as_int();
+	checkpoint[0].rect.y = cp.child("cp1").attribute("y").as_int();
+
+	checkpoint[1].rect.x = cp.child("cp2").attribute("x").as_int();
+	checkpoint[1].rect.y = cp.child("cp2").attribute("y").as_int();
+
 	return ret;
 }
 
@@ -41,6 +52,16 @@ bool Scene::Start()
 	titleScene = app->tex->Load(sourceTitle.GetString());
 	introScene = app->tex->Load(sourceIntro.GetString());
 	deathScene = app->tex->Load(sourceDeath.GetString());
+	for (int i = 0; i < 2; i++)
+	{
+		checkpoint[i].Cp = (Cp)i;
+		checkpoint[i].checked = false;
+		checkpoint[i].rect.w = 10;
+		checkpoint[i].rect.h = 20;
+
+	}
+	checkpoint[0].active = true;
+
 	app->audio->PlayMusic("Assets/audio/music/Raxer_Sound_-_Pathfinder_Master.ogg");
 	app->map->Load(app->map->GetLevelToLoad().GetString());
 	
@@ -56,6 +77,21 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
+	//LOG("X: %d, Y: %d", app->player->playerInfo.position.x, app->player->playerInfo.position.y);
+	/*
+	if (checkpoint[0].checked) LOG("CP1 True");
+	else
+	{
+		LOG("CP1 False");
+	}
+
+	if (checkpoint[1].checked) LOG("CP2 True");
+	else
+	{
+		LOG("CP2 False");
+	}
+	*/
+
 	switch (currentScreen)
 	{
 		case TITLE_SCREEN:
@@ -89,7 +125,9 @@ bool Scene::Update(float dt)
 
 		case DEAD_SCREEN:
 		{
-			app->render->DrawTexture(deathScene, 0, 0);
+			if (checkpoint[0].checked) app->render->DrawTexture(deathScene, 788, 0);
+			else if (checkpoint[1].checked) app->render->DrawTexture(deathScene, 255, 0);
+			else { app->render->DrawTexture(deathScene, 0, 0); }
 
 			if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
 			{
@@ -102,11 +140,35 @@ bool Scene::Update(float dt)
 		case PLAYING:
 		{
 			if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+			{
+				//RESTART CHECKPOINTS
+				app->scene->checkpoint[0].checked = false;
+				app->scene->checkpoint[1].checked = false;
+
 				app->player->LoadCurrentLevel(LVL_1);
+				app->scene->checkpoint[0].active = true;
+				app->scene->checkpoint[1].active = false;
+				
+			}
 			if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
+			{
+				//RESTART CHECKPOINTS
+				app->scene->checkpoint[0].checked = false;
+				app->scene->checkpoint[1].checked = false;
+
 				app->player->LoadCurrentLevel(LVL_2);
+				app->scene->checkpoint[0].active = false;
+				app->scene->checkpoint[1].active = true;
+			}
 			if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
+			{
+				//RESTART CHECKPOINTS
+				app->scene->checkpoint[0].checked = false;
+				app->scene->checkpoint[1].checked = false;
+
 				app->player->LoadCurrentLevel(app->player->playerInfo.currentLevel);
+			}
+
 
 			if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
 				app->SaveRequest("savegame.xml");
@@ -135,6 +197,16 @@ bool Scene::Update(float dt)
 		SString title("!!!!GOD MODE ACTIVATED!!!!");
 
 		app->win->SetTitle(title.GetString());
+	}
+
+
+	if (checkpoint[0].active && app->collision->CheckCollision(app->player->playerColider, checkpoint[0].rect))
+	{
+		checkpoint[0].checked = true;
+	}
+	else if (checkpoint[1].active && app->collision->CheckCollision(app->player->playerColider, checkpoint[1].rect))
+	{
+		checkpoint[1].checked = true;
 	}
 
 	return true;
