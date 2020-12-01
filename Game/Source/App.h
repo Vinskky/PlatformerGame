@@ -17,6 +17,8 @@ class Map;
 class Player;
 class Collisions;
 class Transition;
+class PerfTimer;
+class Timer;
 
 class App
 {
@@ -91,6 +93,8 @@ public:
 	Player* player;
 	Collisions* collision;
 	Transition* fade;
+	PerfTimer* perfTimer;
+	Timer* timer;
 private:
 
 	int argc;

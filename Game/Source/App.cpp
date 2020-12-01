@@ -11,6 +11,8 @@
 #include "Transition.h"
 #include "Defs.h"
 #include "Log.h"
+#include "PerfTimer.h"
+#include "Timer.h"
 
 #include <iostream>
 #include <sstream>
@@ -30,6 +32,8 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	player = new Player();
 	collision = new Collisions();
 	fade = new Transition();
+	perfTimer = new PerfTimer();
+	timer = new Timer();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
@@ -42,6 +46,8 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(player);
 	AddModule(collision);
 	AddModule(fade);
+	AddModule(perfTimer);
+	AddModule(timer);
 
 	// Render last to swap buffer
 	AddModule(render);
