@@ -59,6 +59,7 @@ bool Audio::Awake(pugi::xml_node& config)
 	{
 		volume = config.child("volume").attribute("value").as_int();
 		LoadFx(config.child("fx").child("jump").attribute("name").as_string());
+		LoadFx(config.child("fx").child("checkpoint").attribute("name").as_string());
 		//Load checkpoint sound
 		fxVolume = config.child("fx").child("volume").attribute("value").as_int();
 	}

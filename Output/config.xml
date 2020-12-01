@@ -19,6 +19,7 @@
     <volume value="64"/>
     <fx>
       <jump name="Assets/audio/fx/jump.wav" />
+      <checkpoint name="Assets/audio/fx/checkpoint_fx.wav" />
       <volume value="64"/>
     </fx>
   </audio>

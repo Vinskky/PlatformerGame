@@ -219,10 +219,18 @@ bool Scene::Update(float dt)
 	if (checkpoint[0].active && app->collision->CheckCollision(app->player->playerColider, checkpoint[0].rect))
 	{
 		checkpoint[0].checked = true;
+		if (checkpoint[0].checked == false)
+		{
+			app->audio->PlayFx(2);
+		}
 	}
 	else if (checkpoint[1].active && app->collision->CheckCollision(app->player->playerColider, checkpoint[1].rect))
 	{
 		checkpoint[1].checked = true;
+		if (checkpoint[1].checked == false)
+		{
+			app->audio->PlayFx(2);
+		}
 	}
 
 	return true;
