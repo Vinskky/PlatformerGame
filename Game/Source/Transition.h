@@ -36,8 +36,8 @@ private:
     currentStep = TransitionStep::NONE;
 
     // A frame count system to handle the fade time and ratio
-    Uint32 frameCount;
-    Uint32 maxFadeFrames;
+    uint32 frameCount;
+    uint32 maxFadeFrames;
 
     // The rectangle of the screen, used to render the black rectangle
     SDL_Rect screenRect;
