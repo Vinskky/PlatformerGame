@@ -11,8 +11,6 @@
 #include "Transition.h"
 #include "Defs.h"
 #include "Log.h"
-#include "PerfTimer.h"
-#include "Timer.h"
 
 #include <iostream>
 #include <sstream>
@@ -21,6 +19,7 @@
 App::App(int argc, char* args[]) : argc(argc), args(args)
 {
 	frames = 0;
+	pTimer.Start();
 
 	input = new Input();
 	win = new Window();
@@ -32,8 +31,6 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	player = new Player();
 	collision = new Collisions();
 	fade = new Transition();
-	perfTimer = new PerfTimer();
-	timer = new Timer();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
@@ -46,8 +43,6 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(player);
 	AddModule(collision);
 	AddModule(fade);
-	AddModule(perfTimer);
-	AddModule(timer);
 
 	// Render last to swap buffer
 	AddModule(render);
@@ -79,6 +74,7 @@ void App::AddModule(Module* module)
 // Called before render is available
 bool App::Awake()
 {
+	pTimer.Start();
 	// L01: DONE 3: Load config from XML
 	bool ret = LoadConfig();
 
@@ -108,6 +104,8 @@ bool App::Awake()
 // Called before the first frame
 bool App::Start()
 {
+	pTimer.Start();
+
 	bool ret = true;
 	ListItem<Module*>* item;
 	item = modules.start;
@@ -139,6 +137,12 @@ bool App::Update()
 	if(ret == true)
 		ret = PostUpdate();
 
+	if (app->input->GetKey(SDL_SCANCODE_F11) == KEY_DOWN)
+	{
+		if (changeFps) changeFps = false;
+		else if (!changeFps) changeFps = true;
+	}
+
 	FinishUpdate();
 	return ret;
 }
@@ -168,6 +172,10 @@ bool App::LoadConfig()
 
 void App::PrepareUpdate()
 {
+	frameCount++;
+	lastSecFrameCount++;
+	dt = frameTime.ReadSec();
+	frameTime.Start();
 }
 
 void App::FinishUpdate()
@@ -177,6 +185,34 @@ void App::FinishUpdate()
 		LoadGame();
 	if (saveRequest == true)
 		SaveGame();
+
+	if (lastSecFrameTime.Read() > 1000)
+	{
+		lastSecFrameTime.Start();
+		prevLastSecFrameCount = lastSecFrameCount;
+		lastSecFrameCount = 0;
+	}
+
+	float averageFps = 0.0f;
+	float secondsSinceStartup = 0.0f;
+	uint32 lastFrameMs = 0;
+	uint32 framesOnLastUpdate = 0;
+
+	averageFps = float(frameCount) / startupTime.ReadSec();
+	secondsSinceStartup = startupTime.ReadSec();
+	lastFrameMs = frameTime.Read();
+	framesOnLastUpdate = prevLastSecFrameCount;
+
+	static char title[256];
+	sprintf_s(title, 256, "Av.FPS: %.2f | Last Frame Ms: %02u | Last Sec Frames: %i | Last dt: %.3f | Time Since Startup: %.3f | Frame Count: %I64u",
+		averageFps, lastFrameMs, framesOnLastUpdate, dt, secondsSinceStartup, frameCount);
+	app->win->SetTitle(title);
+
+	if (frameDelay > lastFrameMs)
+	{
+		if (!changeFps) SDL_Delay(frameDelay - lastFrameMs);
+		if (changeFps) SDL_Delay(1000 / 30 - lastFrameMs);
+	}
 }
 
 // Call modules before each loop iteration
@@ -250,6 +286,8 @@ bool App::PostUpdate()
 // Called before quitting
 bool App::CleanUp()
 {
+	pTimer.Start();
+
 	bool ret = true;
 	ListItem<Module*>* item;
 	item = modules.end;

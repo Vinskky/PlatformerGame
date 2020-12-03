@@ -10,6 +10,7 @@ public:
 
 	// Constructor
 	PerfTimer();
+	~PerfTimer();
 
 	bool Start();
 	double ReadMs() const;
@@ -17,7 +18,7 @@ public:
 
 private:
 	uint64 startTime;
-	static uint64 frequency;
+	uint64 frequency;
 };
 
 #endif //__PERFTIMER_H__

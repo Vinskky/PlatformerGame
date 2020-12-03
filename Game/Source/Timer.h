@@ -10,6 +10,7 @@ public:
 
 	// Constructor
 	Timer();
+	~Timer();
 
 	bool Start();
 	uint32 Read() const;

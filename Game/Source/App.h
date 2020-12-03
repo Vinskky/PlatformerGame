@@ -5,6 +5,9 @@
 #include "List.h"
 
 #include "PugiXml/src/pugixml.hpp"
+#include "Timer.h"
+#include "PerfTimer.h"
+
 
 // Modules
 class Window;
@@ -17,8 +20,6 @@ class Map;
 class Player;
 class Collisions;
 class Transition;
-class PerfTimer;
-class Timer;
 
 class App
 {
@@ -93,8 +94,7 @@ public:
 	Player* player;
 	Collisions* collision;
 	Transition* fade;
-	PerfTimer* perfTimer;
-	Timer* timer;
+
 private:
 
 	int argc;
@@ -112,7 +112,6 @@ private:
 	pugi::xml_node configApp;
 
 	uint frames;
-	float dt;
 
 	// L02: TODO 1: Create required variables to request load / save and 
 	// the filename for save / load
@@ -120,6 +119,19 @@ private:
 	mutable bool saveRequest = false;
 	SString loadFileName;
 	mutable SString saveFileName;
+
+	// FRAME CAP SHENANIGANS
+	PerfTimer pTimer;
+	uint64 frameCount = 0;
+	const uint32 fps = 60;
+	const uint32 frameDelay = 1000 / fps;
+	Timer startupTime;
+	Timer frameTime;
+	Timer lastSecFrameTime;
+	uint32 lastSecFrameCount = 0;
+	uint32 prevLastSecFrameCount = 0;
+	float dt = 0.0f;
+	bool changeFps = false;
 };
 
 extern App* app;

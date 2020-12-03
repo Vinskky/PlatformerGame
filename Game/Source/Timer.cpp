@@ -2,9 +2,9 @@
 // Fast timer with milisecons precision
 // ----------------------------------------------------
 
-#include "App.h"
+//#include "App.h"
 #include "Timer.h"
-#include "SDL\include\SDL_timer.h"
+//#include "SDL\include\SDL_timer.h"
 #include "Defs.h"
 #include "Log.h"
 
@@ -16,20 +16,23 @@
 	
 Timer::Timer()
 {
-	Start();
+	name.Create("timer");
 }
+
+Timer::~Timer() {}
 
 bool Timer::Start()
 {
-	return Read();
+	startTime = SDL_GetTicks();
+	return true;
 }
 
 uint32 Timer::Read() const
 {
-	return SDL_GetTicks();
+	return (SDL_GetTicks() - startTime);
 }
 
 float Timer::ReadSec() const
 {
-	return 0.0f;
+	return float(Read() / 1000.0f);
 }
