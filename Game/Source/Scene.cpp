@@ -36,6 +36,8 @@ bool Scene::Awake(pugi::xml_node& conf)
 	pugi::xml_node cp = conf.child("checkpoints");
 
 	//Set Checkpoints
+	checkpoint[0].source.Create(cp.attribute("name").as_string());
+	checkpoint[1].source.Create(cp.attribute("name").as_string());
 
 	checkpoint[0].rect.x = cp.child("cp1").attribute("x").as_int();
 	checkpoint[0].rect.y = cp.child("cp1").attribute("y").as_int();
@@ -49,6 +51,8 @@ bool Scene::Awake(pugi::xml_node& conf)
 // Called before the first frame
 bool Scene::Start()
 {
+	checkpoint[0].checkpointTex = app->tex->Load(checkpoint[0].source.GetString());
+	checkpoint[1].checkpointTex = app->tex->Load(checkpoint[0].source.GetString());
 	titleScene = app->tex->Load(sourceTitle.GetString());
 	introScene = app->tex->Load(sourceIntro.GetString());
 	deathScene = app->tex->Load(sourceDeath.GetString());
@@ -56,8 +60,8 @@ bool Scene::Start()
 	{
 		checkpoint[i].cp = (Cp)i;
 		checkpoint[i].checked = false;
-		checkpoint[i].rect.w = 10;
-		checkpoint[i].rect.h = 20;
+		checkpoint[i].rect.w = 22;
+		checkpoint[i].rect.h = 22;
 
 	}
 	checkpoint[0].active = true;
@@ -77,21 +81,6 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
-	//LOG("X: %d, Y: %d", app->player->playerInfo.position.x, app->player->playerInfo.position.y);
-	/*
-	if (checkpoint[0].checked) LOG("CP1 True");
-	else
-	{
-		LOG("CP1 False");
-	}
-
-	if (checkpoint[1].checked) LOG("CP2 True");
-	else
-	{
-		LOG("CP2 False");
-	}
-	*/
-
 	switch (currentScreen)
 	{
 		case TITLE_SCREEN:
@@ -215,22 +204,21 @@ bool Scene::Update(float dt)
 		app->win->SetTitle(title.GetString());
 	}
 
-
 	if (checkpoint[0].active && app->collision->CheckCollision(app->player->playerColider, checkpoint[0].rect))
 	{
-		checkpoint[0].checked = true;
 		if (checkpoint[0].checked == false)
 		{
 			app->audio->PlayFx(2);
 		}
+		checkpoint[0].checked = true;
 	}
 	else if (checkpoint[1].active && app->collision->CheckCollision(app->player->playerColider, checkpoint[1].rect))
 	{
-		checkpoint[1].checked = true;
 		if (checkpoint[1].checked == false)
 		{
 			app->audio->PlayFx(2);
 		}
+		checkpoint[1].checked = true;
 	}
 
 	return true;
@@ -243,6 +231,27 @@ bool Scene::PostUpdate()
 
 	if(app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 		ret = false;
+
+	const SDL_Rect sectionCPAnim1 = { 0, 0, 22, 22 };
+	const SDL_Rect sectionCPAnim2 = { 22, 0, 22, 22 };
+
+	if (checkpoint[0].active && !checkpoint[0].checked && currentScreen != DEAD_SCREEN)
+	{
+		app->render->DrawTexture(checkpoint[0].checkpointTex, checkpoint[0].rect.x, checkpoint[0].rect.y, &sectionCPAnim1);
+	}
+	else if (checkpoint[0].active && checkpoint[0].checked && currentScreen != DEAD_SCREEN)
+	{
+		app->render->DrawTexture(checkpoint[0].checkpointTex, checkpoint[0].rect.x, checkpoint[0].rect.y, &sectionCPAnim2);
+	}
+
+	if (checkpoint[1].active && !checkpoint[1].checked && currentScreen != DEAD_SCREEN)
+	{
+		app->render->DrawTexture(checkpoint[1].checkpointTex, checkpoint[1].rect.x, checkpoint[1].rect.y, &sectionCPAnim1);
+	}
+	else if (checkpoint[1].active && checkpoint[1].checked && currentScreen != DEAD_SCREEN)
+	{
+		app->render->DrawTexture(checkpoint[1].checkpointTex, checkpoint[1].rect.x, checkpoint[1].rect.y, &sectionCPAnim2);
+	}
 
 	return ret;
 }

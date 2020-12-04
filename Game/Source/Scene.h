@@ -26,6 +26,8 @@ struct Checkpoint
 	bool checked;
 	bool active = false;
 	void TP(Cp cp);
+	SDL_Texture* checkpointTex;
+	SString source;
 };
 
 class Scene : public Module

@@ -63,6 +63,7 @@ bool Audio::Awake(pugi::xml_node& config)
 		//Load checkpoint sound
 		fxVolume = config.child("fx").child("volume").attribute("value").as_int();
 	}
+
 	return ret;
 }
 
@@ -191,7 +192,6 @@ unsigned int Audio::LoadFx(const char* path)
 		fx.Add(chunk);
 		ret = fx.Count();
 	}
-
 	return ret;
 }
 

@@ -27,9 +27,9 @@
     <title name="Assets/textures/Title_Screen_Platformer.png"/>
     <intro name="Assets/textures/IntroPlaceholder.png" />
     <death name="Assets/textures/Die_Screen_Platformer.png"/>
-    <checkpoints>
-      <cp1 x ="1000" y = "140"/>
-      <cp2 x ="467" y = "156"/>
+    <checkpoints name ="Assets/textures/checkpoint_sheet.png">
+      <cp1 x ="995" y = "138"/>
+      <cp2 x ="456" y = "154"/>
     </checkpoints>
   </scene>
   <map>

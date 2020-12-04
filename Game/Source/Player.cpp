@@ -324,7 +324,7 @@ void Player::SetInitialPlayer(Level lvl)
 		{
 			playerInfo.position = { app->map->GetPlayerInitialPos() };
 			playerInfo.position.y += 2;
-			playerColider = { playerInfo.position.x, playerInfo.position.y, 16, 30 };
+			playerColider = { playerInfo.position.x + 2, playerInfo.position.y, 14, 30 };
 
 			playerInfo.speed = 2;
 			playerInfo.currentLevel = lvl;
@@ -340,7 +340,7 @@ void Player::SetInitialPlayer(Level lvl)
 		if (app->IsLoading() == false)
 		{
 			playerInfo.position = { app->scene->checkpoint[0].rect.x, app->scene->checkpoint[0].rect.y - 16 };
-			playerColider = { playerInfo.position.x, playerInfo.position.y, 16, 30 };
+			playerColider = { playerInfo.position.x + 2, playerInfo.position.y, 14, 30 };
 
 			playerInfo.speed = 2;
 			playerInfo.currentLevel = lvl;
@@ -356,7 +356,7 @@ void Player::SetInitialPlayer(Level lvl)
 		if (app->IsLoading() == false)
 		{
 			playerInfo.position = { app->scene->checkpoint[1].rect.x, app->scene->checkpoint[1].rect.y - 16 };
-			playerColider = { playerInfo.position.x, playerInfo.position.y, 16, 30 };
+			playerColider = { playerInfo.position.x + 2, playerInfo.position.y, 14, 30 };
 
 			playerInfo.speed = 2;
 			playerInfo.currentLevel = lvl;
@@ -619,7 +619,7 @@ void Player::TP(Cp cp)
 			if (app->IsLoading() == false)
 			{
 				playerInfo.position = { app->scene->checkpoint[0].rect.x, app->scene->checkpoint[0].rect.y - 16 };
-				playerColider = { playerInfo.position.x, playerInfo.position.y, 16, 30 };
+				playerColider = { playerInfo.position.x + 2, playerInfo.position.y, 14, 30 };
 
 				playerInfo.speed = 2;
 				playerInfo.currentLevel = LVL_1;
@@ -645,7 +645,7 @@ void Player::TP(Cp cp)
 			if (app->IsLoading() == false)
 			{
 				playerInfo.position = { app->scene->checkpoint[1].rect.x, app->scene->checkpoint[1].rect.y - 16 };
-				playerColider = { playerInfo.position.x, playerInfo.position.y, 16, 30 };
+				playerColider = { playerInfo.position.x + 2, playerInfo.position.y, 14, 30 };
 
 				playerInfo.speed = 2;
 				playerInfo.currentLevel = LVL_2;
