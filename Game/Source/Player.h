@@ -94,6 +94,7 @@ public:
 public:
 	PlayerData playerInfo;
 	SDL_Rect playerColider;
+	SDL_Rect swordCollider;
 	bool onGround = true;
 	bool jumpOn = true;
 	bool doubleJump = true;

@@ -231,15 +231,25 @@ bool Player::Update(float dt)
 			if (playerInfo.currentDir == RIGHT_DIR)
 			{
 				UpdateAnimation("attackRight");
+				swordCollider.x = playerColider.x + 14;
+				swordCollider.y = playerColider.y + 15;
 			}
 			if (playerInfo.currentDir == LEFT_DIR)
 			{
 				UpdateAnimation("attackLeft");
+				swordCollider.x = playerColider.x - 12;
+				swordCollider.y = playerColider.y + 15;
 			}
 			if (playerInfo.currentAnimation->currentFrame > 2.4f)
 			{
 				playerInfo.attacking = false;
 			}
+
+		}
+		else
+		{
+			swordCollider.x = -20;
+			swordCollider.y = 0;
 		}
 
 		//ATTACK END
@@ -361,6 +371,7 @@ bool Player::Save(pugi::xml_node& saveNode) const
 
 void Player::SetInitialPlayer(Level lvl)
 {
+	swordCollider = {-20, 0, 13, 7};
 	if (!app->scene->checkpoint[0].checked && !app->scene->checkpoint[1].checked)
 	{
 		app->render->camera.x = 0;
