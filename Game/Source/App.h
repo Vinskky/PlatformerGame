@@ -17,6 +17,7 @@ class Textures;
 class Audio;
 class Scene;
 class Map;
+class PathFinding;
 class Player;
 class Collisions;
 class Transition;
@@ -91,6 +92,7 @@ public:
 	Audio* audio;
 	Scene* scene;
 	Map* map;
+	PathFinding* pathfinding;
 	Player* player;
 	Collisions* collision;
 	Transition* fade;
