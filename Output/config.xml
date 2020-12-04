@@ -40,6 +40,16 @@
   <player>
     <source name="Assets/textures/Character.png"/>
     <animations>
+      <animation name ="attackRight" loop="false" speed="0.165">
+          <frame height="31" width="20" x ="62" y="248"/>
+          <frame height="31" width="31" x ="0" y="248"/>
+          <frame height="31" width="32" x ="102" y="248"/>
+      </animation>
+      <animation name ="attackLeft" loop="false" speed="0.165">     
+          <frame height="31" width="20" x ="82" y="248"/>
+          <frame height="31" width="31" x ="31" y="248"/>
+          <frame height="31" width="32" x ="134" y="248"/>
+      </animation>
       <animation name ="walk" loop="true" speed="0.125">     
           <frame height="28" width="24" x ="0" y="32"/>
           <frame height="28" width="24" x ="24" y="32"/>

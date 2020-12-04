@@ -33,6 +33,10 @@ struct PlayerData
 	Animation jumpLeft;
 	Animation dieLeft;
 	Animation walkLeft;
+	Animation attackRight;
+	Animation attackLeft;
+
+	bool attacking = false;
 
 	iPoint position;
 	uint speed;

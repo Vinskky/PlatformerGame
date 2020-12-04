@@ -108,6 +108,24 @@ bool Player::Awake(pugi::xml_node& config)
 			playerInfo.dieLeft.speed = anim.attribute("speed").as_float();
 			playerInfo.dieLeft.loop = anim.attribute("loop").as_bool();
 		}
+		else if (strcmp(tmp.GetString(), "attackRight") == 0)
+		{
+			for (frame = anim.child("frame"); frame; frame = frame.next_sibling("frame"))
+			{
+				playerInfo.attackRight.PushBack({ frame.attribute("x").as_int(),frame.attribute("y").as_int(), frame.attribute("width").as_int(), frame.attribute("height").as_int() }, tmp);
+			}
+			playerInfo.attackRight.speed = anim.attribute("speed").as_float();
+			playerInfo.attackRight.loop = anim.attribute("loop").as_bool();
+		}
+		else if (strcmp(tmp.GetString(), "attackLeft") == 0)
+		{
+			for (frame = anim.child("frame"); frame; frame = frame.next_sibling("frame"))
+			{
+				playerInfo.attackLeft.PushBack({ frame.attribute("x").as_int(),frame.attribute("y").as_int(), frame.attribute("width").as_int(), frame.attribute("height").as_int() }, tmp);
+			}
+			playerInfo.attackLeft.speed = anim.attribute("speed").as_float();
+			playerInfo.attackLeft.loop = anim.attribute("loop").as_bool();
+		}
 	}
 	
 	return ret;
@@ -134,6 +152,7 @@ bool Player::Update(float dt)
 		if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
 			godMode = !godMode;
 		// Player Controls
+
 		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 		{
 			if (godMode == false)
@@ -165,6 +184,7 @@ bool Player::Update(float dt)
 			}
 			UpdateAnimation("walk");
 			playerInfo.currentDir = LEFT_DIR;
+
 		}
 
 		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
@@ -199,6 +219,30 @@ bool Player::Update(float dt)
 			playerInfo.currentDir = RIGHT_DIR;
 			UpdateAnimation("walk");
 		}
+
+		//ATTACK CODE
+		if (app->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
+		{
+			playerInfo.attacking = true;
+		}
+
+		if (playerInfo.attacking)
+		{
+			if (playerInfo.currentDir == RIGHT_DIR)
+			{
+				UpdateAnimation("attackRight");
+			}
+			if (playerInfo.currentDir == LEFT_DIR)
+			{
+				UpdateAnimation("attackLeft");
+			}
+			if (playerInfo.currentAnimation->currentFrame > 2.4f)
+			{
+				playerInfo.attacking = false;
+			}
+		}
+
+		//ATTACK END
 
 		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && onGround && !jumpOn)
 		{
@@ -576,6 +620,11 @@ void Player::UpdateAnimation(char* anim)
 			playerInfo.currentAnimation->FinishAnimation();
 			playerInfo.currentAnimation = &playerInfo.die;
 		}
+		else if (strcmp(anim, "attackRight") == 0)
+		{
+			playerInfo.currentAnimation->FinishAnimation();
+			playerInfo.currentAnimation = &playerInfo.attackRight;
+		}
 	}
 	else if (playerInfo.currentDir == LEFT_DIR)
 	{
@@ -598,6 +647,11 @@ void Player::UpdateAnimation(char* anim)
 		{
 			playerInfo.currentAnimation->FinishAnimation();
 			playerInfo.currentAnimation = &playerInfo.dieLeft;
+		}
+		else if (strcmp(anim, "attackLeft") == 0)
+		{
+			playerInfo.currentAnimation->FinishAnimation();
+			playerInfo.currentAnimation = &playerInfo.attackLeft;
 		}
 	}
 }
