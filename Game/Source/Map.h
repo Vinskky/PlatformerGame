@@ -146,6 +146,8 @@ public:
     MapData mapInfo;
     TileSet* GetTileSetFromTileId(int id) const;
     
+    bool CreateWalkabilityMap(int* width, int* height, uchar** buffer) const;
+
     bool lvl1 = true;
     bool lvl2 = false;
 

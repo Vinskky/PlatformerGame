@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "Transition.h"
 #include "Map.h"
+#include "Pathfinding.h"
 #include "Collider.h"
 
 #include "Defs.h"
@@ -93,7 +94,15 @@ bool Scene::Start()
 	deathScene = app->tex->Load(sourceDeath.GetString());
 
 	app->audio->PlayMusic("Assets/audio/music/Raxer_Sound_-_Pathfinder_Master.ogg");
-	app->map->Load(app->map->GetLevelToLoad().GetString());
+	if (app->map->Load(app->map->GetLevelToLoad().GetString()) == true)
+	{
+		int w, h;
+		uchar* data = NULL;
+		
+		if(app->map->CreateWalkabilityMap(&w, &h, &data)) app->pathfinding->SetMap(w, h, data);
+
+		RELEASE_ARRAY(data);
+	}
 	
 	return true;
 }

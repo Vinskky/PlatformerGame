@@ -1,19 +1,17 @@
 #include "EnemyNormal.h"
-#include "Textures.h"
 #include "App.h"
-#include "Pathfinding.h"
-#include "Player.h"
+#include "Input.h"
+#include "Audio.h"
 #include "Render.h"
+#include "Textures.h"
+#include "Player.h"
+#include "Pathfinding.h"
 
 EnemyNormal::EnemyNormal() : Criature()
 {
 	enName.Create("enemyNormal");
 	type = EnemyType::EN_NORMAL;
 	//animations pushes here
-	//----------
-	//----------
-	//----------
-	//----------
 }
 
 
@@ -23,6 +21,7 @@ EnemyNormal::~EnemyNormal()
 	delete aStar;
 	app->tex->UnLoad(graphics);
 	//clear enemy collider
+	collider = {0, 0,0,0 };
 	graphics = nullptr;
 }
 
@@ -40,7 +39,7 @@ bool EnemyNormal::Start()
 	aStar = new PathFinding();
 	playerLastPos = app->player->playerInfo.position;
 	//add collider to enemy
-
+	collider = { enemyPos.x,enemyPos.y, 16,16 };
 	return true;
 }
 
@@ -57,9 +56,9 @@ bool EnemyNormal::Update(float dt)
 			playerLastPos = app->player->playerInfo.position;
 	}
 
-	MoveEnemy(dt);
-	processPos();
-	processGravity(dt);
+	//MoveEnemy(dt);
+	//processPos();
+	//processGravity(dt);
 
 	//collision follows
 

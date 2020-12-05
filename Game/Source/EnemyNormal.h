@@ -11,6 +11,7 @@ class PathFinding;
 
 class EnemyNormal : public Criature
 {
+public:
 	EnemyNormal();
 	virtual ~EnemyNormal();
 
@@ -50,6 +51,7 @@ private:
 	EnemyState state;
 	EnemyDirection direction;
 	SDL_Texture* graphics = nullptr;
+	SDL_Rect collider;
 	bool isMove = false;
 
 	PathFinding* aStar = nullptr;

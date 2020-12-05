@@ -13,6 +13,8 @@ public:
 	List<SDL_Rect> deathTriggers;
 	List<SDL_Rect> winTriggers;
 	List<SDL_Rect> initPos;
+	List<SDL_Rect> initPosEnemyGround;
+	List<SDL_Rect> initPosEnemyFly;
 
 public:
 
@@ -36,6 +38,8 @@ public:
 	void TriggerDeath(SDL_Rect death);
 	void TriggerWin(SDL_Rect victory);
 	void InitPos(SDL_Rect position);
+	void InitPosEnemy(SDL_Rect position);
+	void InitPosFly(SDL_Rect position);
 	void ClearColliders();
 
 	void DebugDraw();

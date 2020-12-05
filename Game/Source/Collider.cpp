@@ -70,12 +70,24 @@ void Collisions::InitPos(SDL_Rect position)
 	initPos.Add(position);
 }
 
+void Collisions::InitPosEnemy(SDL_Rect position)
+{
+	initPosEnemyGround.Add(position);
+}
+
+void Collisions::InitPosFly(SDL_Rect position)
+{
+	initPosEnemyFly.Add(position);
+}
+
 void Collisions::ClearColliders()
 {
 	deathTriggers.Clear();
 	winTriggers.Clear();
 	noWalkable.Clear();
 	initPos.Clear();
+	initPosEnemyGround.Clear();
+	initPosEnemyFly.Clear();
 }
 
 void Collisions::DebugDraw()

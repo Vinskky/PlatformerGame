@@ -5,6 +5,7 @@
 #include "Map.h"
 #include "Collider.h"
 #include "Player.h"
+#include "EnemyManager.h"
 #include "Defs.h"
 #include "Log.h"
 
@@ -432,6 +433,49 @@ TileSet* Map::GetTileSetFromTileId(int id) const
     return set;
 }
 
+bool Map::CreateWalkabilityMap(int* width, int* height, uchar** buffer) const
+{
+    bool ret = false;
+    ListItem<MapLayer*>* item;
+    item = mapInfo.layers.start;
+
+    for (item = mapInfo.layers.start; item != NULL; item = item->next)
+    {
+        MapLayer* layer = item->data;
+
+        if (layer->properties.GetProperty("Navigation", 0) == 0)
+            continue;
+
+        uchar* map = new uchar[layer->width * layer->height];
+        memset(map, 1, layer->width * layer->height);
+
+        for (int y = 0; y < mapInfo.height; ++y)
+        {
+            for (int x = 0; x < mapInfo.width; ++x)
+            {
+                int i = (y * layer->width) + x;
+
+                int tileId = layer->Get(x, y);
+                TileSet* tileset = (tileId > 0) ? GetTileSetFromTileId(tileId) : NULL;
+
+                if (tileset != NULL)
+                {
+                    map[i] = (tileId - tileset->firstGid) > 0 ? 0 : 1;
+                }
+            }
+        }
+
+        *buffer = map;
+        *width = mapInfo.width;
+        *height = mapInfo.height;
+        ret = true;
+
+        break;
+    }
+
+    return ret;
+}
+
 void Map::ColliderAsign(MapLayer* layer)
 {
     for (int y = 0; y < mapInfo.height; ++y)
@@ -467,6 +511,14 @@ void Map::ColliderAsign(MapLayer* layer)
 
                     case 276:
                         app->collision->TriggerWin(r);
+                        break;
+
+                    case 277:
+                        app->collision->InitPosEnemy(r);
+                        break;
+
+                    case 278:
+                        app->collision->InitPosFly(r);
                         break;
 
                     case 1:

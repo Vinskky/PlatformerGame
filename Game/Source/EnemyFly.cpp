@@ -11,7 +11,7 @@
 EnemyFly::EnemyFly() : Criature()
 {
 	enName.Create("enemyFly");
-	type = EnemyType::EN_FLY;
+	type = EN_FLY;
 
 	//animation pushes here
 
@@ -28,6 +28,7 @@ EnemyFly::~EnemyFly()
 
 bool EnemyFly::Awake()
 {
+	graphics = app->tex->Load("Assets/textures/bat_sprite_sheet.png");
 	enemyVel.Create(0, 0);
 	enemyState = ENEMY_IDLE;
 	return true;
@@ -35,13 +36,12 @@ bool EnemyFly::Awake()
 
 bool EnemyFly::Start()
 {
-	//graphics == texture
-	//current animation on start
+	currAnimation = &idleLeft;
 	enemyState = ENEMY_IDLE;
 	aStar = new PathFinding();
 	playerLastPos = app->player->playerInfo.position;
 	//add collider to enemy
-
+	collider = { enemyPos.x,enemyPos.y, 16,16 };
 	return true;
 }
 

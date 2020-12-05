@@ -3,7 +3,6 @@
 
 #include "Module.h"
 #include "List.h"
-#include "EnemyFly.h"
 #include "Criature.h"
 
 class EnemyManager : public Module

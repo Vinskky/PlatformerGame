@@ -1,6 +1,10 @@
 #include "EnemyManager.h"
+#include "EnemyFly.h"
+#include "EnemyNormal.h"
+#include "Criature.h"
 #include "App.h"
 #include "Log.h"
+#include "Collider.h"
 #include "Defs.h"
 #include "Input.h"
 
@@ -28,6 +32,13 @@ bool EnemyManager::Awake(pugi::xml_node& config)
 
 bool EnemyManager::Start()
 {
+	ListItem<SDL_Rect>* item = app->collision->initPosEnemyGround.start;
+	while (item != NULL)
+	{
+		iPoint pos = { item->data.x, item->data.y };
+		CreateEnemyNormal(pos);
+		item = item->next;
+	}
 	return true;
 }
 
@@ -77,6 +88,13 @@ void EnemyManager::CreateEnemyFly(iPoint position)
 
 void EnemyManager::CreateEnemyNormal(iPoint position)
 {
+	EnemyNormal* enGround = new EnemyNormal();
+	enGround->Awake();
+	enGround->enemyPos = position;
+	enGround->Start();
+	enemies.Add(enGround);
+
+	LOG("Enemy Ground Created!");
 }
 
 void EnemyManager::DeleteEnemyFly(Criature* enemyFly)
@@ -97,8 +115,22 @@ void EnemyManager::DeleteEnemyFly(Criature* enemyFly)
 	}
 }
 
-void EnemyManager::DeleteEnemyNormal(Criature* enemy_normal)
+void EnemyManager::DeleteEnemyNormal(Criature* enemyNormal)
 {
+	int id = enemies.Find(enemyNormal);
+	int ds = 0;
+	ListItem<Criature*>* item = enemies.start;
+	while (item != NULL)
+	{
+		if (id == ds)
+		{
+			item->data->~Criature();
+			enemies.Del(item);
+			return;
+		}
+		ds++;
+		item = item->next;
+	}
 }
 
 void EnemyManager::DeleteAllEnemies()
