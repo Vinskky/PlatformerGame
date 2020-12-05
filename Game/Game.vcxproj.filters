@@ -64,6 +64,7 @@
     <ClInclude Include="Source\PerfTimer.h" />
     <ClInclude Include="Source\Timer.h" />
     <ClInclude Include="Source\Pathfinding.h" />
+    <ClInclude Include="Source\Criature.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="External">
