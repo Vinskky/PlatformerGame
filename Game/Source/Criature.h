@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _CRIATURE_H_
+#define _CRIATURE_H_
+
 
 #include "Collider.h"
 #include "Point.h"
@@ -103,3 +105,4 @@ private:
 
 };
 
+#endif // !_CRIATURE_H_
