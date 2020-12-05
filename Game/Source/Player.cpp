@@ -342,11 +342,18 @@ bool Player::PostUpdate()
 		}
 		else if (playerLife.lifes == 2)
 		{
-
+			app->render->DrawTexture(playerLife.lifeTex, 30 - app->render->camera.x / 3, 3);
+			app->render->DrawTexture(playerLife.lifeTex, 50 - app->render->camera.x / 3, 3);
 		}
 		else if (playerLife.lifes == 1)
 		{
+			app->render->DrawTexture(playerLife.lifeTex, 30 - app->render->camera.x / 3, 3);
+		}
 
+		if (playerLife.lifes == 0)
+		{
+			playerLife.lifes = 3;
+			Dead();
 		}
 	}
 	return true;
