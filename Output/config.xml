@@ -32,13 +32,17 @@
       <cp1 x ="995" y = "138"/>
       <cp2 x ="456" y = "154"/>
     </checkpoints>
-    <collectible name="Assets/textures/item.png" w="19" h="25">
+    <collectible name="Assets/textures/item.png" w="13" h="17">
       <collect x="480" y="100" active="true"/>
       <collect x="1245" y="65" active="true"/>
       <collect x="272" y="49" active="false"/>
       <collect x="512" y="49" active="false"/>
     </collectible>
-    <lifegetter name="Assets/textures/life_getter.png"/>
+    <collectiblemark name="Assets/textures/item_mark.png"/>
+    <lifegetter name="Assets/textures/life_getter.png" w="21" h="21">
+      <getter x="0" y="0"/>
+      <getter x="0" y="0"/>
+    </lifegetter>
   </scene>
   <map>
     <folder>Assets/maps/</folder>

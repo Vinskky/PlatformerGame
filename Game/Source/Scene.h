@@ -78,9 +78,14 @@ private:
 	SDL_Texture* deathScene;
 
 public:
+	void CollectibleMarkerLogic();
 	Screens currentScreen;
 	Checkpoint checkpoint[2];
 	Collectible collectible[4];
+
+	SDL_Texture* markerTex;
+	SString sourceMarker;
+	int collectibleCount = 0;
 };
 
 #endif // __SCENE_H__

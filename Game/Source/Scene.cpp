@@ -63,12 +63,19 @@ bool Scene::Awake(pugi::xml_node& conf)
 		i++;
 	}
 
+	cp = conf.child("collectiblemark");
+
+	sourceMarker.Create(cp.attribute("name").as_string());
+
 	return ret;
 }
 
 // Called before the first frame
 bool Scene::Start()
 {
+	//COLLECTABLE MARKER
+	markerTex = app->tex->Load(sourceMarker.GetString());
+
 	//CP
 	checkpoint[0].checkpointTex = app->tex->Load(checkpoint[0].source.GetString());
 	checkpoint[1].checkpointTex = app->tex->Load(checkpoint[0].source.GetString());
@@ -265,6 +272,7 @@ bool Scene::Update(float dt)
 
 			if (app->input->GetKey(SDL_SCANCODE_KP_MINUS) == KEY_DOWN)
 				app->audio->SetVolume(1);
+
 		}
 		break;
 
@@ -355,6 +363,9 @@ bool Scene::PostUpdate()
 		}
 	}
 
+	//COLLECTIBLES MARKER LOGIC
+	CollectibleMarkerLogic();
+
 	return ret;
 }
 
@@ -364,4 +375,43 @@ bool Scene::CleanUp()
 	LOG("Freeing scene");
 
 	return true;
+}
+
+void Scene::CollectibleMarkerLogic()
+{
+	if (currentScreen == PLAYING)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			if (collectible[i].collected)
+			{
+				collectibleCount++;
+			}
+		}
+
+		if (collectibleCount == 1)
+		{
+			app->render->DrawTexture(markerTex, 426 - 30 - app->render->camera.x / 3, 3);
+		}
+		else if (collectibleCount == 2)
+		{
+			app->render->DrawTexture(markerTex, 426 - 30 - app->render->camera.x / 3, 3);
+			app->render->DrawTexture(markerTex, 426 - 50 - app->render->camera.x / 3, 3);
+		}
+		else if (collectibleCount == 3)
+		{
+			app->render->DrawTexture(markerTex, 426 - 30 - app->render->camera.x / 3, 3);
+			app->render->DrawTexture(markerTex, 426 - 50 - app->render->camera.x / 3, 3);
+			app->render->DrawTexture(markerTex, 426 - 70 - app->render->camera.x / 3, 3);
+		}
+		else if (collectibleCount == 4)
+		{
+			app->render->DrawTexture(markerTex, 426 - 30 - app->render->camera.x / 3, 3);
+			app->render->DrawTexture(markerTex, 426 - 50 - app->render->camera.x / 3, 3);
+			app->render->DrawTexture(markerTex, 426 - 70 - app->render->camera.x / 3, 3);
+			app->render->DrawTexture(markerTex, 426 - 90 - app->render->camera.x / 3, 3);
+		}
+
+		collectibleCount = 0;
+	}
 }

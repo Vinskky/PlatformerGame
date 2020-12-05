@@ -145,7 +145,7 @@ bool Player::Update(float dt)
 {
 	bool ret = true;
 
-	LOG("CAMX: %d, CAMY: %d", playerInfo.position.x, playerInfo.position.y);
+	//LOG("CAMX: %d, CAMY: %d", playerInfo.position.x, playerInfo.position.y);
 
 	if (app->scene->currentScreen == Screens::PLAYING)
 	{
@@ -404,7 +404,10 @@ void Player::SetInitialPlayer(Level lvl)
 	if (!app->scene->checkpoint[0].checked && !app->scene->checkpoint[1].checked)
 	{
 		//RESTART COLLECTIBLES
-		for (int i = 0; i < 4; i++) app->scene->collectible[i].collected = false;
+		if (lvl == LVL_1)
+		{
+			for (int i = 0; i < 4; i++) app->scene->collectible[i].collected = false;
+		}
 
 		app->render->camera.x = 0;
 		if (app->IsLoading() == false)
@@ -635,7 +638,8 @@ void Player::LoadCurrentLevel(Level currentLvl)
 		app->scene->checkpoint[1].active = false;
 
 		//RESTART COLLECTIBLES
-		for (int i = 0; i < 4; i++) app->scene->collectible[i].collected = false;
+		if (!app->scene->checkpoint[0].checked) app->scene->collectible[0].collected = false;
+		if (app->scene->checkpoint[0].checked) app->scene->collectible[1].collected = false;
 
 		//ACTIVATE COLLECTIBLES
 		app->scene->collectible[0].active = true;
@@ -658,7 +662,8 @@ void Player::LoadCurrentLevel(Level currentLvl)
 		app->scene->checkpoint[1].active = true;
 
 		//RESTART COLLECTIBLES
-		for (int i = 0; i < 4; i++) app->scene->collectible[i].collected = false;
+		if (!app->scene->checkpoint[1].checked) app->scene->collectible[2].collected = false;
+		if (app->scene->checkpoint[1].checked) app->scene->collectible[3].collected = false;
 
 		//ACTIVATE COLLECTIBLES
 		app->scene->collectible[0].active = false;
