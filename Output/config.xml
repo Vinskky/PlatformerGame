@@ -38,6 +38,7 @@
     <level2>Level_2_Platformer.tmx</level2>
   </map>
   <player>
+    <life source="Assets/textures/heart.png" lifes="3"/>
     <source name="Assets/textures/Character.png"/>
     <animations>
       <animation name ="attackRight" loop="false" speed="0.165">

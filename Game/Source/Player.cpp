@@ -127,6 +127,10 @@ bool Player::Awake(pugi::xml_node& config)
 			playerInfo.attackLeft.loop = anim.attribute("loop").as_bool();
 		}
 	}
+
+	LOG("%s", config.child("life").attribute("source").as_string());
+	playerLife.source.Create(config.child("life").attribute("source").as_string());
+	playerLife.lifes = config.child("life").attribute("lifes").as_int();
 	
 	return ret;
 }
@@ -328,6 +332,23 @@ bool Player::Update(float dt)
 
 bool Player::PostUpdate() 
 {
+	if (app->scene->currentScreen == PLAYING)
+	{
+		if (playerLife.lifes == 3)
+		{
+			app->render->DrawTexture(playerLife.lifeTex, 30 - app->render->camera.x / 3, 3);
+			app->render->DrawTexture(playerLife.lifeTex, 50 - app->render->camera.x / 3, 3);
+			app->render->DrawTexture(playerLife.lifeTex, 70 - app->render->camera.x / 3, 3);
+		}
+		else if (playerLife.lifes == 2)
+		{
+
+		}
+		else if (playerLife.lifes == 1)
+		{
+
+		}
+	}
 	return true;
 }
 
@@ -371,6 +392,7 @@ bool Player::Save(pugi::xml_node& saveNode) const
 
 void Player::SetInitialPlayer(Level lvl)
 {
+	playerLife.lifeTex = app->tex->Load(playerLife.source.GetString());
 	swordCollider = {-20, 0, 13, 7};
 	if (!app->scene->checkpoint[0].checked && !app->scene->checkpoint[1].checked)
 	{

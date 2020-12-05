@@ -44,6 +44,13 @@ struct PlayerData
 	Level currentLevel;
 };
 
+struct Life
+{
+	SDL_Texture* lifeTex;
+	int lifes;
+	SString source;
+};
+
 class Player : public Module 
 {
 public:
@@ -100,6 +107,7 @@ public:
 	bool doubleJump = true;
 	bool godMode = false;
 	bool isMoving;
+	Life playerLife;
 private:
 	SDL_Texture* texture;
 	SString textPath;
