@@ -8,6 +8,7 @@
 #include "Scene.h"
 #include "Map.h"
 #include "Player.h"
+#include "EnemyManager.h"
 #include "Collider.h"
 #include "Transition.h"
 #include "Defs.h"
@@ -30,6 +31,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	pathfinding = new PathFinding();
 	scene = new Scene();
 	map = new Map();
+	enManager = new EnemyManager();
 	player = new Player();
 	collision = new Collisions();
 	fade = new Transition();
@@ -43,6 +45,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(pathfinding);
 	AddModule(scene);
 	AddModule(map);
+	AddModule(enManager);
 	AddModule(player);
 	AddModule(collision);
 	AddModule(fade);

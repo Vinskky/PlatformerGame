@@ -7,7 +7,7 @@
 
 struct SDL_Texture;
 
-enum State
+enum EnemyState
 {
 	ENEMY_IDLE,
 	ENEMY_WALK_L,
@@ -17,7 +17,7 @@ enum State
 	DEAD
 };
 
-enum Direction
+enum EnemyDirection
 {
 	NON,
 	ENEMY_UP,
@@ -29,7 +29,7 @@ enum Direction
 class Criature
 {
 public:
-	enum Type
+	enum EnemyType
 	{
 		EN_NORMAL,
 		EN_FLY
@@ -86,10 +86,10 @@ public:
 
 	virtual void OnCollision(Collisions*, Collisions*) {}
 
-private:
+public:
 
-	State enemyState;
-	Direction enemyDirection;
+	EnemyState enemyState;
+	EnemyDirection enemyDirection;
 
 	iPoint enemyPos;
 	iPoint enemyVel;
@@ -100,7 +100,7 @@ private:
 	SString enName;
 	bool active = false;
 
-	Type type;
+	EnemyType type;
 	Collisions* enemyCollider = nullptr;
 
 };

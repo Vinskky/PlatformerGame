@@ -19,6 +19,7 @@ class Scene;
 class Map;
 class PathFinding;
 class Player;
+class EnemyManager;
 class Collisions;
 class Transition;
 
@@ -96,7 +97,7 @@ public:
 	Player* player;
 	Collisions* collision;
 	Transition* fade;
-
+	EnemyManager* enManager;
 private:
 
 	int argc;

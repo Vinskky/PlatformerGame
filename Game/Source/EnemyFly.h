@@ -52,8 +52,8 @@ public:
 	bool CleanUp();
 
 private:
-	State state;
-	Direction direction;
+	EnemyState state;
+	EnemyDirection direction;
 	SDL_Texture* graphics = nullptr;
 	bool isMove = false;
 
