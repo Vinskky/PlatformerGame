@@ -1,5 +1,5 @@
-#ifndef _ENEMY_FLY_H
-#define _ENEMY_FLY_H
+#ifndef _ENEMY_NORMAL_H_
+#define _ENEMY_NORMAL_H_
 
 #include "Criature.h"
 #include "Point.h"
@@ -9,11 +9,10 @@
 
 class PathFinding;
 
-class EnemyFly : public Criature
+class EnemyNormal : public Criature
 {
-public:
-	EnemyFly();
-	virtual ~EnemyFly();
+	EnemyNormal();
+	virtual ~EnemyNormal();
 
 	// Called before render is available
 	bool Awake();
@@ -28,12 +27,8 @@ public:
 	bool Update(float dt);
 
 	void MoveEnemy(float dt);
-
 	void processPos();
-
-	void processGravity();
-
-	void ReturnToZero();
+	void processGravity(float dt);
 
 	void Draw();
 
@@ -57,19 +52,15 @@ private:
 	SDL_Texture* graphics = nullptr;
 	bool isMove = false;
 
-	DynArray<iPoint>* path;
+	mutable DynArray<iPoint>* path;
 	PathFinding* aStar = nullptr;
 
 	iPoint playerLastPos;
 
 	Animation* currAnimation = new Animation();
-	Animation idleRight;
-	Animation idleLeft;
-	Animation flyRight;
-	Animation flyLeft;
-	Animation deadRight;
-	Animation deadLeft;
+	Animation moveRight;
+	Animation moveLeft;
 
 };
-#endif // !_ENEMY_FLY_H
 
+#endif // !_ENEMY_NORMAL_H_

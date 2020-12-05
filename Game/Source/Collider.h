@@ -40,7 +40,7 @@ public:
 
 	void DebugDraw();
 
-private:
+public:
 	bool debug = false;
 };
 
