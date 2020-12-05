@@ -28,6 +28,16 @@ struct Checkpoint
 	void TP(Cp cp);
 	SDL_Texture* checkpointTex;
 	SString source;
+	int collectibles;
+};
+
+struct Collectible
+{
+	SString source;
+	SDL_Rect itemRect;
+	bool active;
+	bool collected = false;
+	SDL_Texture* itemTex;
 };
 
 class Scene : public Module
@@ -70,6 +80,7 @@ private:
 public:
 	Screens currentScreen;
 	Checkpoint checkpoint[2];
+	Collectible collectible[4];
 };
 
 #endif // __SCENE_H__

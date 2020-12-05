@@ -145,7 +145,7 @@ bool Player::Update(float dt)
 {
 	bool ret = true;
 
-	//LOG("CAMX: %d", app->render->camera.x);
+	LOG("CAMX: %d, CAMY: %d", playerInfo.position.x, playerInfo.position.y);
 
 	if (app->scene->currentScreen == Screens::PLAYING)
 	{
@@ -403,6 +403,9 @@ void Player::SetInitialPlayer(Level lvl)
 	swordCollider = {-20, 0, 13, 7};
 	if (!app->scene->checkpoint[0].checked && !app->scene->checkpoint[1].checked)
 	{
+		//RESTART COLLECTIBLES
+		for (int i = 0; i < 4; i++) app->scene->collectible[i].collected = false;
+
 		app->render->camera.x = 0;
 		if (app->IsLoading() == false)
 		{
@@ -420,6 +423,7 @@ void Player::SetInitialPlayer(Level lvl)
 	}
 	else if (app->scene->checkpoint[0].checked && lvl == LVL_1)
 	{
+
 		app->render->camera.x = -2364;
 		if (app->IsLoading() == false)
 		{
@@ -579,6 +583,12 @@ void Player::ChangeLevel(Level currentLvl)
 		app->scene->checkpoint[0].checked = false;
 		app->scene->checkpoint[1].checked = false;
 
+		//ACTIVATE COLLECTIBLES
+		app->scene->collectible[0].active = false;
+		app->scene->collectible[1].active = false;
+		app->scene->collectible[2].active = true;
+		app->scene->collectible[3].active = true;
+
 		if (app->map->Load(app->map->GetLevelToLoad().GetString()));
 		{
 			SetInitialPlayer(LVL_2);
@@ -597,6 +607,15 @@ void Player::ChangeLevel(Level currentLvl)
 		app->scene->checkpoint[0].checked = false;
 		app->scene->checkpoint[1].checked = false;
 
+		//RESTART COLLECTIBLES
+		for (int i = 0; i < 4; i++) app->scene->collectible[i].collected = false;
+
+		//ACTIVATE COLLECTIBLES
+		app->scene->collectible[0].active = true;
+		app->scene->collectible[1].active = true;
+		app->scene->collectible[2].active = false;
+		app->scene->collectible[3].active = false;
+
 		if (app->map->Load(app->map->GetLevelToLoad().GetString()));
 		{
 			SetInitialPlayer(LVL_1);
@@ -614,6 +633,15 @@ void Player::LoadCurrentLevel(Level currentLvl)
 		app->map->lvl2 = false;
 		app->scene->checkpoint[0].active = true;
 		app->scene->checkpoint[1].active = false;
+
+		//RESTART COLLECTIBLES
+		for (int i = 0; i < 4; i++) app->scene->collectible[i].collected = false;
+
+		//ACTIVATE COLLECTIBLES
+		app->scene->collectible[0].active = true;
+		app->scene->collectible[1].active = true;
+		app->scene->collectible[2].active = false;
+		app->scene->collectible[3].active = false;
 		
 		if (app->map->Load(app->map->GetLevelToLoad().GetString()));
 		{
@@ -628,6 +656,15 @@ void Player::LoadCurrentLevel(Level currentLvl)
 		app->map->lvl2 = true;
 		app->scene->checkpoint[0].active = false;
 		app->scene->checkpoint[1].active = true;
+
+		//RESTART COLLECTIBLES
+		for (int i = 0; i < 4; i++) app->scene->collectible[i].collected = false;
+
+		//ACTIVATE COLLECTIBLES
+		app->scene->collectible[0].active = false;
+		app->scene->collectible[1].active = false;
+		app->scene->collectible[2].active = true;
+		app->scene->collectible[3].active = true;
 
 		if(app->map->Load(app->map->GetLevelToLoad().GetString()));
 		{
@@ -707,6 +744,15 @@ void Player::TP(Cp cp)
 		app->scene->checkpoint[0].active = true;
 		app->scene->checkpoint[1].active = false;
 
+		//RESTART COLLECTIBLES
+		for (int i = 0; i < 4; i++) app->scene->collectible[i].collected = false;
+
+		//ACTIVATE COLLECTIBLES
+		app->scene->collectible[0].active = true;
+		app->scene->collectible[1].active = true;
+		app->scene->collectible[2].active = false;
+		app->scene->collectible[3].active = false;
+
 		if (app->map->Load(app->map->GetLevelToLoad().GetString()));
 		{
 			app->render->camera.x = -2364;
@@ -732,6 +778,15 @@ void Player::TP(Cp cp)
 		app->map->lvl2 = true;
 		app->scene->checkpoint[0].active = false;
 		app->scene->checkpoint[1].active = true;
+
+		//RESTART COLLECTIBLES
+		for (int i = 0; i < 4; i++) app->scene->collectible[i].collected = false;
+
+		//ACTIVATE COLLECTIBLES
+		app->scene->collectible[0].active = false;
+		app->scene->collectible[1].active = false;
+		app->scene->collectible[2].active = true;
+		app->scene->collectible[3].active = true;
 
 		if (app->map->Load(app->map->GetLevelToLoad().GetString()));
 		{

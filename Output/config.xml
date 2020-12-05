@@ -20,6 +20,7 @@
     <fx>
       <jump name="Assets/audio/fx/jump.wav" />
       <checkpoint name="Assets/audio/fx/checkpoint_fx.wav" />
+      <collectible name="Assets/audio/fx/coin_fx.wav"/>
       <volume value="64"/>
     </fx>
   </audio>
@@ -31,6 +32,13 @@
       <cp1 x ="995" y = "138"/>
       <cp2 x ="456" y = "154"/>
     </checkpoints>
+    <collectible name="Assets/textures/item.png" w="19" h="25">
+      <collect x="480" y="100" active="true"/>
+      <collect x="1245" y="65" active="true"/>
+      <collect x="272" y="49" active="false"/>
+      <collect x="512" y="49" active="false"/>
+    </collectible>
+    <lifegetter name="Assets/textures/life_getter.png"/>
   </scene>
   <map>
     <folder>Assets/maps/</folder>

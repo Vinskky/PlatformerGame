@@ -45,26 +45,52 @@ bool Scene::Awake(pugi::xml_node& conf)
 	checkpoint[1].rect.x = cp.child("cp2").attribute("x").as_int();
 	checkpoint[1].rect.y = cp.child("cp2").attribute("y").as_int();
 
+	cp = conf.child("collectible");
+
+	for (int i = 0; i < 4; i++)
+	{
+		collectible[i].source.Create(cp.attribute("name").as_string());
+		collectible[i].itemRect.w = cp.attribute("w").as_int();
+		collectible[i].itemRect.h = cp.attribute("h").as_int();
+	}
+	int i = 0;
+	for (pugi::xml_node collect = cp.child("collect"); collect; collect = collect.next_sibling("collect"))
+	{
+		collectible[i].itemRect.x = collect.attribute("x").as_int();
+		collectible[i].itemRect.y = collect.attribute("y").as_int();
+		collectible[i].active = collect.attribute("active").as_bool();
+		i++;
+	}
+
 	return ret;
 }
 
 // Called before the first frame
 bool Scene::Start()
 {
+	//CP
 	checkpoint[0].checkpointTex = app->tex->Load(checkpoint[0].source.GetString());
 	checkpoint[1].checkpointTex = app->tex->Load(checkpoint[0].source.GetString());
-	titleScene = app->tex->Load(sourceTitle.GetString());
-	introScene = app->tex->Load(sourceIntro.GetString());
-	deathScene = app->tex->Load(sourceDeath.GetString());
+
 	for (int i = 0; i < 2; i++)
 	{
 		checkpoint[i].cp = (Cp)i;
 		checkpoint[i].checked = false;
 		checkpoint[i].rect.w = 22;
 		checkpoint[i].rect.h = 22;
-
 	}
 	checkpoint[0].active = true;
+
+	//COLLECTIBLES
+	for (int i = 0; i < 4; i++)
+	{
+		collectible[i].itemTex = app->tex->Load(collectible[i].source.GetString());
+	}
+
+	//SCREENS
+	titleScene = app->tex->Load(sourceTitle.GetString());
+	introScene = app->tex->Load(sourceIntro.GetString());
+	deathScene = app->tex->Load(sourceDeath.GetString());
 
 	app->audio->PlayMusic("Assets/audio/music/Raxer_Sound_-_Pathfinder_Master.ogg");
 	app->map->Load(app->map->GetLevelToLoad().GetString());
@@ -114,9 +140,31 @@ bool Scene::Update(float dt)
 
 		case DEAD_SCREEN:
 		{
+			//DIESCREEN
 			if (checkpoint[0].checked) app->render->DrawTexture(deathScene, 788, 0);
 			else if (checkpoint[1].checked) app->render->DrawTexture(deathScene, 255, 0);
 			else { app->render->DrawTexture(deathScene, 0, 0); }
+			
+			//LIVES
+			app->player->playerLife.lifes = 3;
+
+			//COLLECIBLES
+			if (!checkpoint[0].checked && app->player->playerInfo.currentLevel == LVL_1)
+			{
+				collectible[0].collected = false;
+			}
+			else if (checkpoint[0].checked && app->player->playerInfo.currentLevel == LVL_1)
+			{
+				collectible[1].collected = false;
+			}
+			if (!checkpoint[1].checked && app->player->playerInfo.currentLevel == LVL_2)
+			{
+				collectible[2].collected = false;
+			}
+			else if (checkpoint[1].checked && app->player->playerInfo.currentLevel == LVL_2)
+			{
+				collectible[3].collected = false;
+			}
 
 			if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
 			{
@@ -134,10 +182,20 @@ bool Scene::Update(float dt)
 				app->scene->checkpoint[0].checked = false;
 				app->scene->checkpoint[1].checked = false;
 
+				//RESTART COLLECTIBLES
+				for (int i = 0; i < 4; i++) collectible[i].collected = false;
+
 				app->player->LoadCurrentLevel(LVL_1);
+
+				//ACTIVATE CHECKPOINTS
 				app->scene->checkpoint[0].active = true;
 				app->scene->checkpoint[1].active = false;
-				
+
+				//ACTIVATE COLLECTIBLES
+				collectible[0].active = true;
+				collectible[1].active = true;
+				collectible[2].active = false;
+				collectible[3].active = false;
 			}
 			if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
 			{
@@ -145,15 +203,29 @@ bool Scene::Update(float dt)
 				app->scene->checkpoint[0].checked = false;
 				app->scene->checkpoint[1].checked = false;
 
+				//RESTART COLLECTIBLES
+				for (int i = 0; i < 4; i++) collectible[i].collected = false;
+
 				app->player->LoadCurrentLevel(LVL_2);
+
+				//ACTIVATE CHECKPOINTS
 				app->scene->checkpoint[0].active = false;
 				app->scene->checkpoint[1].active = true;
+
+				//ACTIVATE COLLECTIBLES
+				collectible[0].active = false;
+				collectible[1].active = false;
+				collectible[2].active = true;
+				collectible[3].active = true;
 			}
 			if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
 			{
 				//RESTART CHECKPOINTS
 				app->scene->checkpoint[0].checked = false;
 				app->scene->checkpoint[1].checked = false;
+
+				//RESTART COLLECTIBLES
+				for (int i = 0; i < 4; i++) collectible[i].collected = false;
 
 				app->player->LoadCurrentLevel(app->player->playerInfo.currentLevel);
 			}
@@ -173,7 +245,6 @@ bool Scene::Update(float dt)
 
 				app->player->TP(CP2);
 			}
-
 
 			if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
 				app->SaveRequest("savegame.xml");
@@ -221,6 +292,20 @@ bool Scene::Update(float dt)
 		checkpoint[1].checked = true;
 	}
 
+	for (int i = 0; i < 4; i++)
+	{
+		if (collectible[i].active && app->collision->CheckCollision(app->player->playerColider, collectible[i].itemRect))
+		{
+			if (collectible[i].collected == false)
+			{
+				app->audio->PlayFx(3);
+			}
+			collectible[i].collected = true;
+		}
+	}
+
+	
+
 	return true;
 }
 
@@ -251,6 +336,14 @@ bool Scene::PostUpdate()
 	else if (checkpoint[1].active && checkpoint[1].checked && currentScreen != DEAD_SCREEN)
 	{
 		app->render->DrawTexture(checkpoint[1].checkpointTex, checkpoint[1].rect.x, checkpoint[1].rect.y, &sectionCPAnim2);
+	}
+
+	for (int i = 0; i < 4; i++)
+	{
+		if (collectible[i].active && !collectible[i].collected && currentScreen != DEAD_SCREEN)
+		{
+			app->render->DrawTexture(collectible[i].itemTex, collectible[i].itemRect.x, collectible[i].itemRect.y);
+		}
 	}
 
 	return ret;

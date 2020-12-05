@@ -120,7 +120,17 @@ void Collisions::DebugDraw()
 
 	app->render->DrawRectangle(app->player->swordCollider, 117, 156, 217, alpha);
 
-	if (app->map->lvl1) app->render->DrawRectangle(app->scene->checkpoint[0].rect, 180, 20, 20, alpha);
-	else if (app->map->lvl2) app->render->DrawRectangle(app->scene->checkpoint[1].rect, 180, 20, 20, alpha);
+	if (app->map->lvl1)
+	{
+		app->render->DrawRectangle(app->scene->checkpoint[0].rect, 180, 20, 20, alpha);
+		app->render->DrawRectangle(app->scene->collectible[0].itemRect, 180, 20, 20, alpha);
+		app->render->DrawRectangle(app->scene->collectible[1].itemRect, 180, 20, 20, alpha);
+	}
+	else if (app->map->lvl2)
+	{
+		app->render->DrawRectangle(app->scene->checkpoint[1].rect, 180, 20, 20, alpha);
+		app->render->DrawRectangle(app->scene->collectible[2].itemRect, 180, 20, 20, alpha);
+		app->render->DrawRectangle(app->scene->collectible[3].itemRect, 180, 20, 20, alpha);
+	}
 
 }
