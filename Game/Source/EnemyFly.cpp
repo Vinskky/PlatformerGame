@@ -10,33 +10,60 @@
 
 EnemyFly::EnemyFly() : Criature()
 {
-	/*enName.Create("enemyFly");
-	type = Type::EN_FLY;*/
+	enName.Create("enemyFly");
+	type = EnemyType::EN_FLY;
+
+	//animation pushes here
 
 }
 
 EnemyFly::~EnemyFly()
 {
+	currAnimation = nullptr;
+	delete aStar;
+	app->tex->UnLoad(graphics);
+	//clear enemy collider
+	graphics = nullptr;
 }
 
 bool EnemyFly::Awake()
 {
-	return false;
+	enemyVel.Create(0, 0);
+	enemyState = ENEMY_IDLE;
+	return true;
 }
 
 bool EnemyFly::Start()
 {
-	return false;
+	//graphics == texture
+	//current animation on start
+	enemyState = ENEMY_IDLE;
+	aStar = new PathFinding();
+	playerLastPos = app->player->playerInfo.position;
+	//add collider to enemy
+
+	return true;
 }
 
 bool EnemyFly::PreUpdate()
 {
-	return false;
+	return true;
 }
 
 bool EnemyFly::Update(float dt)
 {
-	return false;
+	if (playerLastPos.DistanceTo(app->player->playerInfo.position) > 10)
+	{
+		if (aStar->CreatePath(enemyPos, app->player->playerInfo.position) != -1)
+			playerLastPos = app->player->playerInfo.position;
+	}
+
+	MoveEnemy(dt);
+	processPos();
+
+	//collision follows
+
+	return true;
 }
 
 void EnemyFly::MoveEnemy(float dt)
@@ -61,17 +88,17 @@ void EnemyFly::Draw()
 
 bool EnemyFly::PostUpdate()
 {
-	return false;
+	return true;
 }
 
 bool EnemyFly::Load(pugi::xml_node&)
 {
-	return false;
+	return true;
 }
 
 bool EnemyFly::Save(pugi::xml_node&) const
 {
-	return false;
+	return true;
 }
 
 int EnemyFly::GetDirection() const
@@ -81,10 +108,10 @@ int EnemyFly::GetDirection() const
 
 iPoint EnemyFly::Getposition() const
 {
-	return iPoint();
+	return enemyPos;
 }
 
 bool EnemyFly::CleanUp()
 {
-	return false;
+	return true;
 }

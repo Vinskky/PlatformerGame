@@ -35,13 +35,10 @@ bool EnemyNormal::Awake()
 
 bool EnemyNormal::Start()
 {
-	//graphics == texture
-	//current animation on start
+	graphics = app->tex->Load("Assets/textures/ground_enemy.png");
 	enemyState = ENEMY_IDLE;
 	aStar = new PathFinding();
 	playerLastPos = app->player->playerInfo.position;
-	if (aStar->CreatePath(enemyPos, playerLastPos) != -1)
-		path = aStar->GetLastPath();
 	//add collider to enemy
 
 	return true;
@@ -57,10 +54,7 @@ bool EnemyNormal::Update(float dt)
 	if (playerLastPos.DistanceTo(app->player->playerInfo.position) > 10)
 	{
 		if (aStar->CreatePath(enemyPos, app->player->playerInfo.position) != -1)
-		{
-			path = aStar->GetLastPath();
 			playerLastPos = app->player->playerInfo.position;
-		}
 	}
 
 	MoveEnemy(dt);
@@ -76,9 +70,9 @@ void EnemyNormal::MoveEnemy(float dt)
 {
 	if (app->player->playerInfo.position.DistanceTo(enemyPos) < 250)
 	{
-		if (path != nullptr)
+		if (aStar->GetLastPath() != nullptr)
 		{
-			iPoint tmp = *path->At(path->Count() - 1);
+			iPoint tmp = *aStar->GetLastPath()->At(aStar->GetLastPath()->Count() - 1);
 			int distanceToMove = tmp.x - enemyPos.x;
 			if (distanceToMove < 0)
 			{
@@ -88,12 +82,6 @@ void EnemyNormal::MoveEnemy(float dt)
 			else
 			{
 				enemyPos.x += ceil(-distanceToMove * dt);
-			}
-
-			if (enemyPos.DistanceTo(tmp) < 5)
-			{
-				iPoint popiPoint;
-				path->Pop(popiPoint);
 			}
 		}
 	}
@@ -130,12 +118,12 @@ void EnemyNormal::Draw()
 	SDL_Rect r = currAnimation->GetCurrentFrame();
 	app->render->DrawTexture(graphics, enemyPos.x, enemyPos.y, &r, 2);
 
-	if (path != nullptr && app->collision->debug)
+	if (aStar->GetLastPath() != nullptr && app->collision->debug)
 	{
 		Uint8 alpha = 80;
-		for (int i = 0; i < path->Count(); i++)
+		for (int i = 0; i < aStar->GetLastPath()->Count(); i++)
 		{
-			iPoint tmp = *path->At(i);
+			iPoint tmp = *aStar->GetLastPath()->At(i);
 			SDL_Rect t = { tmp.x,tmp.y, 16, 16 };
 			app->render->DrawRectangle(t, 255, 255, 255, alpha);
 		}

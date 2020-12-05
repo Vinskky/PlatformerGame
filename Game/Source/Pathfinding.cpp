@@ -61,7 +61,7 @@ uchar PathFinding::GetTileAt(const iPoint& pos) const
 }
 
 // To request all tiles involved in the last generated path
-DynArray<iPoint>* PathFinding::GetLastPath() const
+const DynArray<iPoint>* PathFinding::GetLastPath() const
 {
 	return &lastPath;
 }

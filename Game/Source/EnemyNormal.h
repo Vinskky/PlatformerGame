@@ -52,7 +52,6 @@ private:
 	SDL_Texture* graphics = nullptr;
 	bool isMove = false;
 
-	mutable DynArray<iPoint>* path;
 	PathFinding* aStar = nullptr;
 
 	iPoint playerLastPos;
