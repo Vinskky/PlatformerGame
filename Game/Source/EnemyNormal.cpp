@@ -42,14 +42,13 @@ EnemyNormal::~EnemyNormal()
 bool EnemyNormal::Awake()
 {
 	enemyVel.Create(0, 0);
-	enemyState = ENEMY_IDLE;
 	return true;
 }
 
 bool EnemyNormal::Start()
 {
-	graphics = app->tex->Load("Assets/textures/ground_enemy.png");
-	enemyState = ENEMY_IDLE;
+	graphics = app->tex->Load("Assets/Textures/ground_enemy.png");
+	enemyState = ENEMY_WALK_L;
 	playerLastPos = app->player->playerInfo.position;
 	collider = { enemyPos.x,enemyPos.y, 16,16 };
 	return true;
@@ -84,41 +83,50 @@ void EnemyNormal::MoveEnemy()
 	goal = app->map->WorldToMap(goal.x, goal.y+16);
 	init = app->map->WorldToMap(init.x, init.y);
 
-	if (app->player->playerInfo.position.DistanceTo(enemyPos) < 75)
+	if (app->player->playerInfo.position.DistanceTo(enemyPos) < 125)
 	{
 		enemyPath.Clear();
 		if (app->pathfinding->CreatePath(enemyPath, init, goal) != -1)
 		{
 			iPoint tmp = *enemyPath.At(enemyPath.Count() - 1);
 			int distanceToMove = tmp.x - enemyPos.x;
+			if (app->player->playerInfo.position.x > enemyPos.x)
+				distanceToMove = 1;
+
 			if (distanceToMove < 0 )
 			{
-				enemyPos.x -= 1;
-				collider.x = enemyPos.x;
-
+				if (enemyPos.x > 176)
+				{
+					enemyPos.x -= 1;
+					collider.x = enemyPos.x;
+				}
+				enemyState = ENEMY_WALK_L;
 			}
 			else if (distanceToMove > 0 )
 			{
-				enemyPos.x += 1;
-				collider.x = enemyPos.x;
+				if (enemyPos.x < 252)
+				{
+					enemyPos.x += 1;
+					collider.x = enemyPos.x;
+				}
+				
+				enemyState = ENEMY_WALK_R;
 			}
 		}
 	}
 }
 
-void EnemyNormal::processPos()
+void EnemyNormal::ProcessPos()
 {
 	enemyPos.y = enemyPos.y + enemyVel.y;
 }
 
-void EnemyNormal::processGravity(float dt)
+void EnemyNormal::ProcessGravity(float dt)
 {
 }
 
 void EnemyNormal::Draw()
 {
-	enemyState = ENEMY_WALK_L;
-	//enemyState = ENEMY_WALK_R;
 	switch (enemyState)
 	{
 	case ENEMY_WALK_L:

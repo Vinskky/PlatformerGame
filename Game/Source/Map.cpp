@@ -565,6 +565,14 @@ void Map::ColliderAsign(MapLayer* layer)
                     case 4:
                         app->collision->TriggerWin(r);; //  level 2
                         break;
+
+                    case 5:
+                        app->collision->InitPosEnemy(r);// lvl 2
+                        break;
+
+                    case 6:
+                        app->collision->InitPosFly(r); // lvl2
+                        break;
                     }
             }
         }

@@ -105,7 +105,7 @@ public:
 
 	void UpdateAnimation(char* anim);
 
-	void TP(Cp cp);
+	void Tp(Cp cp);
 
 	void CheckHurt();
 

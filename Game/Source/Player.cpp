@@ -131,7 +131,7 @@ bool Player::Awake(pugi::xml_node& config)
 		}
 	}
 
-	LOG("%s", config.child("life").attribute("source").as_string());
+	//LOG("%s", config.child("life").attribute("source").as_string());
 	playerLife.source.Create(config.child("life").attribute("source").as_string());
 	playerLife.lifes = config.child("life").attribute("lifes").as_int();
 
@@ -158,6 +158,7 @@ bool Player::Awake(pugi::xml_node& config)
 
 bool Player::Start() 
 {
+	texture = app->tex->Load(textPath.GetString());
 	SetInitialPlayer(LVL_1);
 	return true;
 }
@@ -464,7 +465,7 @@ void Player::SetInitialPlayer(Level lvl)
 			playerInfo.currentLevel = lvl;
 			playerInfo.currentDir = RIGHT_DIR;
 		}
-		texture = app->tex->Load(textPath.GetString());
+		
 
 		playerInfo.currentAnimation = &playerInfo.idle;
 	}
@@ -481,8 +482,6 @@ void Player::SetInitialPlayer(Level lvl)
 			playerInfo.currentLevel = lvl;
 			playerInfo.currentDir = RIGHT_DIR;
 		}
-		texture = app->tex->Load(textPath.GetString());
-
 		playerInfo.currentAnimation = &playerInfo.idle;
 	}
 	else if (app->scene->checkpoint[1].checked && lvl == LVL_2)
@@ -497,7 +496,6 @@ void Player::SetInitialPlayer(Level lvl)
 			playerInfo.currentLevel = lvl;
 			playerInfo.currentDir = RIGHT_DIR;
 		}
-		texture = app->tex->Load(textPath.GetString());
 
 		playerInfo.currentAnimation = &playerInfo.idle;
 	}
@@ -716,6 +714,23 @@ void Player::LoadCurrentLevel(Level currentLvl)
 		
 		if (app->map->Load(app->map->GetLevelToLoad().GetString()));
 		{
+			/*app->enManager->DeleteAllEnemies();
+			ListItem<SDL_Rect>* item = app->collision->initPosEnemyGround.start;
+			while (item != NULL)
+			{
+				iPoint positionSpawn = { item->data.x,item->data.y };
+				app->enManager->CreateEnemyNormal(positionSpawn);
+				item = item->next;
+			}
+
+			ListItem<SDL_Rect>* item2 = app->collision->initPosEnemyFly.start;
+			while (item2 != NULL)
+			{
+				iPoint positionSpawn = { item2->data.x,item2->data.y };
+				app->enManager->CreateEnemyFly(positionSpawn);
+				item2 = item2->next;
+			}*/
+
 			SetInitialPlayer(LVL_1);
 		}
 	}
@@ -809,7 +824,7 @@ void Player::UpdateAnimation(char* anim)
 	}
 }
 
-void Player::TP(Cp cp)
+void Player::Tp(Cp cp)
 {
 	if (cp == CP1)
 	{
@@ -851,8 +866,6 @@ void Player::TP(Cp cp)
 				playerInfo.currentLevel = LVL_1;
 				playerInfo.currentDir = RIGHT_DIR;
 			}
-			texture = app->tex->Load(textPath.GetString());
-
 			playerInfo.currentAnimation = &playerInfo.idle;
 		}
 	}
@@ -896,8 +909,6 @@ void Player::TP(Cp cp)
 				playerInfo.currentLevel = LVL_2;
 				playerInfo.currentDir = RIGHT_DIR;
 			}
-			texture = app->tex->Load(textPath.GetString());
-
 			playerInfo.currentAnimation = &playerInfo.idle;
 		}
 	}

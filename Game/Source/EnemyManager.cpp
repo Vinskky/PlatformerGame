@@ -70,7 +70,7 @@ bool EnemyManager::Update(float dt)
 		ListItem<Criature*>* item = enemies.start;
 		while (item != NULL)
 		{
-			item->data->Update(dt);
+ 			item->data->Update(dt);
 			item = item->next;
 		}
 	}
@@ -155,6 +155,7 @@ void EnemyManager::DeleteAllEnemies()
 		enemies.Del(item);
 		item = item->next;
 	}
+	enemies.Clear();
 }
 
 bool EnemyManager::Load(pugi::xml_node& node)

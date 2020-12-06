@@ -63,7 +63,7 @@ EnemyFly::~EnemyFly()
 
 bool EnemyFly::Awake()
 {
-	graphics = app->tex->Load("Assets/textures/bat_sprite_sheet.png");
+	graphics = app->tex->Load("Assets/Textures/bat_sprite_sheet.png");
 	enemyVel.Create(0, 0);
 	enemyState = ENEMY_IDLE;
 	return true;
@@ -91,7 +91,7 @@ bool EnemyFly::Update(float dt)
 			playerLastPos = app->player->playerInfo.position;
 	}*/
 
-	MoveEnemy();
+	//MoveEnemy();
 	//processPos();
 
 	//collision follows
@@ -142,35 +142,14 @@ void EnemyFly::MoveEnemy()
 				enemyPath.Pop(popiPoint);
 			}
 		}
-
-		/*if (app->player->playerInfo.position.DistanceTo(enemyPos) < 275)
-		{
-			enemyPath.Clear();
-			if (app->pathfinding->CreatePath(enemyPath, init, goal) != -1)
-			{
-				iPoint tmp = *enemyPath.At(enemyPath.Count() - 1);
-				int distanceToMove = tmp.x - enemyPos.x;
-				if (distanceToMove < 0)
-				{
-					enemyPos.x -= 1;
-					collider.x = enemyPos.x;
-
-				}
-				else if (distanceToMove > 0)
-				{
-					enemyPos.x += 1;
-					collider.x = enemyPos.x;
-				}
-			}
-		}*/
 	}
 }
 
-void EnemyFly::processPos()
+void EnemyFly::ProcessPos()
 {
 }
 
-void EnemyFly::processGravity()
+void EnemyFly::ProcessGravity()
 {
 }
 
@@ -222,6 +201,7 @@ void EnemyFly::Draw()
 		for (int i = 0; i < enemyPath.Count(); i++)
 		{
 			iPoint tmp = *enemyPath.At(i);
+			tmp = app->map->MapToWorld(tmp.x, tmp.y);
 			SDL_Rect t = { tmp.x,tmp.y, 16, 16 };
 			app->render->DrawRectangle(t, 255, 255, 255, alpha);
 		}

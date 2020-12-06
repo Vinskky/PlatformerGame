@@ -100,7 +100,7 @@ bool Scene::Start()
 	introScene = app->tex->Load(sourceIntro.GetString());
 	deathScene = app->tex->Load(sourceDeath.GetString());
 
-	app->audio->PlayMusic("Assets/audio/music/Raxer_Sound_-_Pathfinder_Master.ogg");
+	app->audio->PlayMusic("Assets/Audio/Music/raxer_sound_pathfinder_master.ogg");
 	if (app->map->Load(app->map->GetLevelToLoad().GetString()) == true)
 	{
 		int w, h;
@@ -259,7 +259,7 @@ bool Scene::Update(float dt)
 				app->scene->checkpoint[0].checked = false;
 				app->scene->checkpoint[1].checked = false;
 
-				app->player->TP(CP1);
+				app->player->Tp(CP1);
 			}
 			if (app->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
 			{
@@ -267,7 +267,7 @@ bool Scene::Update(float dt)
 				app->scene->checkpoint[0].checked = false;
 				app->scene->checkpoint[1].checked = false;
 
-				app->player->TP(CP2);
+				app->player->Tp(CP2);
 			}
 
 			if (app->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
@@ -344,8 +344,6 @@ bool Scene::Update(float dt)
 			collectible[i].collected = true;
 		}
 	}
-
-	
 
 	return true;
 }

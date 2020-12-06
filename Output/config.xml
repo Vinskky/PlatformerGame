@@ -16,42 +16,42 @@
     <fullscreenWindow value="false"/>
   </window>
   <audio>
-    <volume value="64"/>
+    <volume value="15"/>
     <fx>
-      <jump name="Assets/audio/fx/jump.wav" />
-      <checkpoint name="Assets/audio/fx/checkpoint_fx.wav" />
-      <collectible name="Assets/audio/fx/coin_fx.wav"/>
-      <volume value="64"/>
+      <jump name="Assets/Audio/Fx/jump.wav" />
+      <checkpoint name="Assets/Audio/Fx/checkpoint_fx.wav" />
+      <collectible name="Assets/Audio/Fx/coin_fx.wav"/>
+      <volume value="124"/>
     </fx>
   </audio>
   <scene>
-    <title name="Assets/textures/Title_Screen_Platformer.png"/>
-    <intro name="Assets/textures/IntroPlaceholder.png" />
-    <death name="Assets/textures/Die_Screen_Platformer.png"/>
-    <checkpoints name ="Assets/textures/checkpoint_sheet.png">
+    <title name="Assets/Textures/title_screen_platformer.png"/>
+    <intro name="Assets/Textures/intro_placeholder.png" />
+    <death name="Assets/Textures/die_screen_platformer.png"/>
+    <checkpoints name ="Assets/Textures/checkpoint_sheet.png">
       <cp1 x ="995" y = "138"/>
       <cp2 x ="456" y = "154"/>
     </checkpoints>
-    <collectible name="Assets/textures/item.png" w="13" h="17">
+    <collectible name="Assets/Textures/item.png" w="13" h="17">
       <collect x="480" y="100" active="true"/>
       <collect x="1245" y="65" active="true"/>
       <collect x="272" y="49" active="false"/>
       <collect x="512" y="49" active="false"/>
     </collectible>
-    <collectiblemark name="Assets/textures/item_mark.png"/>
+    <collectiblemark name="Assets/Textures/item_mark.png"/>
   </scene>
   <map>
-    <folder>Assets/maps/</folder>
-    <level1>Level_1_Platformer.tmx</level1>
-    <level2>Level_2_Platformer.tmx</level2>
+    <folder>Assets/Maps/</folder>
+    <level1>level_1_platformer.tmx</level1>
+    <level2>level_2_platformer.tmx</level2>
   </map>
   <player>
-    <life source="Assets/textures/heart.png" lifes="3"/>
-    <lifegetter name="Assets/textures/life_getter.png" w="21" h="21">
+    <life source="Assets/Textures/heart.png" lifes="3"/>
+    <lifegetter name="Assets/Textures/life_getter.png" w="21" h="21">
       <getter x="1102" y="155" active="true"/>
       <getter x="846" y="172" active="false"/>
     </lifegetter>
-    <source name="Assets/textures/Character.png"/>
+    <source name="Assets/Textures/character.png"/>
     <animations>
       <animation name ="attackRight" loop="false" speed="0.165">
           <frame height="31" width="20" x ="62" y="248"/>

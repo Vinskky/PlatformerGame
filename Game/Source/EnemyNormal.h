@@ -28,8 +28,8 @@ public:
 	bool Update(float dt);
 
 	void MoveEnemy();
-	void processPos();
-	void processGravity(float dt);
+	void ProcessPos();
+	void ProcessGravity(float dt);
 
 	void Draw();
 

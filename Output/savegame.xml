@@ -1,21 +1,17 @@
 <?xml version="1.0"?>
 <saveState>
 	<renderer>
-		<camera x="0" y="0" />
+		<camera x="-378" y="0" />
 	</renderer>
 	<transition />
 	<collisions />
 	<player>
-		<position x="86" y="114" />
-		<collider x="86" y="114" />
+		<position x="338" y="162" />
+		<collider x="338" y="162" />
 		<level value="1" />
 		<direction value="1" />
 	</player>
 	<criatures>
-		<enemyNormal>
-			<enemyPosition x="256" y="144" />
-			<enemyCollider x="256" y="144" />
-		</enemyNormal>
 		<enemyFly>
 			<enemyPosition x="864" y="112" />
 			<enemyCollider x="864" y="112" />
@@ -25,7 +21,7 @@
 	<scene />
 	<pathfinding />
 	<audio>
-		<volume value="64" />
+		<volume value="0" />
 	</audio>
 	<textures />
 	<window />

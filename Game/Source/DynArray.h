@@ -255,7 +255,7 @@ private:
 		VALUE* tmp = data;
 
 		memCapacity = mem;
-		data = new VALUE[memCapacity];
+ 		data = new VALUE[memCapacity];
 
 		numElements = MIN(memCapacity, numElements);
 

@@ -29,9 +29,9 @@ public:
 
 	void MoveEnemy();
 
-	void processPos();
+	void ProcessPos();
 
-	void processGravity();
+	void ProcessGravity();
 
 	void ReturnToZero();
 

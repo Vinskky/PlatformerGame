@@ -212,7 +212,8 @@ void App::FinishUpdate()
 	static char title[256];
 	sprintf_s(title, 256, "Av.FPS: %.2f | Last Frame Ms: %02u | Last Sec Frames: %i | Last dt: %.3f | Time Since Startup: %.3f | Frame Count: %I64u",
 		averageFps, lastFrameMs, framesOnLastUpdate, dt, secondsSinceStartup, frameCount);
-	app->win->SetTitle(title);
+	
+	if(!app->player->godMode) app->win->SetTitle(title);
 
 	if (frameDelay > lastFrameMs && !changeFps)
 	{

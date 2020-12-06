@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="80" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="1">
  <tileset firstgid="1" name="Colision_Tileset" tilewidth="16" tileheight="16" tilecount="6" columns="3">
-  <image source="Colision_Tileset.png" width="48" height="32"/>
+  <image source="colision_tileset.png" width="48" height="32"/>
  </tileset>
  <tileset firstgid="7" name="Steampunk_Blocks" tilewidth="16" tileheight="16" tilecount="96" columns="12">
-  <image source="Steampunk_Blocks.png" width="192" height="128"/>
+  <image source="steampunk_blocks.png" width="192" height="128"/>
  </tileset>
  <tileset firstgid="103" name="Steampunk_Brick_Back" tilewidth="16" tileheight="16" tilecount="48" columns="12">
-  <image source="Steampunk_Brick_Back.png" width="192" height="64"/>
+  <image source="steampunk_brick_back.png" width="192" height="64"/>
  </tileset>
  <tileset firstgid="151" name="Steampunk_Corse_Elements" tilewidth="16" tileheight="16" tilecount="64" columns="8">
-  <image source="Steampunk_Corse_Elements.png" width="128" height="128"/>
+  <image source="steampunk_corse_elements.png" width="128" height="128"/>
  </tileset>
  <tileset firstgid="215" name="Steampunk_Corse_Elements_Dark" tilewidth="16" tileheight="16" tilecount="64" columns="8">
-  <image source="Steampunk_Corse_Elements_Dark.png" width="128" height="128"/>
+  <image source="steampunk_corse_elements_dark.png" width="128" height="128"/>
  </tileset>
  <tileset firstgid="279" name="parallax_00" tilewidth="16" tileheight="16" tilecount="102" columns="17">
-  <image source="skill-desc_0000_foreground.png" width="272" height="104"/>
+  <image source="skill_desc_0000_foreground.png" width="272" height="104"/>
  </tileset>
  <tileset firstgid="381" name="parallax_01" tilewidth="16" tileheight="16" tilecount="153" columns="17">
-  <image source="skill-desc_0001_buildings.png" width="272" height="150"/>
+  <image source="skill_desc_0001_buildings.png" width="272" height="150"/>
  </tileset>
  <tileset firstgid="534" name="parallax_02" tilewidth="16" tileheight="16" tilecount="104" columns="13">
-  <image source="skill-desc_0002_far-buildings.png" width="213" height="142"/>
+  <image source="skill_desc_0002_far_buildings.png" width="213" height="142"/>
  </tileset>
  <tileset firstgid="638" name="parallax_03" tilewidth="16" tileheight="16" tilecount="170" columns="17">
-  <image source="skill-desc_0003_bg.png" width="272" height="160"/>
+  <image source="skill_desc_0003_bg.png" width="272" height="160"/>
  </tileset>
  <layer id="9" name="Parallax 3" width="80" height="15">
   <properties>
