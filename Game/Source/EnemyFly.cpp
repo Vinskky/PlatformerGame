@@ -54,8 +54,8 @@ EnemyFly::EnemyFly() : Criature()
 EnemyFly::~EnemyFly()
 {
 	currAnimation = nullptr;
-	delete aStar;
 	app->tex->UnLoad(graphics);
+	enemyPath.Clear();
 	//clear enemy collider
 	graphics = nullptr;
 }
@@ -72,9 +72,7 @@ bool EnemyFly::Start()
 {
 	currAnimation = &idle;
 	enemyState = ENEMY_IDLE;
-	//aStar = new PathFinding();
 	playerLastPos = app->player->playerInfo.position;
-	//add collider to enemy
 	collider = { enemyPos.x,enemyPos.y, 16,16 };
 	return true;
 }
@@ -160,12 +158,12 @@ void EnemyFly::Draw()
 	if (app->scene->currentScreen == PLAYING && !isDead)
 		app->render->DrawTexture(graphics, enemyPos.x, enemyPos.y, &currAnimation->GetCurrentFrame());
 
-	if (aStar->GetLastPath() != nullptr && app->collision->debug)
+	if (enemyPath.Count() > 0 && app->collision->debug)
 	{
 		Uint8 alpha = 80;
-		for (int i = 0; i < aStar->GetLastPath()->Count(); i++)
+		for (int i = 0; i < enemyPath.Count(); i++)
 		{
-			iPoint tmp = *aStar->GetLastPath()->At(i);
+			iPoint tmp = *enemyPath.At(i);
 			SDL_Rect t = { tmp.x,tmp.y, 16, 16 };
 			app->render->DrawRectangle(t, 255, 255, 255, alpha);
 		}
@@ -193,10 +191,6 @@ int EnemyFly::GetDirection() const
 	return 0;
 }
 
-SDL_Rect EnemyFly::GetCollider() const
-{
-	return collider;
-}
 
 iPoint EnemyFly::Getposition() const
 {

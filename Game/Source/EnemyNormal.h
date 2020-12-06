@@ -42,8 +42,6 @@ public:
 
 	int GetDirection() const;
 
-	SDL_Rect GetCollider() const;
-
 	iPoint Getposition() const;
 
 	// Called before quitting
@@ -53,11 +51,9 @@ private:
 	EnemyState state;
 	EnemyDirection direction;
 	SDL_Texture* graphics = nullptr;
-	SDL_Rect collider;
+
 	bool isMove = false;
 	bool isDead = false;
-
-	PathFinding* aStar = nullptr;
 
 	iPoint playerLastPos;
 

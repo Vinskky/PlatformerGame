@@ -4,8 +4,7 @@
 #include "DynArray.h"
 #include "Collider.h"
 #include "Point.h"
-
-struct SDL_Texture;
+#include "Render.h"
 
 enum EnemyState
 {
@@ -90,6 +89,7 @@ public:
 	EnemyState enemyState;
 	EnemyDirection enemyDirection;
 
+	SDL_Rect collider;
 	iPoint enemyPos;
 	iPoint enemyVel;
 
