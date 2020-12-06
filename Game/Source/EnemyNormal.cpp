@@ -1,5 +1,6 @@
 #include "EnemyNormal.h"
 #include "App.h"
+#include "Log.h"
 #include "Input.h"
 #include "Audio.h"
 #include "Render.h"
@@ -50,7 +51,6 @@ bool EnemyNormal::Start()
 	graphics = app->tex->Load("Assets/textures/ground_enemy.png");
 	enemyState = ENEMY_IDLE;
 	playerLastPos = app->player->playerInfo.position;
-	//add collider to enemy
 	collider = { enemyPos.x,enemyPos.y, 16,16 };
 	return true;
 }
@@ -62,23 +62,9 @@ bool EnemyNormal::PreUpdate()
 
 bool EnemyNormal::Update(float dt)
 {
-	iPoint goal = app->player->playerInfo.position;
-	iPoint init = enemyPos;
-
-	goal = app->map->WorldToMap(goal.x, goal.y);
-	init = app->map->WorldToMap(init.x, init.y);
-
-	if (playerLastPos.DistanceTo(goal) > 50)
-	{
-		if (app->pathfinding->CreatePath(enemyPath,init,goal) != -1)
-			playerLastPos = app->player->playerInfo.position;
-	}
-
 	MoveEnemy();
 	//processPos();
 	//processGravity(dt);
-
-	//collision follows
 
 	//ENEMY DEATH
 	if (app->collision->CheckCollision(app->player->swordCollider, collider))
@@ -91,7 +77,7 @@ bool EnemyNormal::Update(float dt)
 
 void EnemyNormal::MoveEnemy()
 {
-	iPoint goal = playerLastPos;
+	iPoint goal = app->player->playerInfo.position;
 	iPoint init = enemyPos;
 
 	goal = app->map->WorldToMap(goal.x, goal.y+16);
@@ -99,20 +85,20 @@ void EnemyNormal::MoveEnemy()
 
 	if (app->player->playerInfo.position.DistanceTo(enemyPos) < 75)
 	{
+		enemyPath.Clear();
 		if (app->pathfinding->CreatePath(enemyPath, init, goal) != -1)
 		{
 			iPoint tmp = *enemyPath.At(enemyPath.Count() - 1);
 			int distanceToMove = tmp.x - enemyPos.x;
-			if (distanceToMove < 0)
+			if (distanceToMove < 0 )
 			{
-				//ceil Rounds x upward, returning the smallest integral value that is not less than x.
-				enemyPos.x -= 1;// ceil(-distanceToMove * 0.17);
+				enemyPos.x -= 1;
 				collider.x = enemyPos.x;
 
 			}
-			else
+			else if (distanceToMove > 0 )
 			{
-				enemyPos.x += 1;//ceil(-distanceToMove * 0.17);
+				enemyPos.x += 1;
 				collider.x = enemyPos.x;
 			}
 		}
@@ -154,12 +140,13 @@ void EnemyNormal::Draw()
 
 	if (enemyPath.Count() > 0 && app->collision->debug)
 	{
-		Uint8 alpha = 80;
+		Uint8 alpha = 70;
 		for (int i = 0; i < enemyPath.Count(); i++)
 		{
 			iPoint tmp = *enemyPath.At(i);
+			tmp = app->map->MapToWorld(tmp.x, tmp.y);
 			SDL_Rect t = { tmp.x,tmp.y, 16, 16 };
-			app->render->DrawRectangle(t, 255, 255, 255, alpha);
+			app->render->DrawRectangle(t, 0, 155, 255, alpha);
 		}
 	}
 }
@@ -170,13 +157,28 @@ bool EnemyNormal::PostUpdate()
 	return true;
 }
 
-bool EnemyNormal::Load(pugi::xml_node&)
+bool EnemyNormal::Load(pugi::xml_node& loadNode)
 {
+	enemyPos.x = loadNode.child("enemyNormal").child("enemyPosition").attribute("x").as_int();
+	enemyPos.y = loadNode.child("enemyNormal").child("enemyPosition").attribute("y").as_int();
+	collider.x = loadNode.child("enemyNormal").child("enemyCollider").attribute("x").as_int();
+	collider.y = loadNode.child("enemyNormal").child("enemyCollider").attribute("y").as_int();
+
 	return true;
 }
 
-bool EnemyNormal::Save(pugi::xml_node&) const
+bool EnemyNormal::Save(pugi::xml_node& saveNode) const
 {
+	saveNode = saveNode.append_child(enName.GetString());
+	pugi::xml_node position = saveNode.append_child("enemyPosition");
+	pugi::xml_node rect = saveNode.append_child("enemyCollider");
+
+	position.append_attribute("x").set_value(enemyPos.x);
+	position.append_attribute("y").set_value(enemyPos.y);
+
+	rect.append_attribute("x").set_value(collider.x);
+	rect.append_attribute("y").set_value(collider.y);
+
 	return true;
 }
 

@@ -102,6 +102,10 @@ public:
 	EnemyType type;
 
 	DynArray<iPoint> enemyPath;
+
+protected:
+	iPoint pastDest;
+	int i;
 };
 
 #endif // !_CRIATURE_H_
