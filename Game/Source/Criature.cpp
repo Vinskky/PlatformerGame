@@ -14,4 +14,5 @@ Criature::Criature()
 Criature::~Criature()
 {
 	enemyPath.Clear();
+	collider = { 0,0,0,0 };
 }

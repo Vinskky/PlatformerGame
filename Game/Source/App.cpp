@@ -214,10 +214,13 @@ void App::FinishUpdate()
 		averageFps, lastFrameMs, framesOnLastUpdate, dt, secondsSinceStartup, frameCount);
 	app->win->SetTitle(title);
 
-	if (frameDelay > lastFrameMs)
+	if (frameDelay > lastFrameMs && !changeFps)
 	{
-		if (!changeFps) SDL_Delay(frameDelay - lastFrameMs);
-		if (changeFps) SDL_Delay(1000 / 30 - lastFrameMs);
+		SDL_Delay(frameDelay - lastFrameMs);
+	}
+	if ((1000.0f/30.0f) > lastFrameMs && changeFps)
+	{
+		SDL_Delay(1000.0f / 30.0f - lastFrameMs);
 	}
 }
 

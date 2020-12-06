@@ -8,6 +8,7 @@
 #include "Map.h"
 #include "Player.h"
 #include "Pathfinding.h"
+#include "EnemyManager.h"
 
 EnemyNormal::EnemyNormal() : Criature()
 {
@@ -34,7 +35,6 @@ EnemyNormal::~EnemyNormal()
 	currAnimation = nullptr;
 	app->tex->UnLoad(graphics);
 	enemyPath.Clear();
-	//clear enemy collider
 	collider = {0, 0,0,0 };
 	graphics = nullptr;
 }
@@ -69,6 +69,7 @@ bool EnemyNormal::Update(float dt)
 	//ENEMY DEATH
 	if (app->collision->CheckCollision(app->player->swordCollider, collider))
 	{
+		app->enManager->DeleteEnemyNormal(this);
 		isDead = true;
 	}
 

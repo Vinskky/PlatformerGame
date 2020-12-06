@@ -3,6 +3,7 @@
 #include "Input.h"
 #include "Audio.h"
 #include "Render.h"
+#include "Map.h"
 #include "Textures.h"
 #include "Player.h"
 #include "Pathfinding.h"
@@ -90,7 +91,7 @@ bool EnemyFly::Update(float dt)
 			playerLastPos = app->player->playerInfo.position;
 	}*/
 
-	//MoveEnemy(dt);
+	MoveEnemy();
 	//processPos();
 
 	//collision follows
@@ -104,8 +105,65 @@ bool EnemyFly::Update(float dt)
 	return true;
 }
 
-void EnemyFly::MoveEnemy(float dt)
+void EnemyFly::MoveEnemy()
 {
+	iPoint goal = app->player->playerInfo.position;
+	iPoint init = enemyPos;
+
+	goal = app->map->WorldToMap(goal.x, goal.y);
+	init = app->map->WorldToMap(init.x, init.y);
+	if (app->player->playerInfo.position.DistanceTo(enemyPos) < 350)
+	{
+		enemyPath.Clear();
+		if (app->pathfinding->CreatePath(enemyPath, init, goal) != -1)
+		{
+			iPoint temp = *enemyPath.At(enemyPath.Count() - 1);
+			int moveX = temp.x - enemyPos.x;
+			if (moveX < 0)
+			{
+				enemyPos.x -= 1;
+			}
+			else
+			{
+				enemyPos.x += 1;
+			}
+			int moveY = temp.y - enemyPos.y;
+			if (moveY < 0)
+			{
+				enemyPos.y -= 1;
+			}
+			else
+			{
+				enemyPos.y += 1;
+			}
+			if (enemyPos.DistanceTo(temp) < 5)
+			{
+				iPoint popiPoint;
+				enemyPath.Pop(popiPoint);
+			}
+		}
+
+		/*if (app->player->playerInfo.position.DistanceTo(enemyPos) < 275)
+		{
+			enemyPath.Clear();
+			if (app->pathfinding->CreatePath(enemyPath, init, goal) != -1)
+			{
+				iPoint tmp = *enemyPath.At(enemyPath.Count() - 1);
+				int distanceToMove = tmp.x - enemyPos.x;
+				if (distanceToMove < 0)
+				{
+					enemyPos.x -= 1;
+					collider.x = enemyPos.x;
+
+				}
+				else if (distanceToMove > 0)
+				{
+					enemyPos.x += 1;
+					collider.x = enemyPos.x;
+				}
+			}
+		}*/
+	}
 }
 
 void EnemyFly::processPos()
