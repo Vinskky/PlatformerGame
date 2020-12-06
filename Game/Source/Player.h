@@ -107,6 +107,10 @@ public:
 
 	void TP(Cp cp);
 
+	void CheckHurt();
+
+	void InvincibleTimer();
+
 public:
 	PlayerData playerInfo;
 	SDL_Rect playerColider;
@@ -116,9 +120,12 @@ public:
 	bool doubleJump = true;
 	bool godMode = false;
 	bool isMoving;
+	bool isInvincible = false;
 	Life playerLife;
 	LifeGetter lifeGetter[2];
 	const int velAugm = 30;
+	uint invincibleTimer;
+
 private:
 	SDL_Texture* texture;
 	SString textPath;

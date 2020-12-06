@@ -59,6 +59,8 @@ public:
 	void SaveRequest(const char* filename);
 	bool IsLoading() const;
 
+	int GetFrameCount();
+
 private:
 
 	// Load config file

@@ -9,6 +9,7 @@
 #include "Collider.h"
 #include "Scene.h"
 #include "EnemyManager.h"
+#include "Criature.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -16,6 +17,7 @@
 #define MAX_JUMP_HEIGHT 42
 #define WINDOW_MIDDLE_S 213
 #define WINDOW_MIDDLE_E 1065
+#define INVINCIBLETIME 100
 
 Player::Player():Module(),texture(nullptr)
 {
@@ -357,6 +359,9 @@ bool Player::Update(float dt)
 				}
 			}
 		}
+
+		//HURT && INVINCIBILITY
+		CheckHurt();
 	}
 	return true;
 }
@@ -500,7 +505,17 @@ void Player::SetInitialPlayer(Level lvl)
 
 void Player::Draw()
 {
-	app->render->DrawTexture(texture, playerInfo.position.x, playerInfo.position.y, &(playerInfo.currentAnimation->GetCurrentFrame()));
+	if (!isInvincible)
+	{
+		app->render->DrawTexture(texture, playerInfo.position.x, playerInfo.position.y, &(playerInfo.currentAnimation->GetCurrentFrame()));
+	}
+	else
+	{
+		if (app->GetFrameCount() % 2 == 0)
+		{
+			app->render->DrawTexture(texture, playerInfo.position.x, playerInfo.position.y, &(playerInfo.currentAnimation->GetCurrentFrame()));
+		}
+	}
 }
 
 void Player::Gravity()
@@ -887,5 +902,42 @@ void Player::TP(Cp cp)
 		}
 	}
 }
+
+void Player::CheckHurt()
+{
+	ListItem<Criature*>* enemy = app->enManager->enemies.start;
+	for (enemy; enemy != NULL; enemy = enemy->next)
+	{
+		//SDL_Rect temp = { 110, 115, 7, 12 };
+		//app->render->DrawRectangle(temp, 25, 154, 86);
+		if (app->collision->CheckCollision(playerColider, enemy->data->collider))
+		{
+			if (!isInvincible)
+			{
+				playerLife.lifes--;
+				isInvincible = true;
+			}
+		}
+		if (isInvincible)
+		{
+			InvincibleTimer();
+		}
+	}
+}
+
+void Player::InvincibleTimer()
+{
+	if (invincibleTimer < INVINCIBLETIME)
+	{
+		LOG("TIME: %d", invincibleTimer);
+		invincibleTimer++;
+	}
+	else
+	{
+		invincibleTimer = 0;
+		isInvincible = false;
+	}
+}
+
 
 

@@ -8,6 +8,8 @@
 #include "Collider.h"
 #include "Scene.h"
 #include "Map.h"
+#include "EnemyManager.h"
+#include "Criature.h"
 
 Collisions::Collisions():Module()
 {
@@ -138,6 +140,13 @@ void Collisions::DebugDraw()
 		app->render->DrawRectangle(app->scene->collectible[0].itemRect, 180, 20, 20, alpha);
 		app->render->DrawRectangle(app->scene->collectible[1].itemRect, 180, 20, 20, alpha);
 		app->render->DrawRectangle(app->player->lifeGetter[0].getterRect, 70, 180, 20, alpha);
+
+		ListItem<Criature*>* enemy = app->enManager->enemies.start;
+		for (enemy; enemy != NULL; enemy = enemy->next)
+		{
+			app->render->DrawRectangle(enemy->data->collider, 180, 20, 180, alpha);
+		}
+
 	}
 	else if (app->map->lvl2)
 	{
@@ -146,6 +155,10 @@ void Collisions::DebugDraw()
 		app->render->DrawRectangle(app->scene->collectible[3].itemRect, 180, 20, 20, alpha);
 		app->render->DrawRectangle(app->player->lifeGetter[1].getterRect, 70, 180, 20, alpha);
 	}
+
+
+
+
 
 
 

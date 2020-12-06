@@ -42,7 +42,7 @@ public:
 
 	int GetDirection() const;
 
-	iPoint Getposition() const;
+	iPoint GetPosition() const;
 
 	// Called before quitting
 	bool CleanUp();

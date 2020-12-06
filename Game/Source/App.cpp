@@ -432,6 +432,11 @@ bool App::SaveGame() const
 	return ret;
 }
 
+int App::GetFrameCount()
+{
+	return (int)frameCount;
+}
+
 
 
 

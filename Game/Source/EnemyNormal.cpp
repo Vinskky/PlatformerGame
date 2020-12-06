@@ -107,10 +107,13 @@ void EnemyNormal::MoveEnemy()
 			{
 				//ceil Rounds x upward, returning the smallest integral value that is not less than x.
 				enemyPos.x -= 1;// ceil(-distanceToMove * 0.17);
+				collider.x = enemyPos.x;
+
 			}
 			else
 			{
 				enemyPos.x += 1;//ceil(-distanceToMove * 0.17);
+				collider.x = enemyPos.x;
 			}
 		}
 	}
@@ -182,7 +185,7 @@ int EnemyNormal::GetDirection() const
 	return 0;
 }
 
-iPoint EnemyNormal::Getposition() const
+iPoint EnemyNormal::GetPosition() const
 {
 	return enemyPos;
 }
