@@ -176,13 +176,28 @@ bool EnemyFly::PostUpdate()
 	return true;
 }
 
-bool EnemyFly::Load(pugi::xml_node&)
+bool EnemyFly::Load(pugi::xml_node& loadNode)
 {
+	enemyPos.x = loadNode.child("enemyFly").child("enemyPosition").attribute("x").as_int();
+	enemyPos.y = loadNode.child("enemyFly").child("enemyPosition").attribute("y").as_int();
+	collider.x = loadNode.child("enemyFly").child("enemyCollider").attribute("x").as_int();
+	collider.y = loadNode.child("enemyFly").child("enemyCollider").attribute("y").as_int();
+
 	return true;
 }
 
-bool EnemyFly::Save(pugi::xml_node&) const
+bool EnemyFly::Save(pugi::xml_node& saveNode) const
 {
+	pugi::xml_node enFLy = saveNode.append_child(enName.GetString());
+	pugi::xml_node position = enFLy.append_child("enemyPosition");
+	pugi::xml_node rect = enFLy.append_child("enemyCollider");
+
+	position.append_attribute("x").set_value(enemyPos.x);
+	position.append_attribute("y").set_value(enemyPos.y);
+
+	rect.append_attribute("x").set_value(collider.x);
+	rect.append_attribute("y").set_value(collider.y);
+
 	return true;
 }
 

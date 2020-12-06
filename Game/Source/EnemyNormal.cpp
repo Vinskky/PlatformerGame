@@ -169,9 +169,9 @@ bool EnemyNormal::Load(pugi::xml_node& loadNode)
 
 bool EnemyNormal::Save(pugi::xml_node& saveNode) const
 {
-	saveNode = saveNode.append_child(enName.GetString());
-	pugi::xml_node position = saveNode.append_child("enemyPosition");
-	pugi::xml_node rect = saveNode.append_child("enemyCollider");
+	pugi::xml_node enGround = saveNode.append_child(enName.GetString());
+	pugi::xml_node position = enGround.append_child("enemyPosition");
+	pugi::xml_node rect = enGround.append_child("enemyCollider");
 
 	position.append_attribute("x").set_value(enemyPos.x);
 	position.append_attribute("y").set_value(enemyPos.y);
