@@ -179,13 +179,13 @@ bool Player::Update(float dt)
 		{
 			if (godMode == false)
 			{
-				playerColider.x -= 1 * playerInfo.speed;
+				playerColider.x -= 1 * playerInfo.speed * dt * velAugm;
 				if (CheckCollision() == false)
 				{
 					playerInfo.position.x = playerColider.x;
 					isMoving = true;
 					if (playerInfo.position.x >= WINDOW_MIDDLE_S && playerInfo.position.x <= WINDOW_MIDDLE_E)
-						app->render->camera.x += 6;
+						app->render->camera.x += 6 * dt * velAugm;
 				}
 				else if (godMode == false)
 				{
@@ -197,11 +197,11 @@ bool Player::Update(float dt)
 			{
 				if (playerInfo.position.x > 0)
 				{
-					playerColider.x -= 1 * playerInfo.speed;
+					playerColider.x -= 1 * playerInfo.speed * dt * velAugm;
 					playerInfo.position.x = playerColider.x;
 					isMoving = true;
 					if (playerInfo.position.x >= WINDOW_MIDDLE_S && playerInfo.position.x <= WINDOW_MIDDLE_E)
-						app->render->camera.x += 6;
+						app->render->camera.x += 6 * dt * velAugm;
 				}
 			}
 			UpdateAnimation("walk");
@@ -213,13 +213,13 @@ bool Player::Update(float dt)
 		{
 			if (godMode == false)
 			{
-				playerColider.x += 1 * playerInfo.speed;
+				playerColider.x += 1 * playerInfo.speed * dt * velAugm;
 				if (CheckCollision() == false)
 				{
 					playerInfo.position.x = playerColider.x;
 					isMoving = true;
 					if (playerInfo.position.x >= WINDOW_MIDDLE_S && playerInfo.position.x <= WINDOW_MIDDLE_E)
-						app->render->camera.x -= 6;
+						app->render->camera.x -= 6 * dt * velAugm;
 				}
 				else
 				{
@@ -231,11 +231,11 @@ bool Player::Update(float dt)
 			{
 				if (playerInfo.position.x < 1255)
 				{
-					playerColider.x += 1 * playerInfo.speed;
+					playerColider.x += 1 * playerInfo.speed * dt * velAugm;
 					playerInfo.position.x = playerColider.x;
 					isMoving = true;
 					if (playerInfo.position.x >= WINDOW_MIDDLE_S && playerInfo.position.x <= WINDOW_MIDDLE_E)
-						app->render->camera.x -= 6;
+						app->render->camera.x -= 6 * dt * velAugm;
 				}
 			}
 			playerInfo.currentDir = RIGHT_DIR;

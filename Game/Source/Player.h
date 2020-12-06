@@ -118,6 +118,7 @@ public:
 	bool isMoving;
 	Life playerLife;
 	LifeGetter lifeGetter[2];
+	const int velAugm = 30;
 private:
 	SDL_Texture* texture;
 	SString textPath;
