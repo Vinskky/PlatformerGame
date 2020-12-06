@@ -49,7 +49,7 @@ bool EnemyNormal::Start()
 {
 	graphics = app->tex->Load("Assets/textures/ground_enemy.png");
 	enemyState = ENEMY_IDLE;
-	aStar = new PathFinding();
+	//aStar = new PathFinding();
 	playerLastPos = app->player->playerInfo.position;
 	//add collider to enemy
 	collider = { enemyPos.x,enemyPos.y, 16,16 };
@@ -181,6 +181,11 @@ bool EnemyNormal::Save(pugi::xml_node&) const
 int EnemyNormal::GetDirection() const
 {
 	return 0;
+}
+
+SDL_Rect EnemyNormal::GetCollider() const
+{
+	return collider;
 }
 
 iPoint EnemyNormal::Getposition() const

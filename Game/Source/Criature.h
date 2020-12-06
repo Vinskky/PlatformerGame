@@ -35,7 +35,7 @@ public:
 		EN_FLY
 	};
 	Criature() {};
-	virtual ~Criature() {};
+	virtual ~Criature();
 
 	//Called before render is available
 	virtual bool Awake()
@@ -84,12 +84,12 @@ public:
 		return true;
 	}
 
-	virtual void OnCollision(Collisions*, Collisions*) {}
 
 public:
 
 	EnemyState enemyState;
 	EnemyDirection enemyDirection;
+	SDL_Rect rCollider;
 
 	iPoint enemyPos;
 	iPoint enemyVel;
@@ -101,7 +101,6 @@ public:
 	bool active = false;
 
 	EnemyType type;
-	Collisions* enemyCollider = nullptr;
 
 	DynArray<iPoint> enemyPath;
 };

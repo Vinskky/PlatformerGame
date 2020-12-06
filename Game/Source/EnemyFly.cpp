@@ -72,7 +72,7 @@ bool EnemyFly::Start()
 {
 	currAnimation = &idle;
 	enemyState = ENEMY_IDLE;
-	aStar = new PathFinding();
+	//aStar = new PathFinding();
 	playerLastPos = app->player->playerInfo.position;
 	//add collider to enemy
 	collider = { enemyPos.x,enemyPos.y, 16,16 };
@@ -191,6 +191,11 @@ bool EnemyFly::Save(pugi::xml_node&) const
 int EnemyFly::GetDirection() const
 {
 	return 0;
+}
+
+SDL_Rect EnemyFly::GetCollider() const
+{
+	return collider;
 }
 
 iPoint EnemyFly::Getposition() const

@@ -42,6 +42,8 @@ public:
 
 	int GetDirection() const;
 
+	SDL_Rect GetCollider() const;
+
 	iPoint Getposition() const;
 
 	// Called before quitting

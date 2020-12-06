@@ -90,6 +90,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Collider.cpp" />
+    <ClCompile Include="Source\Criature.cpp" />
     <ClCompile Include="Source\EnemyFly.cpp" />
     <ClCompile Include="Source\EnemyManager.cpp" />
     <ClCompile Include="Source\EnemyNormal.cpp" />
