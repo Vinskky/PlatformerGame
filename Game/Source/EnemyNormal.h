@@ -27,7 +27,7 @@ public:
 	// Called each loop iteration
 	bool Update(float dt);
 
-	void MoveEnemy(float dt);
+	void MoveEnemy();
 	void processPos();
 	void processGravity(float dt);
 

@@ -63,12 +63,10 @@ private:
 	iPoint playerLastPos;
 
 	Animation* currAnimation = new Animation();
-	Animation idleRight;
-	Animation idleLeft;
+	Animation idle;
 	Animation flyRight;
 	Animation flyLeft;
-	Animation deadRight;
-	Animation deadLeft;
+	Animation dead;
 
 };
 #endif // !_ENEMY_FLY_H

@@ -36,7 +36,7 @@ bool EnemyFly::Awake()
 
 bool EnemyFly::Start()
 {
-	currAnimation = &idleLeft;
+	currAnimation = &idle;
 	enemyState = ENEMY_IDLE;
 	aStar = new PathFinding();
 	playerLastPos = app->player->playerInfo.position;
@@ -52,14 +52,14 @@ bool EnemyFly::PreUpdate()
 
 bool EnemyFly::Update(float dt)
 {
-	if (playerLastPos.DistanceTo(app->player->playerInfo.position) > 10)
+	/*if (playerLastPos.DistanceTo(app->player->playerInfo.position) > 10)
 	{
 		if (aStar->CreatePath(enemyPos, app->player->playerInfo.position) != -1)
 			playerLastPos = app->player->playerInfo.position;
-	}
+	}*/
 
-	MoveEnemy(dt);
-	processPos();
+	//MoveEnemy(dt);
+	//processPos();
 
 	//collision follows
 
@@ -84,10 +84,56 @@ void EnemyFly::ReturnToZero()
 
 void EnemyFly::Draw()
 {
+	switch (enemyState)
+	{
+	case ENEMY_IDLE:
+	{
+		currAnimation = &idle;
+		break;
+	}
+		
+	case ENEMY_FLY_L:
+	{
+		currAnimation = &flyLeft;
+		break;
+	}
+		
+	case ENEMY_FLY_R:
+	{
+		currAnimation = &flyRight;
+		break;
+	}
+		
+	case DEAD:
+	{
+		currAnimation = &dead;
+		break;
+	}
+		
+	default:
+		break;
+	}
+
+	SDL_Rect r = { 0,0,13,9 };
+	if (app->scene->currentScreen == PLAYING)
+		app->render->DrawTexture(graphics, enemyPos.x, enemyPos.y, &r);
+
+	if (aStar->GetLastPath() != nullptr && app->collision->debug)
+	{
+		Uint8 alpha = 80;
+		for (int i = 0; i < aStar->GetLastPath()->Count(); i++)
+		{
+			iPoint tmp = *aStar->GetLastPath()->At(i);
+			SDL_Rect t = { tmp.x,tmp.y, 16, 16 };
+			app->render->DrawRectangle(t, 255, 255, 255, alpha);
+		}
+	}
+	app->render->DrawRectangle(collider, 125, 151, 255, 75);
 }
 
 bool EnemyFly::PostUpdate()
 {
+	Draw();
 	return true;
 }
 

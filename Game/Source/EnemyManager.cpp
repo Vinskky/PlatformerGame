@@ -4,13 +4,14 @@
 #include "Criature.h"
 #include "App.h"
 #include "Log.h"
+#include "Scene.h"
 #include "Collider.h"
 #include "Defs.h"
 #include "Input.h"
 
 EnemyManager::EnemyManager()
 {
-	name.Create("Criatures");
+	name.Create("criatures");
 }
 
 EnemyManager::~EnemyManager()
@@ -39,6 +40,15 @@ bool EnemyManager::Start()
 		CreateEnemyNormal(pos);
 		item = item->next;
 	}
+
+	/*ListItem<SDL_Rect>* item2 = app->collision->initPosEnemyFly.start;
+	while (item2 != NULL)
+	{
+		iPoint pos = { item2->data.x, item2->data.y };
+		CreateEnemyFly(pos);
+		item2 = item2->next;
+	}*/
+
 	return true;
 }
 
@@ -55,13 +65,16 @@ bool EnemyManager::PreUpdate()
 
 bool EnemyManager::Update(float dt)
 {
-	ListItem<Criature*>* item = enemies.start;
-	while (item != NULL)
+	if(app->scene->currentScreen == PLAYING)
 	{
-		item->data->Update(dt);
-		item = item->next;
+		ListItem<Criature*>* item = enemies.start;
+		while (item != NULL)
+		{
+			item->data->Update(dt);
+			item = item->next;
+		}
 	}
-	return true;
+	return true;	
 }
 
 bool EnemyManager::PostUpdate()

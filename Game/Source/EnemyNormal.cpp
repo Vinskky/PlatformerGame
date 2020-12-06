@@ -4,6 +4,7 @@
 #include "Audio.h"
 #include "Render.h"
 #include "Textures.h"
+#include "Map.h"
 #include "Player.h"
 #include "Pathfinding.h"
 
@@ -50,13 +51,19 @@ bool EnemyNormal::PreUpdate()
 
 bool EnemyNormal::Update(float dt)
 {
-	if (playerLastPos.DistanceTo(app->player->playerInfo.position) > 10)
+	iPoint goal = app->player->playerInfo.position;
+	iPoint init = enemyPos;
+
+	goal = app->map->WorldToMap(goal.x, goal.y);
+	init = app->map->WorldToMap(init.x, init.y);
+
+	if (playerLastPos.DistanceTo(app->player->playerInfo.position) > 50)
 	{
-		if (aStar->CreatePath(enemyPos, app->player->playerInfo.position) != -1)
+		if (aStar->CreatePath(init, goal) != -1)
 			playerLastPos = app->player->playerInfo.position;
 	}
 
-	//MoveEnemy(dt);
+	MoveEnemy();
 	//processPos();
 	//processGravity(dt);
 
@@ -65,22 +72,28 @@ bool EnemyNormal::Update(float dt)
 	return true;
 }
 
-void EnemyNormal::MoveEnemy(float dt)
+void EnemyNormal::MoveEnemy()
 {
-	if (app->player->playerInfo.position.DistanceTo(enemyPos) < 250)
+	iPoint goal = app->player->playerInfo.position;
+	iPoint init = enemyPos;
+
+	goal = app->map->WorldToMap(goal.x, goal.y);
+	init = app->map->WorldToMap(init.x, init.y);
+
+	if (app->player->playerInfo.position.DistanceTo(enemyPos) < 75)
 	{
-		if (aStar->GetLastPath() != nullptr)
+		if (aStar->CreatePath(init, goal) != -1)
 		{
 			iPoint tmp = *aStar->GetLastPath()->At(aStar->GetLastPath()->Count() - 1);
 			int distanceToMove = tmp.x - enemyPos.x;
 			if (distanceToMove < 0)
 			{
 				//ceil Rounds x upward, returning the smallest integral value that is not less than x.
-				enemyPos.x -= ceil(-distanceToMove * dt); 
+				enemyPos.x -= ceil(-distanceToMove * 0.17); 
 			}
 			else
 			{
-				enemyPos.x += ceil(-distanceToMove * dt);
+				enemyPos.x += ceil(-distanceToMove * 0.17);
 			}
 		}
 	}
@@ -114,8 +127,9 @@ void EnemyNormal::Draw()
 		break;
 	}
 
-	SDL_Rect r = currAnimation->GetCurrentFrame();
-	app->render->DrawTexture(graphics, enemyPos.x, enemyPos.y, &r, 2);
+	SDL_Rect r = {0,8,23,23};
+	if(app->scene->currentScreen == PLAYING)
+		app->render->DrawTexture(graphics, enemyPos.x-7, enemyPos.y-7, &r);
 
 	if (aStar->GetLastPath() != nullptr && app->collision->debug)
 	{
@@ -127,6 +141,7 @@ void EnemyNormal::Draw()
 			app->render->DrawRectangle(t, 255, 255, 255, alpha);
 		}
 	}
+	app->render->DrawRectangle(collider, 125, 151, 255, 75);
 }
 
 bool EnemyNormal::PostUpdate()

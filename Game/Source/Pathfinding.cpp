@@ -177,9 +177,6 @@ int PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 	}
 	else
 	{
-		// L12b: TODO 2: Create two lists: open, close
-		// Add the origin tile to open
-		// Iterate while we have tile in the open list
 		PathList close;
 		PathList open;
 
@@ -230,20 +227,6 @@ int PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 			}
 			
 		}
-		
-		// L12b: TODO 3: Move the lowest score cell from open list to the closed list
-
-		// L12b: TODO 4: If we just added the destination, we are done!
-		// Backtrack to create the final path
-		// Use the Pathnode::parent and Flip() the path when you are finish
-
-		// L12b: TODO 5: Fill a list of all adjancent nodes
-
-		// L12b: TODO 6: Iterate adjancent nodes:
-		// ignore nodes in the closed list
-		// If it is NOT found, calculate its F and add it to the open list
-		// If it is already in the open list, check if it is a better path (compare G)
-		// If it is a better path, Update the parent
 	}
 	return -1;
 }
