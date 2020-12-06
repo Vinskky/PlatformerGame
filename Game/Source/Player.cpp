@@ -131,6 +131,24 @@ bool Player::Awake(pugi::xml_node& config)
 	LOG("%s", config.child("life").attribute("source").as_string());
 	playerLife.source.Create(config.child("life").attribute("source").as_string());
 	playerLife.lifes = config.child("life").attribute("lifes").as_int();
+
+	//LIFEGETTER
+	for (int i = 0; i < 2; i++)
+	{
+		lifeGetter[i].source.Create(config.child("lifegetter").attribute("name").as_string());
+		lifeGetter[i].getterRect.w = config.child("lifegetter").attribute("w").as_int();
+		lifeGetter[i].getterRect.h = config.child("lifegetter").attribute("h").as_int();
+	}
+
+	int a = 0;
+	for (pugi::xml_node getter = config.child("lifegetter").child("getter"); getter; getter = getter.next_sibling("getter"))
+	{
+		lifeGetter[a].getterRect.x = getter.attribute("x").as_int();
+		lifeGetter[a].getterRect.y = getter.attribute("y").as_int();
+		lifeGetter[a].active = getter.attribute("active").as_bool();
+
+		a++;
+	}
 	
 	return ret;
 }
@@ -293,6 +311,18 @@ bool Player::Update(float dt)
 		}
 
 		app->map->Draw();
+
+		//LIFEGETTERS DRAW
+		if (lifeGetter[0].active)
+		{
+			app->render->DrawTexture(lifeGetter[0].getterTex, lifeGetter[0].getterRect.x, lifeGetter[0].getterRect.y);
+		}
+		else if (lifeGetter[1].active)
+		{
+			app->render->DrawTexture(lifeGetter[1].getterTex, lifeGetter[1].getterRect.x, lifeGetter[1].getterRect.y);
+		}
+		//----------
+
 		app->player->Draw();
 
 		//IDLE ANIMATION
@@ -399,8 +429,16 @@ bool Player::Save(pugi::xml_node& saveNode) const
 
 void Player::SetInitialPlayer(Level lvl)
 {
+	//PLAYER LIFES
 	playerLife.lifeTex = app->tex->Load(playerLife.source.GetString());
+
+	//LIFEGETTER
+	lifeGetter[0].getterTex = app->tex->Load(lifeGetter[0].source.GetString());
+	lifeGetter[1].getterTex = app->tex->Load(lifeGetter[1].source.GetString());
+
+	//SWORD COLLIDER
 	swordCollider = {-20, 0, 13, 7};
+
 	if (!app->scene->checkpoint[0].checked && !app->scene->checkpoint[1].checked)
 	{
 		//RESTART COLLECTIBLES
@@ -582,9 +620,14 @@ void Player::ChangeLevel(Level currentLvl)
 		app->map->lvl2 = true;
 		app->scene->checkpoint[0].active = false;
 		app->scene->checkpoint[1].active = true;
+
 		//RESTART CHECKPOINTS
 		app->scene->checkpoint[0].checked = false;
 		app->scene->checkpoint[1].checked = false;
+
+		//ACTIVATE LIFE GETTERS
+		app->player->lifeGetter[0].active = false;
+		app->player->lifeGetter[1].active = true;
 
 		//ACTIVATE COLLECTIBLES
 		app->scene->collectible[0].active = false;
@@ -609,6 +652,10 @@ void Player::ChangeLevel(Level currentLvl)
 		// RESTART CHECKPOINTS
 		app->scene->checkpoint[0].checked = false;
 		app->scene->checkpoint[1].checked = false;
+
+		//ACTIVATE LIFE GETTERS
+		app->player->lifeGetter[0].active = true;
+		app->player->lifeGetter[1].active = false;
 
 		//RESTART COLLECTIBLES
 		for (int i = 0; i < 4; i++) app->scene->collectible[i].collected = false;
@@ -641,6 +688,10 @@ void Player::LoadCurrentLevel(Level currentLvl)
 		if (!app->scene->checkpoint[0].checked) app->scene->collectible[0].collected = false;
 		if (app->scene->checkpoint[0].checked) app->scene->collectible[1].collected = false;
 
+		//ACTIVATE LIFE GETTERS
+		app->player->lifeGetter[0].active = true;
+		app->player->lifeGetter[1].active = false;
+
 		//ACTIVATE COLLECTIBLES
 		app->scene->collectible[0].active = true;
 		app->scene->collectible[1].active = true;
@@ -664,6 +715,10 @@ void Player::LoadCurrentLevel(Level currentLvl)
 		//RESTART COLLECTIBLES
 		if (!app->scene->checkpoint[1].checked) app->scene->collectible[2].collected = false;
 		if (app->scene->checkpoint[1].checked) app->scene->collectible[3].collected = false;
+
+		//ACTIVATE LIFE GETTERS
+		app->player->lifeGetter[0].active = false;
+		app->player->lifeGetter[1].active = true;
 
 		//ACTIVATE COLLECTIBLES
 		app->scene->collectible[0].active = false;
@@ -758,6 +813,16 @@ void Player::TP(Cp cp)
 		app->scene->collectible[2].active = false;
 		app->scene->collectible[3].active = false;
 
+		//ACTIVATE LIFE GETTERS
+		app->player->lifeGetter[0].active = true;
+		app->player->lifeGetter[1].active = false;
+
+		//ACTIVATE COLLECTIBLES
+		app->scene->collectible[0].active = true;
+		app->scene->collectible[1].active = true;
+		app->scene->collectible[2].active = false;
+		app->scene->collectible[3].active = false;
+
 		if (app->map->Load(app->map->GetLevelToLoad().GetString()));
 		{
 			app->render->camera.x = -2364;
@@ -786,6 +851,16 @@ void Player::TP(Cp cp)
 
 		//RESTART COLLECTIBLES
 		for (int i = 0; i < 4; i++) app->scene->collectible[i].collected = false;
+
+		//ACTIVATE LIFE GETTERS
+		app->player->lifeGetter[0].active = false;
+		app->player->lifeGetter[1].active = true;
+
+		//ACTIVATE COLLECTIBLES
+		app->scene->collectible[0].active = false;
+		app->scene->collectible[1].active = false;
+		app->scene->collectible[2].active = true;
+		app->scene->collectible[3].active = true;
 
 		//ACTIVATE COLLECTIBLES
 		app->scene->collectible[0].active = false;

@@ -39,10 +39,6 @@
       <collect x="512" y="49" active="false"/>
     </collectible>
     <collectiblemark name="Assets/textures/item_mark.png"/>
-    <lifegetter name="Assets/textures/life_getter.png" w="21" h="21">
-      <getter x="0" y="0"/>
-      <getter x="0" y="0"/>
-    </lifegetter>
   </scene>
   <map>
     <folder>Assets/maps/</folder>
@@ -51,6 +47,10 @@
   </map>
   <player>
     <life source="Assets/textures/heart.png" lifes="3"/>
+    <lifegetter name="Assets/textures/life_getter.png" w="21" h="21">
+      <getter x="1102" y="155" active="true"/>
+      <getter x="846" y="172" active="false"/>
+    </lifegetter>
     <source name="Assets/textures/Character.png"/>
     <animations>
       <animation name ="attackRight" loop="false" speed="0.165">

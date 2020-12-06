@@ -51,6 +51,15 @@ struct Life
 	SString source;
 };
 
+struct LifeGetter
+{
+	SDL_Texture* getterTex;
+	SString source;
+	const int refill = 3;
+	SDL_Rect getterRect;
+	bool active;
+};
+
 class Player : public Module 
 {
 public:
@@ -108,6 +117,7 @@ public:
 	bool godMode = false;
 	bool isMoving;
 	Life playerLife;
+	LifeGetter lifeGetter[2];
 private:
 	SDL_Texture* texture;
 	SString textPath;

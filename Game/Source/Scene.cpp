@@ -195,8 +195,8 @@ bool Scene::Update(float dt)
 			if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
 			{
 				//RESTART CHECKPOINTS
-				app->scene->checkpoint[0].checked = false;
-				app->scene->checkpoint[1].checked = false;
+				checkpoint[0].checked = false;
+				checkpoint[1].checked = false;
 
 				//RESTART COLLECTIBLES
 				for (int i = 0; i < 4; i++) collectible[i].collected = false;
@@ -204,8 +204,12 @@ bool Scene::Update(float dt)
 				app->player->LoadCurrentLevel(LVL_1);
 
 				//ACTIVATE CHECKPOINTS
-				app->scene->checkpoint[0].active = true;
-				app->scene->checkpoint[1].active = false;
+				checkpoint[0].active = true;
+				checkpoint[1].active = false;
+
+				//ACTIVATE LIFE GETTERS
+				app->player->lifeGetter[0].active = true;
+				app->player->lifeGetter[1].active = false;
 
 				//ACTIVATE COLLECTIBLES
 				collectible[0].active = true;
@@ -216,8 +220,8 @@ bool Scene::Update(float dt)
 			if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
 			{
 				//RESTART CHECKPOINTS
-				app->scene->checkpoint[0].checked = false;
-				app->scene->checkpoint[1].checked = false;
+				checkpoint[0].checked = false;
+				checkpoint[1].checked = false;
 
 				//RESTART COLLECTIBLES
 				for (int i = 0; i < 4; i++) collectible[i].collected = false;
@@ -225,8 +229,12 @@ bool Scene::Update(float dt)
 				app->player->LoadCurrentLevel(LVL_2);
 
 				//ACTIVATE CHECKPOINTS
-				app->scene->checkpoint[0].active = false;
-				app->scene->checkpoint[1].active = true;
+				checkpoint[0].active = false;
+				checkpoint[1].active = true;
+
+				//ACTIVATE LIFE GETTERS
+				app->player->lifeGetter[0].active = false;
+				app->player->lifeGetter[1].active = true;
 
 				//ACTIVATE COLLECTIBLES
 				collectible[0].active = false;
@@ -262,10 +270,16 @@ bool Scene::Update(float dt)
 				app->player->TP(CP2);
 			}
 
+			if (app->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
+			{
+				if(app->player->playerLife.lifes > 0) app->player->playerLife.lifes--;
+			}
+
 			if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
 				app->SaveRequest("savegame.xml");
 			if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN)
 				app->LoadRequest("savegame.xml");
+
 			//L02: BONUS CODE
 			if (app->input->GetKey(SDL_SCANCODE_KP_PLUS) == KEY_DOWN)
 				app->audio->SetVolume(0);
@@ -309,6 +323,16 @@ bool Scene::Update(float dt)
 		checkpoint[1].checked = true;
 	}
 
+	//LIFE GETTERS
+	for (int i = 0; i < 2; i++)
+	{
+		if (app->player->lifeGetter[i].active && app->collision->CheckCollision(app->player->playerColider, app->player->lifeGetter[i].getterRect))
+		{
+			app->player->playerLife.lifes = app->player->lifeGetter[i].refill;
+		}
+	}
+
+	//COLLECTIBLES
 	for (int i = 0; i < 4; i++)
 	{
 		if (collectible[i].active && app->collision->CheckCollision(app->player->playerColider, collectible[i].itemRect))
