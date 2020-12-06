@@ -41,13 +41,13 @@ bool EnemyManager::Start()
 		item = item->next;
 	}
 
-	/*ListItem<SDL_Rect>* item2 = app->collision->initPosEnemyFly.start;
+	ListItem<SDL_Rect>* item2 = app->collision->initPosEnemyFly.start;
 	while (item2 != NULL)
 	{
 		iPoint pos = { item2->data.x, item2->data.y };
 		CreateEnemyFly(pos);
 		item2 = item2->next;
-	}*/
+	}
 
 	return true;
 }

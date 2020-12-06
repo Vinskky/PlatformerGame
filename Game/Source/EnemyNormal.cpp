@@ -12,7 +12,19 @@ EnemyNormal::EnemyNormal() : Criature()
 {
 	enName.Create("enemyNormal");
 	type = EnemyType::EN_NORMAL;
-	//animations pushes here
+	//LEFT ANIMATION
+	moveLeft.PushBack({ 0, 12, 24, 19 }, "moveLeft");
+	moveLeft.PushBack({ 24, 12, 24, 19 }, "moveLeft");
+	moveLeft.PushBack({ 48, 12, 24, 19 }, "moveLeft");
+	moveLeft.loop = true;
+	moveLeft.speed = 0.095;
+
+	//RIGHT ANIMATION
+	moveRight.PushBack({ 120, 12, 23, 19 }, "moveRight");
+	moveRight.PushBack({ 96, 12, 24, 19 }, "moveRight");
+	moveRight.PushBack({ 72, 12, 24, 19 }, "moveRight");
+	moveRight.loop = true;
+	moveRight.speed = 0.095;
 }
 
 
@@ -69,6 +81,12 @@ bool EnemyNormal::Update(float dt)
 
 	//collision follows
 
+	//ENEMY DEATH
+	if (app->collision->CheckCollision(app->player->swordCollider, collider))
+	{
+		isDead = true;
+	}
+
 	return true;
 }
 
@@ -110,6 +128,8 @@ void EnemyNormal::processGravity(float dt)
 
 void EnemyNormal::Draw()
 {
+	enemyState = ENEMY_WALK_L;
+	//enemyState = ENEMY_WALK_R;
 	switch (enemyState)
 	{
 	case ENEMY_WALK_L:
@@ -127,9 +147,8 @@ void EnemyNormal::Draw()
 		break;
 	}
 
-	SDL_Rect r = {0,8,23,23};
-	if(app->scene->currentScreen == PLAYING)
-		app->render->DrawTexture(graphics, enemyPos.x-7, enemyPos.y-7, &r);
+	if(app->scene->currentScreen == PLAYING && !isDead)
+		app->render->DrawTexture(graphics, enemyPos.x-2, enemyPos.y - 2, &currAnimation->GetCurrentFrame());
 
 	if (aStar->GetLastPath() != nullptr && app->collision->debug)
 	{
@@ -141,7 +160,6 @@ void EnemyNormal::Draw()
 			app->render->DrawRectangle(t, 255, 255, 255, alpha);
 		}
 	}
-	app->render->DrawRectangle(collider, 125, 151, 255, 75);
 }
 
 bool EnemyNormal::PostUpdate()

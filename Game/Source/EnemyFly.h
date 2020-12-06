@@ -57,6 +57,7 @@ private:
 	SDL_Texture* graphics = nullptr;
 	SDL_Rect collider;
 	bool isMove = false;
+	bool isDead = false;
 
 	PathFinding* aStar = nullptr;
 
@@ -66,7 +67,8 @@ private:
 	Animation idle;
 	Animation flyRight;
 	Animation flyLeft;
-	Animation dead;
+	Animation dieRight;
+	Animation dieLeft;
 
 };
 #endif // !_ENEMY_FLY_H

@@ -53,6 +53,7 @@ private:
 	SDL_Texture* graphics = nullptr;
 	SDL_Rect collider;
 	bool isMove = false;
+	bool isDead = false;
 
 	PathFinding* aStar = nullptr;
 
