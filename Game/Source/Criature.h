@@ -34,7 +34,7 @@ public:
 		EN_NORMAL,
 		EN_FLY
 	};
-	Criature() {};
+	Criature();
 	virtual ~Criature();
 
 	//Called before render is available
@@ -89,7 +89,6 @@ public:
 
 	EnemyState enemyState;
 	EnemyDirection enemyDirection;
-	SDL_Rect rCollider;
 
 	iPoint enemyPos;
 	iPoint enemyVel;
