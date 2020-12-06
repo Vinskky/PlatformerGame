@@ -1,7 +1,7 @@
 #ifndef _CRIATURE_H_
 #define _CRIATURE_H_
 
-
+#include "DynArray.h"
 #include "Collider.h"
 #include "Point.h"
 
@@ -103,6 +103,7 @@ public:
 	EnemyType type;
 	Collisions* enemyCollider = nullptr;
 
+	DynArray<iPoint> enemyPath;
 };
 
 #endif // !_CRIATURE_H_

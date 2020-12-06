@@ -48,7 +48,7 @@ bool PathFinding::CheckBoundaries(const iPoint& pos) const
 bool PathFinding::IsWalkable(const iPoint& pos) const
 {
 	uchar t = GetTileAt(pos);
-	return t != INVALID_WALK_CODE && t > 0;
+	return t != INVALID_WALK_CODE && t > 0 && t != 254;
 }
 
 // Utility: return the walkability value of a tile
@@ -168,7 +168,7 @@ int PathNode::CalculateF(const iPoint& destination)
 // ----------------------------------------------------------------------------------
 // Actual A* algorithm: return number of steps in the creation of the path or -1 ----
 // ----------------------------------------------------------------------------------
-int PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
+int PathFinding::CreatePath(DynArray<iPoint>& path, const iPoint& origin, const iPoint& destination)
 {
 	// L12b: TODO 1: if origin or destination are not walkable, return -1
 	if (IsWalkable(destination) == false || IsWalkable(origin) == false)
@@ -195,6 +195,7 @@ int PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 					lastPath.PushBack(worldPos);
 				}
 				lastPath.Flip();
+				path = lastPath;
 				return 0;
 			}
 			else

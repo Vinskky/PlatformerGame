@@ -26,7 +26,7 @@ public:
 	void SetMap(uint width, uint height, uchar* data);
 
 	// Main function to request a path from A to B
-	int CreatePath(const iPoint& origin, const iPoint& destination);
+	int CreatePath(DynArray<iPoint> &path, const iPoint& origin, const iPoint& destination);
 
 	// To request all tiles involved in the last generated path
 	const DynArray<iPoint>* GetLastPath() const;
@@ -39,6 +39,8 @@ public:
 
 	// Utility: return the walkability value of a tile
 	uchar GetTileAt(const iPoint& pos) const;
+	
+	DynArray<iPoint> lastPath;
 
 private:
 
@@ -49,8 +51,6 @@ private:
 	// all map walkability values [0..255]
 	uchar* map;
 
-	// we store the created path here
-	DynArray<iPoint> lastPath;
 };
 
 // forward declaration

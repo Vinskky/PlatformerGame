@@ -71,11 +71,11 @@ bool EnemyNormal::Update(float dt)
 
 	if (playerLastPos.DistanceTo(app->player->playerInfo.position) > 50)
 	{
-		if (aStar->CreatePath(init, goal) != -1)
+		if (aStar->CreatePath(enemyPath,init, goal) != -1)
 			playerLastPos = app->player->playerInfo.position;
 	}
 
-	MoveEnemy();
+	//MoveEnemy();
 	//processPos();
 	//processGravity(dt);
 
@@ -100,7 +100,7 @@ void EnemyNormal::MoveEnemy()
 
 	if (app->player->playerInfo.position.DistanceTo(enemyPos) < 75)
 	{
-		if (aStar->CreatePath(init, goal) != -1)
+		if (aStar->CreatePath(enemyPath, init, goal) != -1)
 		{
 			iPoint tmp = *aStar->GetLastPath()->At(aStar->GetLastPath()->Count() - 1);
 			int distanceToMove = tmp.x - enemyPos.x;
