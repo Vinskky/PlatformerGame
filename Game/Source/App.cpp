@@ -357,7 +357,7 @@ bool App::LoadGame()
 
 	if (doc == NULL)
 	{
-		LOG("There was an arror trying to load the game, take care of savegame.xml file. %s", doc.description());
+		LOG("There was an arror trying to load the game, take care of save_game.xml file. %s", doc.description());
 	}
 	else
 	{

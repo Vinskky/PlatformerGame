@@ -276,9 +276,9 @@ bool Scene::Update(float dt)
 			}
 
 			if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
-				app->SaveRequest("savegame.xml");
+				app->SaveRequest("save_game.xml");
 			if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN)
-				app->LoadRequest("savegame.xml");
+				app->LoadRequest("save_game.xml");
 
 			//L02: BONUS CODE
 			if (app->input->GetKey(SDL_SCANCODE_KP_PLUS) == KEY_DOWN)
