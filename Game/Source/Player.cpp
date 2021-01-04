@@ -340,11 +340,11 @@ bool Player::CleanUp()
 
 bool Player::Load(pugi::xml_node& load)
 {
+	app->scene->SetScene((Screens)load.child("level").attribute("value").as_int());
 	playerInfo.position.x = load.child("position").attribute("x").as_int();
 	playerInfo.position.y = load.child("position").attribute("y").as_int();
 	playerColider.x = load.child("collider").attribute("x").as_int();
 	playerColider.y = load.child("collider").attribute("y").as_int();
-	playerInfo.currentLevel = (Level)load.child("level").attribute("value").as_int();
 	playerInfo.currentDir = (Direction)load.child("direction").attribute("value").as_int();
 
 	return true;
@@ -363,77 +363,10 @@ bool Player::Save(pugi::xml_node& saveNode) const
 	rect.append_attribute("x").set_value(playerColider.x);
 	rect.append_attribute("y").set_value(playerColider.y);
 
-	currentLvl.append_attribute("value").set_value(playerInfo.currentLevel);
+	currentLvl.append_attribute("value").set_value(app->scene->currentScreen);
 	currentDir.append_attribute("value").set_value(playerInfo.currentDir);
 
 	return true;
-}
-
-void Player::SetInitialPlayer(Level lvl)
-{
-	//PLAYER LIFES
-	playerLife.lifeTex = app->tex->Load(playerLife.source.GetString());
-
-	//LIFEGETTER
-	lifeGetter[0].getterTex = app->tex->Load(lifeGetter[0].source.GetString());
-	lifeGetter[1].getterTex = app->tex->Load(lifeGetter[1].source.GetString());
-
-	//SWORD COLLIDER
-	swordCollider = {-20, 0, 13, 7};
-
-	if (!app->scene->checkpoint[0].checked && !app->scene->checkpoint[1].checked)
-	{
-		//RESTART COLLECTIBLES
-		if (lvl == LVL_1)
-		{
-			for (int i = 0; i < 4; i++) app->scene->collectible[i].collected = false;
-		}
-
-		app->render->camera.x = 0;
-		if (app->IsLoading() == false)
-		{
-			playerInfo.position = { app->map->GetPlayerInitialPos() };
-			playerInfo.position.y += 2;
-			playerColider = { playerInfo.position.x + 2, playerInfo.position.y, 14, 30 };
-
-			playerInfo.speed = 2;
-			playerInfo.currentLevel = lvl;
-			playerInfo.currentDir = RIGHT_DIR;
-		}
-		
-
-		playerInfo.currentAnimation = &playerInfo.idle;
-	}
-	else if (app->scene->checkpoint[0].checked && lvl == LVL_1)
-	{
-
-		app->render->camera.x = -2364;
-		if (app->IsLoading() == false)
-		{
-			playerInfo.position = { app->scene->checkpoint[0].rect.x, app->scene->checkpoint[0].rect.y - 16 };
-			playerColider = { playerInfo.position.x + 2, playerInfo.position.y, 14, 30 };
-
-			playerInfo.speed = 2;
-			playerInfo.currentLevel = lvl;
-			playerInfo.currentDir = RIGHT_DIR;
-		}
-		playerInfo.currentAnimation = &playerInfo.idle;
-	}
-	else if (app->scene->checkpoint[1].checked && lvl == LVL_2)
-	{
-		app->render->camera.x = -765;
-		if (app->IsLoading() == false)
-		{
-			playerInfo.position = { app->scene->checkpoint[1].rect.x, app->scene->checkpoint[1].rect.y - 16 };
-			playerColider = { playerInfo.position.x + 2, playerInfo.position.y, 14, 30 };
-
-			playerInfo.speed = 2;
-			playerInfo.currentLevel = lvl;
-			playerInfo.currentDir = RIGHT_DIR;
-		}
-
-		playerInfo.currentAnimation = &playerInfo.idle;
-	}
 }
 
 void Player::Draw()
@@ -480,11 +413,6 @@ void Player::Dead()
 bool Player::IsDead() const
 {
 	return isDead;
-}
-
-void Player::SetIsDead(bool set)
-{
-	isDead = set;
 }
 
 bool Player::CheckCollision()

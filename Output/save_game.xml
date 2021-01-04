@@ -6,9 +6,9 @@
 	<transition />
 	<collisions />
 	<player>
-		<position x="48" y="114" />
-		<collider x="48" y="114" />
-		<level value="0" />
+		<position x="194" y="130" />
+		<collider x="194" y="130" />
+		<level value="5" />
 		<direction value="1" />
 	</player>
 	<criatures />

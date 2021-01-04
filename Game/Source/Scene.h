@@ -29,7 +29,6 @@ struct Checkpoint
 	Cp cp;
 	bool checked;
 	bool active = false;
-	void TP(Cp cp);
 	SDL_Texture* checkpointTex;
 	SString source;
 	int collectibles;

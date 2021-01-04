@@ -80,13 +80,12 @@ public:
 
 	bool CleanUp();
 
+public:
 	//Save and load Methods
 	bool Load(pugi::xml_node&);
 	bool Save(pugi::xml_node&) const;
 
 	void Jump();
-
-	void SetInitialPlayer(Level lvl);
 
 	void Draw();
 
@@ -94,20 +93,19 @@ public:
 
 	void Dead();
 	bool IsDead() const;
-	void SetIsDead(bool set);
 
 	bool CheckCollision();
 	bool CheckDeath();
 	bool CheckWin();
+	void CheckHurt();
 
 	void UpdateAnimation(char* anim);
-
-	void CheckHurt();
 
 	void InvincibleTimer();
 
 public:
 	PlayerData playerInfo;
+	Life playerLife;
 	SDL_Rect playerColider;
 	SDL_Rect swordCollider;
 	bool onGround = true;
@@ -116,9 +114,7 @@ public:
 	bool godMode = false;
 	bool isMoving;
 	bool isInvincible = false;
-	Life playerLife;
 	LifeGetter lifeGetter[2];
-	const int velAugm = 30;
 	uint invincibleTimer;
 	SDL_Texture* texture;
 	SString textPath;

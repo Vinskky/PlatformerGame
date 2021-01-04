@@ -20,12 +20,10 @@ Scene::Scene() : Module(), titleScene(nullptr),menuScene(nullptr), deathScene(nu
 	name.Create("scene");
 }
 
-// Destructor
 Scene::~Scene()
 {
 }
 
-// Called before render is available
 bool Scene::Awake(pugi::xml_node& conf)
 {
 	LOG("Loading Scene");
@@ -70,10 +68,8 @@ bool Scene::Awake(pugi::xml_node& conf)
 	return ret;
 }
 
-// Called before the first frame
 bool Scene::Start()
 {
-
 	app->audio->PlayMusic("Assets/Audio/Music/raxer_sound_pathfinder_master.ogg");
 	if (app->map->Load(app->map->GetLevelToLoad().GetString()) == true)
 	{
@@ -99,13 +95,11 @@ bool Scene::Start()
 	return true;
 }
 
-// Called each loop iteration
 bool Scene::PreUpdate()
 {
 	return true;
 }
 
-// Called each loop iteration
 bool Scene::Update(float dt)
 {
 	if (currentScreen == TITLE_SCREEN)
@@ -129,18 +123,13 @@ bool Scene::Update(float dt)
 	return true;
 }
 
-// Called each loop iteration
 bool Scene::PostUpdate()
 {
 	bool ret = true;
 
-	if(app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
-		ret = false;
-
 	return ret;
 }
 
-// Called before quitting
 bool Scene::CleanUp()
 {
 	LOG("Freeing scene");
@@ -191,6 +180,7 @@ void Scene::CollectibleMarkerLogic()
 
 void Scene::SceneCleanUp()
 {
+	//SCREENS UNLOAD
 	if (titleScene != nullptr && titleScene != NULL)
 		app->tex->UnLoad(titleScene);
 
@@ -200,9 +190,20 @@ void Scene::SceneCleanUp()
 	if (menuScene != nullptr && menuScene != NULL)
 		app->tex->UnLoad(menuScene);
 
+	if (configMenu != nullptr && configMenu != NULL)
+		app->tex->UnLoad(configMenu);
+
+	if (pauseMenu != nullptr && pauseMenu != NULL)
+		app->tex->UnLoad(pauseMenu);
+
+	//GUI UNLOAD
 	if (app->player->playerLife.lifeTex != nullptr && app->player->playerLife.lifeTex != NULL)
 		app->tex->UnLoad(app->player->playerLife.lifeTex);
 
+	if (markerTex != nullptr && markerTex != NULL)
+		app->tex->UnLoad(markerTex);
+
+	//ENTITIES UNLOAD
 	if (app->player->lifeGetter[0].getterTex != nullptr && app->player->lifeGetter[0].getterTex != NULL)
 		app->tex->UnLoad(app->player->lifeGetter[0].getterTex);
 
@@ -211,9 +212,6 @@ void Scene::SceneCleanUp()
 
 	if (app->player->texture != nullptr && app->player->texture != NULL)
 		app->tex->UnLoad(app->player->texture);
-
-	if (markerTex != nullptr && markerTex != NULL)
-		app->tex->UnLoad(markerTex);
 
 	if (checkpoint[0].checkpointTex != nullptr && checkpoint[0].checkpointTex != NULL)
 		app->tex->UnLoad(checkpoint[0].checkpointTex);
@@ -227,6 +225,7 @@ void Scene::SceneCleanUp()
 			app->tex->UnLoad(collectible[i].itemTex);
 	}
 
+	//OTHER CLEANUPS
 	app->collision->CleanUp();
 
 	app->map->CleanUp();
