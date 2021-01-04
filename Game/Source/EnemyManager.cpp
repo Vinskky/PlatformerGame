@@ -65,7 +65,7 @@ bool EnemyManager::PreUpdate()
 
 bool EnemyManager::Update(float dt)
 {
-	if(app->scene->currentScreen == PLAYING)
+	if(app->scene->currentScreen == LVL1 || app->scene->currentScreen == LVL2)
 	{
 		ListItem<Criature*>* item = enemies.start;
 		while (item != NULL)

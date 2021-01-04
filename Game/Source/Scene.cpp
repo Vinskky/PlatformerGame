@@ -11,6 +11,7 @@
 #include "Map.h"
 #include "Pathfinding.h"
 #include "Collider.h"
+#include "EnemyManager.h"
 
 #include "Defs.h"
 #include "Log.h"

@@ -47,10 +47,10 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	SDL_Texture* graphics = nullptr;
 private:
 	EnemyState state;
 	EnemyDirection direction;
-	SDL_Texture* graphics = nullptr;
 
 	bool isMove = false;
 	bool isDead = false;

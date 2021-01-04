@@ -192,8 +192,11 @@ void EnemyFly::Draw()
 		break;
 	}
 
-	if (app->scene->currentScreen == PLAYING && !isDead)
-		app->render->DrawTexture(graphics, enemyPos.x, enemyPos.y, &currAnimation->GetCurrentFrame());
+	if (app->scene->currentScreen == LVL1 || app->scene->currentScreen == LVL1)
+	{
+		if (!isDead)
+			app->render->DrawTexture(graphics, enemyPos.x - 2, enemyPos.y - 2, &currAnimation->GetCurrentFrame());
+	}
 
 	if (enemyPath.Count() > 0 && app->collision->debug)
 	{

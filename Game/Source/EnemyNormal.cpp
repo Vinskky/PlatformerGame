@@ -29,7 +29,6 @@ EnemyNormal::EnemyNormal() : Criature()
 	moveRight.speed = 0.095;
 }
 
-
 EnemyNormal::~EnemyNormal()
 {
 	currAnimation = nullptr;
@@ -62,8 +61,6 @@ bool EnemyNormal::PreUpdate()
 bool EnemyNormal::Update(float dt)
 {
 	MoveEnemy();
-	//processPos();
-	//processGravity(dt);
 
 	//ENEMY DEATH
 	if (app->collision->CheckCollision(app->player->swordCollider, collider))
@@ -144,8 +141,11 @@ void EnemyNormal::Draw()
 		break;
 	}
 
-	if(app->scene->currentScreen == PLAYING && !isDead)
-		app->render->DrawTexture(graphics, enemyPos.x-2, enemyPos.y - 2, &currAnimation->GetCurrentFrame());
+	if (app->scene->currentScreen == LVL1 || app->scene->currentScreen == LVL1)
+	{
+		if (!isDead)
+			app->render->DrawTexture(graphics, enemyPos.x - 2, enemyPos.y - 2, &currAnimation->GetCurrentFrame());
+	}
 
 	if (enemyPath.Count() > 0 && app->collision->debug)
 	{
