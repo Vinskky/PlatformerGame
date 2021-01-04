@@ -100,12 +100,7 @@ public:
 	bool CheckDeath();
 	bool CheckWin();
 
-	void ChangeLevel(Level currentLvl);
-	void LoadCurrentLevel(Level currentLvl);
-
 	void UpdateAnimation(char* anim);
-
-	void Tp(Cp cp);
 
 	void CheckHurt();
 
@@ -125,8 +120,6 @@ public:
 	LifeGetter lifeGetter[2];
 	const int velAugm = 30;
 	uint invincibleTimer;
-
-private:
 	SDL_Texture* texture;
 	SString textPath;
 	bool isDead = false;

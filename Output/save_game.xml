@@ -6,21 +6,12 @@
 	<transition />
 	<collisions />
 	<player>
-		<position x="36" y="114" />
-		<collider x="36" y="114" />
-		<level value="1" />
+		<position x="48" y="114" />
+		<collider x="48" y="114" />
+		<level value="0" />
 		<direction value="1" />
 	</player>
-	<criatures>
-		<enemyNormal>
-			<enemyPosition x="256" y="144" />
-			<enemyCollider x="256" y="144" />
-		</enemyNormal>
-		<enemyFly>
-			<enemyPosition x="864" y="112" />
-			<enemyCollider x="864" y="112" />
-		</enemyFly>
-	</criatures>
+	<criatures />
 	<map />
 	<scene />
 	<pathfinding />

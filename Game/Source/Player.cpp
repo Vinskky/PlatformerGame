@@ -158,8 +158,6 @@ bool Player::Awake(pugi::xml_node& config)
 
 bool Player::Start() 
 {
-	texture = app->tex->Load(textPath.GetString());
-	SetInitialPlayer(LVL_1);
 	return true;
 }
 
@@ -167,9 +165,7 @@ bool Player::Update(float dt)
 {
 	bool ret = true;
 
-	//LOG("CAMX: %d, CAMY: %d", playerInfo.position.x, playerInfo.position.y);
-
-	if (app->scene->currentScreen == Screens::PLAYING)
+	if (app->scene->currentScreen == Screens::LVL1 || app->scene->currentScreen == Screens::LVL2)
 	{
 		playerColider.x = playerInfo.position.x;
 		playerColider.y = playerInfo.position.y;
@@ -177,8 +173,8 @@ bool Player::Update(float dt)
 		//GodMode
 		if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
 			godMode = !godMode;
-		// Player Controls
 
+		// Player Controls
 		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 		{
 			if (godMode == false)
@@ -209,6 +205,7 @@ bool Player::Update(float dt)
 				}
 			}
 			UpdateAnimation("walk");
+			playerInfo.currentAnimation;
 			playerInfo.currentDir = LEFT_DIR;
 
 		}
@@ -278,8 +275,7 @@ bool Player::Update(float dt)
 			swordCollider.y = 0;
 		}
 
-		//ATTACK END
-
+		// PHYSICS
 		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && onGround && !jumpOn)
 		{
 			Jump();
@@ -302,42 +298,7 @@ bool Player::Update(float dt)
 
 		if (CheckDeath() == true && godMode == false)
 		{
-			isDead = true;
-			doubleJump = false;
-			onGround = true;
-			jumpOn = false;
-			Dead();
-		}
-
-		if (CheckWin() == true)
-		{
-			ChangeLevel(playerInfo.currentLevel);
-		}
-
-		app->map->Draw();
-
-		//LIFEGETTERS DRAW
-		if (lifeGetter[0].active)
-		{
-			app->render->DrawTexture(lifeGetter[0].getterTex, lifeGetter[0].getterRect.x, lifeGetter[0].getterRect.y);
-		}
-		else if (lifeGetter[1].active)
-		{
-			app->render->DrawTexture(lifeGetter[1].getterTex, lifeGetter[1].getterRect.x, lifeGetter[1].getterRect.y);
-		}
-		//----------
-
-		app->player->Draw();
-
-		//IDLE ANIMATION
-		if (strcmp(playerInfo.currentAnimation->name.GetString(), "idle") != 0 || strcmp(playerInfo.currentAnimation->name.GetString(), "idleLeft") != 0)
-		{
-			if (!playerInfo.currentAnimation->Finished())
-			{
-				playerInfo.currentAnimation->FinishAnimation();
-				UpdateAnimation("idle");
-				isMoving = false;
-			}
+			app->scene->SetScene(DEAD_SCREEN);
 		}
 
 		if (godMode)
@@ -369,30 +330,6 @@ bool Player::Update(float dt)
 
 bool Player::PostUpdate() 
 {
-	if (app->scene->currentScreen == PLAYING)
-	{
-		if (playerLife.lifes == 3)
-		{
-			app->render->DrawTexture(playerLife.lifeTex, 30 - app->render->camera.x / 3, 3);
-			app->render->DrawTexture(playerLife.lifeTex, 50 - app->render->camera.x / 3, 3);
-			app->render->DrawTexture(playerLife.lifeTex, 70 - app->render->camera.x / 3, 3);
-		}
-		else if (playerLife.lifes == 2)
-		{
-			app->render->DrawTexture(playerLife.lifeTex, 30 - app->render->camera.x / 3, 3);
-			app->render->DrawTexture(playerLife.lifeTex, 50 - app->render->camera.x / 3, 3);
-		}
-		else if (playerLife.lifes == 1)
-		{
-			app->render->DrawTexture(playerLife.lifeTex, 30 - app->render->camera.x / 3, 3);
-		}
-
-		if (playerLife.lifes == 0)
-		{
-			playerLife.lifes = 3;
-			Dead();
-		}
-	}
 	return true;
 }
 
@@ -409,8 +346,6 @@ bool Player::Load(pugi::xml_node& load)
 	playerColider.y = load.child("collider").attribute("y").as_int();
 	playerInfo.currentLevel = (Level)load.child("level").attribute("value").as_int();
 	playerInfo.currentDir = (Direction)load.child("direction").attribute("value").as_int();
-
-	LoadCurrentLevel(playerInfo.currentLevel);
 
 	return true;
 }
@@ -535,10 +470,10 @@ void Player::Gravity()
 
 void Player::Dead()
 {
+	app->player->onGround = true;
+	app->player->jumpOn = false;
 	app->player->UpdateAnimation("die");
 	app->player->isMoving = false;
-	app->scene->currentScreen = DEAD_SCREEN;
-	LoadCurrentLevel(app->player->playerInfo.currentLevel);
 	isDead = true;
 }
 
@@ -624,146 +559,6 @@ void Player::Jump()
 	}
 }
 
-void Player::ChangeLevel(Level currentLvl)
-{
-	if (currentLvl == LVL_1)
-	{
-		app->collision->CleanUp();
-		app->map->CleanUp();
-		app->map->lvl1 = false;
-		app->map->lvl2 = true;
-		app->scene->checkpoint[0].active = false;
-		app->scene->checkpoint[1].active = true;
-
-		//RESTART CHECKPOINTS
-		app->scene->checkpoint[0].checked = false;
-		app->scene->checkpoint[1].checked = false;
-
-		//ACTIVATE LIFE GETTERS
-		app->player->lifeGetter[0].active = false;
-		app->player->lifeGetter[1].active = true;
-
-		//ACTIVATE COLLECTIBLES
-		app->scene->collectible[0].active = false;
-		app->scene->collectible[1].active = false;
-		app->scene->collectible[2].active = true;
-		app->scene->collectible[3].active = true;
-
-		if (app->map->Load(app->map->GetLevelToLoad().GetString()));
-		{
-			SetInitialPlayer(LVL_2);
-		}
-			
-	}
-	else if (currentLvl == LVL_2)
-	{
-		app->collision->CleanUp();
-		app->map->CleanUp();
-		app->map->lvl1 = true;
-		app->map->lvl2 = false;
-		app->scene->checkpoint[0].active = true;
-		app->scene->checkpoint[1].active = false;
-		// RESTART CHECKPOINTS
-		app->scene->checkpoint[0].checked = false;
-		app->scene->checkpoint[1].checked = false;
-
-		//ACTIVATE LIFE GETTERS
-		app->player->lifeGetter[0].active = true;
-		app->player->lifeGetter[1].active = false;
-
-		//RESTART COLLECTIBLES
-		for (int i = 0; i < 4; i++) app->scene->collectible[i].collected = false;
-
-		//ACTIVATE COLLECTIBLES
-		app->scene->collectible[0].active = true;
-		app->scene->collectible[1].active = true;
-		app->scene->collectible[2].active = false;
-		app->scene->collectible[3].active = false;
-
-		if (app->map->Load(app->map->GetLevelToLoad().GetString()));
-		{
-			SetInitialPlayer(LVL_1);
-		}
-	}
-}
-
-void Player::LoadCurrentLevel(Level currentLvl)
-{
-	if (currentLvl == LVL_1)
-	{
-		app->collision->CleanUp();
-		app->map->CleanUp();
-		app->map->lvl1 = true;
-		app->map->lvl2 = false;
-		app->scene->checkpoint[0].active = true;
-		app->scene->checkpoint[1].active = false;
-
-		//RESTART COLLECTIBLES
-		if (!app->scene->checkpoint[0].checked) app->scene->collectible[0].collected = false;
-		if (app->scene->checkpoint[0].checked) app->scene->collectible[1].collected = false;
-
-		//ACTIVATE LIFE GETTERS
-		app->player->lifeGetter[0].active = true;
-		app->player->lifeGetter[1].active = false;
-
-		//ACTIVATE COLLECTIBLES
-		app->scene->collectible[0].active = true;
-		app->scene->collectible[1].active = true;
-		app->scene->collectible[2].active = false;
-		app->scene->collectible[3].active = false;
-		
-		if (app->map->Load(app->map->GetLevelToLoad().GetString()));
-		{
-			/*app->enManager->DeleteAllEnemies();
-			ListItem<SDL_Rect>* item = app->collision->initPosEnemyGround.start;
-			while (item != NULL)
-			{
-				iPoint positionSpawn = { item->data.x,item->data.y };
-				app->enManager->CreateEnemyNormal(positionSpawn);
-				item = item->next;
-			}
-
-			ListItem<SDL_Rect>* item2 = app->collision->initPosEnemyFly.start;
-			while (item2 != NULL)
-			{
-				iPoint positionSpawn = { item2->data.x,item2->data.y };
-				app->enManager->CreateEnemyFly(positionSpawn);
-				item2 = item2->next;
-			}*/
-
-			SetInitialPlayer(LVL_1);
-		}
-	}
-	else if (currentLvl == LVL_2)
-	{
-		app->collision->CleanUp();
-		app->map->CleanUp();
-		app->map->lvl1 = false;
-		app->map->lvl2 = true;
-		app->scene->checkpoint[0].active = false;
-		app->scene->checkpoint[1].active = true;
-
-		//RESTART COLLECTIBLES
-		if (!app->scene->checkpoint[1].checked) app->scene->collectible[2].collected = false;
-		if (app->scene->checkpoint[1].checked) app->scene->collectible[3].collected = false;
-
-		//ACTIVATE LIFE GETTERS
-		app->player->lifeGetter[0].active = false;
-		app->player->lifeGetter[1].active = true;
-
-		//ACTIVATE COLLECTIBLES
-		app->scene->collectible[0].active = false;
-		app->scene->collectible[1].active = false;
-		app->scene->collectible[2].active = true;
-		app->scene->collectible[3].active = true;
-
-		if(app->map->Load(app->map->GetLevelToLoad().GetString()));
-		{
-			SetInitialPlayer(LVL_2);
-		}
-	}
-}
-
 void Player::UpdateAnimation(char* anim)
 {
 	if ( playerInfo.currentDir == RIGHT_DIR)
@@ -820,96 +615,6 @@ void Player::UpdateAnimation(char* anim)
 		{
 			playerInfo.currentAnimation->FinishAnimation();
 			playerInfo.currentAnimation = &playerInfo.attackLeft;
-		}
-	}
-}
-
-void Player::Tp(Cp cp)
-{
-	if (cp == CP1)
-	{
-		app->collision->CleanUp();
-		app->map->CleanUp();
-		app->map->lvl1 = true;
-		app->map->lvl2 = false;
-		app->scene->checkpoint[0].active = true;
-		app->scene->checkpoint[1].active = false;
-
-		//RESTART COLLECTIBLES
-		for (int i = 0; i < 4; i++) app->scene->collectible[i].collected = false;
-
-		//ACTIVATE COLLECTIBLES
-		app->scene->collectible[0].active = true;
-		app->scene->collectible[1].active = true;
-		app->scene->collectible[2].active = false;
-		app->scene->collectible[3].active = false;
-
-		//ACTIVATE LIFE GETTERS
-		app->player->lifeGetter[0].active = true;
-		app->player->lifeGetter[1].active = false;
-
-		//ACTIVATE COLLECTIBLES
-		app->scene->collectible[0].active = true;
-		app->scene->collectible[1].active = true;
-		app->scene->collectible[2].active = false;
-		app->scene->collectible[3].active = false;
-
-		if (app->map->Load(app->map->GetLevelToLoad().GetString()));
-		{
-			app->render->camera.x = -2364;
-			if (app->IsLoading() == false)
-			{
-				playerInfo.position = { app->scene->checkpoint[0].rect.x, app->scene->checkpoint[0].rect.y - 16 };
-				playerColider = { playerInfo.position.x + 2, playerInfo.position.y, 14, 30 };
-
-				playerInfo.speed = 2;
-				playerInfo.currentLevel = LVL_1;
-				playerInfo.currentDir = RIGHT_DIR;
-			}
-			playerInfo.currentAnimation = &playerInfo.idle;
-		}
-	}
-	else if (cp == CP2)
-	{
-		app->collision->CleanUp();
-		app->map->CleanUp();
-		app->map->lvl1 = false;
-		app->map->lvl2 = true;
-		app->scene->checkpoint[0].active = false;
-		app->scene->checkpoint[1].active = true;
-
-		//RESTART COLLECTIBLES
-		for (int i = 0; i < 4; i++) app->scene->collectible[i].collected = false;
-
-		//ACTIVATE LIFE GETTERS
-		app->player->lifeGetter[0].active = false;
-		app->player->lifeGetter[1].active = true;
-
-		//ACTIVATE COLLECTIBLES
-		app->scene->collectible[0].active = false;
-		app->scene->collectible[1].active = false;
-		app->scene->collectible[2].active = true;
-		app->scene->collectible[3].active = true;
-
-		//ACTIVATE COLLECTIBLES
-		app->scene->collectible[0].active = false;
-		app->scene->collectible[1].active = false;
-		app->scene->collectible[2].active = true;
-		app->scene->collectible[3].active = true;
-
-		if (app->map->Load(app->map->GetLevelToLoad().GetString()));
-		{
-			app->render->camera.x = -765;
-			if (app->IsLoading() == false)
-			{
-				playerInfo.position = { app->scene->checkpoint[1].rect.x, app->scene->checkpoint[1].rect.y - 16 };
-				playerColider = { playerInfo.position.x + 2, playerInfo.position.y, 14, 30 };
-
-				playerInfo.speed = 2;
-				playerInfo.currentLevel = LVL_2;
-				playerInfo.currentDir = RIGHT_DIR;
-			}
-			playerInfo.currentAnimation = &playerInfo.idle;
 		}
 	}
 }

@@ -8,9 +8,13 @@ struct SDL_Texture;
 enum Screens
 {
 	TITLE_SCREEN = 1,
-	START_SCREEN,
+	MAIN_MENU,
 	DEAD_SCREEN,
-	PLAYING
+	PLAYING,
+	LVL1,
+	LVL2,
+	CONFIG_MENU,
+	PAUSE_MENU,
 };
 
 enum Cp
@@ -70,16 +74,42 @@ public:
 private:
 	int timer = 0;
 	iPoint tempPlayerPosition;
+
+public:
+	//SCENE MANAGER
+	Screens currentScreen;
+	Screens previousScreen;
+
+	void SceneCleanUp();
+
+	void SetScene(Screens scene);
+	void SetTitleScreen();
+	void SetMainMenu();
+	void SetDeadScreen();
+	void SetLvl1();
+	void SetLvl2();
+	void SetConfigMenu();
+	void SetPauseMenu();
+
+	void UpdateTitle();
+	void UpdateMainMenu();
+	void UpdateDeadScreen();
+	void UpdateLevels();
+	void UpdateConfigMenu();
+	void UpdatePauseMenu();
+
 	SString sourceTitle;
 	SString sourceDeath;
 	SString sourceIntro;
+
 	SDL_Texture* titleScene;
-	SDL_Texture* introScene;
+	SDL_Texture* menuScene;
 	SDL_Texture* deathScene;
+	SDL_Texture* configMenu;
+	SDL_Texture* pauseMenu;
 
 public:
 	void CollectibleMarkerLogic();
-	Screens currentScreen;
 	Checkpoint checkpoint[2];
 	Collectible collectible[4];
 

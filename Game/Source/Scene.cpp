@@ -15,7 +15,7 @@
 #include "Defs.h"
 #include "Log.h"
 
-Scene::Scene() : Module(), titleScene(nullptr),introScene(nullptr), deathScene(nullptr), currentScreen(Screens::TITLE_SCREEN)
+Scene::Scene() : Module(), titleScene(nullptr),menuScene(nullptr), deathScene(nullptr), currentScreen(Screens::TITLE_SCREEN)
 {
 	name.Create("scene");
 }
@@ -73,32 +73,6 @@ bool Scene::Awake(pugi::xml_node& conf)
 // Called before the first frame
 bool Scene::Start()
 {
-	//COLLECTABLE MARKER
-	markerTex = app->tex->Load(sourceMarker.GetString());
-
-	//CP
-	checkpoint[0].checkpointTex = app->tex->Load(checkpoint[0].source.GetString());
-	checkpoint[1].checkpointTex = app->tex->Load(checkpoint[0].source.GetString());
-
-	for (int i = 0; i < 2; i++)
-	{
-		checkpoint[i].cp = (Cp)i;
-		checkpoint[i].checked = false;
-		checkpoint[i].rect.w = 22;
-		checkpoint[i].rect.h = 22;
-	}
-	checkpoint[0].active = true;
-
-	//COLLECTIBLES
-	for (int i = 0; i < 4; i++)
-	{
-		collectible[i].itemTex = app->tex->Load(collectible[i].source.GetString());
-	}
-
-	//SCREENS
-	titleScene = app->tex->Load(sourceTitle.GetString());
-	introScene = app->tex->Load(sourceIntro.GetString());
-	deathScene = app->tex->Load(sourceDeath.GetString());
 
 	app->audio->PlayMusic("Assets/Audio/Music/raxer_sound_pathfinder_master.ogg");
 	if (app->map->Load(app->map->GetLevelToLoad().GetString()) == true)
@@ -110,6 +84,17 @@ bool Scene::Start()
 
 		RELEASE_ARRAY(data);
 	}
+
+	for (int i = 0; i < 2; i++)
+	{
+		checkpoint[i].cp = (Cp)i;
+		checkpoint[i].checked = false;
+		checkpoint[i].rect.w = 22;
+		checkpoint[i].rect.h = 22;
+	}
+	checkpoint[0].active = true;
+
+	SetScene(TITLE_SCREEN);
 	
 	return true;
 }
@@ -123,189 +108,421 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
-	switch (currentScreen)
+	if (currentScreen == TITLE_SCREEN)
+		UpdateTitle();
+
+	else if (currentScreen == MAIN_MENU)
+		UpdateMainMenu();
+
+	else if (currentScreen == DEAD_SCREEN)
+		UpdateDeadScreen();
+
+	else if (currentScreen == LVL1 || currentScreen == LVL2)
+		UpdateLevels();
+
+	else if (currentScreen == CONFIG_MENU)
+		UpdateConfigMenu();
+
+	else if (currentScreen == PAUSE_MENU)
+		UpdatePauseMenu();
+
+	return true;
+}
+
+// Called each loop iteration
+bool Scene::PostUpdate()
+{
+	bool ret = true;
+
+	if(app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
+		ret = false;
+
+	return ret;
+}
+
+// Called before quitting
+bool Scene::CleanUp()
+{
+	LOG("Freeing scene");
+
+	return true;
+}
+
+void Scene::CollectibleMarkerLogic()
+{
+		for (int i = 0; i < 4; i++)
+		{
+			if (collectible[i].collected)
+			{
+				collectibleCount++;
+			}
+		}
+
+		if (collectibleCount == 1)
+		{
+			app->render->DrawTexture(markerTex, 426 - 30 - app->render->camera.x / 3, 3);
+		}
+		else if (collectibleCount == 2)
+		{
+			app->render->DrawTexture(markerTex, 426 - 30 - app->render->camera.x / 3, 3);
+			app->render->DrawTexture(markerTex, 426 - 50 - app->render->camera.x / 3, 3);
+		}
+		else if (collectibleCount == 3)
+		{
+			app->render->DrawTexture(markerTex, 426 - 30 - app->render->camera.x / 3, 3);
+			app->render->DrawTexture(markerTex, 426 - 50 - app->render->camera.x / 3, 3);
+			app->render->DrawTexture(markerTex, 426 - 70 - app->render->camera.x / 3, 3);
+		}
+		else if (collectibleCount == 4)
+		{
+			app->render->DrawTexture(markerTex, 426 - 30 - app->render->camera.x / 3, 3);
+			app->render->DrawTexture(markerTex, 426 - 50 - app->render->camera.x / 3, 3);
+			app->render->DrawTexture(markerTex, 426 - 70 - app->render->camera.x / 3, 3);
+			app->render->DrawTexture(markerTex, 426 - 90 - app->render->camera.x / 3, 3);
+		}
+
+		collectibleCount = 0;
+}
+
+
+//------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------SCREEN MANAGER-----------------------------------------------
+//------------------------------------------------------------------------------------------------------------
+
+void Scene::SceneCleanUp()
+{
+	if (titleScene != nullptr && titleScene != NULL)
+		app->tex->UnLoad(titleScene);
+
+	if (deathScene != nullptr && deathScene != NULL)
+		app->tex->UnLoad(deathScene);
+
+	if (menuScene != nullptr && menuScene != NULL)
+		app->tex->UnLoad(menuScene);
+
+	if (app->player->playerLife.lifeTex != nullptr && app->player->playerLife.lifeTex != NULL)
+		app->tex->UnLoad(app->player->playerLife.lifeTex);
+
+	if (app->player->lifeGetter[0].getterTex != nullptr && app->player->lifeGetter[0].getterTex != NULL)
+		app->tex->UnLoad(app->player->lifeGetter[0].getterTex);
+
+	if (app->player->lifeGetter[1].getterTex != nullptr && app->player->lifeGetter[1].getterTex != NULL)
+		app->tex->UnLoad(app->player->lifeGetter[1].getterTex);
+
+	if (app->player->texture != nullptr && app->player->texture != NULL)
+		app->tex->UnLoad(app->player->texture);
+
+	if (markerTex != nullptr && markerTex != NULL)
+		app->tex->UnLoad(markerTex);
+
+	if (checkpoint[0].checkpointTex != nullptr && checkpoint[0].checkpointTex != NULL)
+		app->tex->UnLoad(checkpoint[0].checkpointTex);
+
+	if (checkpoint[1].checkpointTex != nullptr && checkpoint[1].checkpointTex != NULL)
+		app->tex->UnLoad(checkpoint[1].checkpointTex);
+
+	for (int i = 0; i < 4; i++)
 	{
-		case TITLE_SCREEN:
-		{
-			app->render->DrawTexture(titleScene, 0, 0);
-
-			if (timer < 200)
-			{
-				timer++;
-			}
-			else
-			{
-				app->fade->FadeEffect(false, 30.0f);
-				currentScreen = START_SCREEN;
-			}
-
-		}
-		break;
-
-		case START_SCREEN:
-		{
-		
-			app->render->DrawTexture(introScene, 0, 0);
-
-			if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
-			{
-				currentScreen = PLAYING;
-			}
-		}
-		break;
-
-		case DEAD_SCREEN:
-		{
-			//DIESCREEN
-			if (checkpoint[0].checked) app->render->DrawTexture(deathScene, 788, 0);
-			else if (checkpoint[1].checked) app->render->DrawTexture(deathScene, 255, 0);
-			else { app->render->DrawTexture(deathScene, 0, 0); }
-			
-			//LIVES
-			app->player->playerLife.lifes = 3;
-
-			//COLLECIBLES
-			if (!checkpoint[0].checked && app->player->playerInfo.currentLevel == LVL_1)
-			{
-				collectible[0].collected = false;
-			}
-			else if (checkpoint[0].checked && app->player->playerInfo.currentLevel == LVL_1)
-			{
-				collectible[1].collected = false;
-			}
-			if (!checkpoint[1].checked && app->player->playerInfo.currentLevel == LVL_2)
-			{
-				collectible[2].collected = false;
-			}
-			else if (checkpoint[1].checked && app->player->playerInfo.currentLevel == LVL_2)
-			{
-				collectible[3].collected = false;
-			}
-
-			if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
-			{
-				currentScreen = PLAYING;
-				app->player->LoadCurrentLevel(app->player->playerInfo.currentLevel);
-			}
-		}
-		break;
-
-		case PLAYING:
-		{
-			if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
-			{
-				//RESTART CHECKPOINTS
-				checkpoint[0].checked = false;
-				checkpoint[1].checked = false;
-
-				//RESTART COLLECTIBLES
-				for (int i = 0; i < 4; i++) collectible[i].collected = false;
-
-				app->player->LoadCurrentLevel(LVL_1);
-
-				//ACTIVATE CHECKPOINTS
-				checkpoint[0].active = true;
-				checkpoint[1].active = false;
-
-				//ACTIVATE LIFE GETTERS
-				app->player->lifeGetter[0].active = true;
-				app->player->lifeGetter[1].active = false;
-
-				//ACTIVATE COLLECTIBLES
-				collectible[0].active = true;
-				collectible[1].active = true;
-				collectible[2].active = false;
-				collectible[3].active = false;
-			}
-			if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
-			{
-				//RESTART CHECKPOINTS
-				checkpoint[0].checked = false;
-				checkpoint[1].checked = false;
-
-				//RESTART COLLECTIBLES
-				for (int i = 0; i < 4; i++) collectible[i].collected = false;
-
-				app->player->LoadCurrentLevel(LVL_2);
-
-				//ACTIVATE CHECKPOINTS
-				checkpoint[0].active = false;
-				checkpoint[1].active = true;
-
-				//ACTIVATE LIFE GETTERS
-				app->player->lifeGetter[0].active = false;
-				app->player->lifeGetter[1].active = true;
-
-				//ACTIVATE COLLECTIBLES
-				collectible[0].active = false;
-				collectible[1].active = false;
-				collectible[2].active = true;
-				collectible[3].active = true;
-			}
-			if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
-			{
-				//RESTART CHECKPOINTS
-				app->scene->checkpoint[0].checked = false;
-				app->scene->checkpoint[1].checked = false;
-
-				//RESTART COLLECTIBLES
-				for (int i = 0; i < 4; i++) collectible[i].collected = false;
-
-				app->player->LoadCurrentLevel(app->player->playerInfo.currentLevel);
-			}
-			if (app->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
-			{
-				//RESTART CHECKPOINTS
-				app->scene->checkpoint[0].checked = false;
-				app->scene->checkpoint[1].checked = false;
-
-				app->player->Tp(CP1);
-			}
-			if (app->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
-			{
-				//RESTART CHECKPOINTS
-				app->scene->checkpoint[0].checked = false;
-				app->scene->checkpoint[1].checked = false;
-
-				app->player->Tp(CP2);
-			}
-
-			if (app->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
-			{
-				if(app->player->playerLife.lifes > 0) app->player->playerLife.lifes--;
-			}
-
-			if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
-				app->SaveRequest("save_game.xml");
-			if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN)
-				app->LoadRequest("save_game.xml");
-
-			//L02: BONUS CODE
-			if (app->input->GetKey(SDL_SCANCODE_KP_PLUS) == KEY_DOWN)
-				app->audio->SetVolume(0);
-
-			if (app->input->GetKey(SDL_SCANCODE_KP_MINUS) == KEY_DOWN)
-				app->audio->SetVolume(1);
-
-		}
-		break;
-
-		default:
-			break;
+		if (collectible[i].itemTex != nullptr && collectible[i].itemTex != NULL)
+			app->tex->UnLoad(collectible[i].itemTex);
 	}
-	if (app->player->godMode == false)
-	{
-		//SString title("Map:%dx%d Tiles:%dx%d Tilesets:%d", app->map->mapInfo.width, app->map->mapInfo.height, app->map->mapInfo.tileWidth, app->map->mapInfo.tileHeight, app->map->mapInfo.tileSets.Count());
 
-		//app->win->SetTitle(title.GetString());
+	app->collision->CleanUp();
+
+	app->map->CleanUp();
+}
+
+//SETTERS
+
+void Scene::SetScene(Screens scene)
+{
+	SceneCleanUp();
+
+	previousScreen = currentScreen;
+	currentScreen = scene;
+
+	if (scene == TITLE_SCREEN)
+		SetTitleScreen();
+
+	else if (scene == MAIN_MENU)
+		SetMainMenu();
+
+	else if (scene == DEAD_SCREEN)
+		SetDeadScreen();
+
+	else if (scene == LVL1)
+		SetLvl1();
+
+	else if (scene == LVL2)
+		SetLvl2();
+
+	else if (scene == CONFIG_MENU)
+		SetConfigMenu();
+
+	else if (scene == PAUSE_MENU)
+		SetPauseMenu();
+
+}
+
+void Scene::SetTitleScreen()
+{
+	titleScene = app->tex->Load(sourceTitle.GetString());
+
+	timer = 0;
+}
+
+void Scene::SetMainMenu()
+{
+	menuScene = app->tex->Load(sourceIntro.GetString());
+}
+
+void Scene::SetLvl1()
+{
+	app->player->texture = app->tex->Load(app->player->textPath.GetString());
+
+	bool checkpointState = checkpoint[0].checked;
+	bool coinState = collectible[0].collected;
+
+	//LEVEL  ------------
+	app->map->lvl1 = true;
+	app->map->lvl2 = false;
+
+	if (app->map->Load(app->map->GetLevelToLoad().GetString()));
+	{
+
+		//ACTIVATE ------------
+		//ACTIVATE CHECKPOINTS
+		checkpoint[0].active = true;
+		checkpoint[1].active = false;
+
+		//ACTIVATE LIFE GETTERS
+		app->player->lifeGetter[0].active = true;
+		app->player->lifeGetter[1].active = false;
+
+		//ACTIVATE COLLECTIBLES
+		collectible[0].active = true;
+		collectible[1].active = true;
+		collectible[2].active = false;
+		collectible[3].active = false;
+
+		//RESTART ------------
+		//RESTART CHECKPOINTS
+		checkpoint[0].checked = false;
+		checkpoint[1].checked = false;
+
+		//RESTART COLLECTIBLES
+		for (int i = 0; i < 4; i++) collectible[i].collected = false;
+
+		//LOADS ------------
+		//PLAYER LIFES
+		app->player->playerLife.lifeTex = app->tex->Load(app->player->playerLife.source.GetString());
+
+		//LIFEGETTER
+		app->player->lifeGetter[0].getterTex = app->tex->Load(app->player->lifeGetter[0].source.GetString());
+		app->player->lifeGetter[1].getterTex = app->tex->Load(app->player->lifeGetter[1].source.GetString());
+
+		//SWORD COLLIDER ------------
+		app->player->swordCollider = { -20, 0, 13, 7 };
+
+		// PLAYER INITIALITZATION ------------
+		if (checkpointState)
+		{
+			collectible[0].collected = coinState;
+
+			app->render->camera.x = -2364;
+
+			if (app->IsLoading() == false)
+			{
+				app->player->playerInfo.position = { app->scene->checkpoint[0].rect.x, app->scene->checkpoint[0].rect.y - 16 };
+			}
+		}
+		else
+		{
+			app->render->camera.x = 0;
+
+			if (app->IsLoading() == false)
+			{
+				app->player->playerInfo.position = { app->map->GetPlayerInitialPos() };
+				app->player->playerInfo.position.y += 2;
+			}
+		}
+
+		if (app->IsLoading() == false)
+		{
+			app->player->playerColider = { app->player->playerInfo.position.x + 2, app->player->playerInfo.position.y, 14, 30 };
+			app->player->playerInfo.speed = 2;
+			app->player->playerInfo.currentDir = RIGHT_DIR;
+		}
+
+		app->player->playerInfo.currentAnimation = &app->player->playerInfo.idle;
+	}
+
+	//LOAD TEXTURES CP & COLLECTIBLES
+	//COLLECTABLE MARKER
+
+	markerTex = app->tex->Load(sourceMarker.GetString());
+
+	//CP
+	checkpoint[0].checkpointTex = app->tex->Load(checkpoint[0].source.GetString());
+	checkpoint[1].checkpointTex = app->tex->Load(checkpoint[0].source.GetString());
+
+	//COLLECTIBLES
+	for (int i = 0; i < 4; i++)
+	{
+		collectible[i].itemTex = app->tex->Load(collectible[i].source.GetString());
+	}
+}
+
+void Scene::SetLvl2()
+{
+	app->player->texture = app->tex->Load(app->player->textPath.GetString());
+
+	bool checkpointState = checkpoint[1].checked;
+	bool coinState = collectible[2].collected;
+
+	//LEVEL  ------------
+	app->map->lvl1 = false;
+	app->map->lvl2 = true;
+
+	if (app->map->Load(app->map->GetLevelToLoad().GetString()));
+	{
+
+		//ACTIVATE ------------
+		//ACTIVATE CHECKPOINTS
+		checkpoint[0].active = false;
+		checkpoint[1].active = true;
+
+		//ACTIVATE LIFE GETTERS
+		app->player->lifeGetter[0].active = false;
+		app->player->lifeGetter[1].active = true;
+
+		//ACTIVATE COLLECTIBLES
+		collectible[0].active = false;
+		collectible[1].active = false;
+		collectible[2].active = true;
+		collectible[3].active = true;
+
+		//RESTART ------------
+		//RESTART CHECKPOINTS
+		checkpoint[0].checked = false;
+		checkpoint[1].checked = false;
+
+		//RESTART COLLECTIBLES
+		for (int i = 0; i < 4; i++) collectible[i].collected = false;
+
+		//LOADS ------------
+		//PLAYER LIFES
+		app->player->playerLife.lifeTex = app->tex->Load(app->player->playerLife.source.GetString());
+
+		//LIFEGETTER
+		app->player->lifeGetter[0].getterTex = app->tex->Load(app->player->lifeGetter[0].source.GetString());
+		app->player->lifeGetter[1].getterTex = app->tex->Load(app->player->lifeGetter[1].source.GetString());
+
+		//SWORD COLLIDER ------------
+		app->player->swordCollider = { -20, 0, 13, 7 };
+
+		// PLAYER INITIALITZATION ------------
+		if (checkpointState)
+		{
+			collectible[2].collected = coinState;
+
+			app->render->camera.x = -765;
+
+			if (app->IsLoading() == false)
+			{
+				app->player->playerInfo.position = { checkpoint[1].rect.x, checkpoint[1].rect.y - 16 };
+			}
+		}
+		else
+		{
+			app->render->camera.x = 0;
+
+			if (app->IsLoading() == false)
+			{
+				app->player->playerInfo.position = { app->map->GetPlayerInitialPos() };
+				app->player->playerInfo.position.y += 2;
+			}
+		}
+
+		if (app->IsLoading() == false)
+		{
+			app->player->playerColider = { app->player->playerInfo.position.x + 2, app->player->playerInfo.position.y, 14, 30 };
+			app->player->playerInfo.speed = 2;
+			app->player->playerInfo.currentDir = RIGHT_DIR;
+		}
+
+		app->player->playerInfo.currentAnimation = &app->player->playerInfo.idle;
+	}
+
+	//LOAD TEXTURES CP & COLLECTIBLES
+	//COLLECTABLE MARKER
+
+	markerTex = app->tex->Load(sourceMarker.GetString());
+
+	//CP
+	checkpoint[0].checkpointTex = app->tex->Load(checkpoint[0].source.GetString());
+	checkpoint[1].checkpointTex = app->tex->Load(checkpoint[0].source.GetString());
+
+	//COLLECTIBLES
+	for (int i = 0; i < 4; i++)
+	{
+		collectible[i].itemTex = app->tex->Load(collectible[i].source.GetString());
+	}
+}
+
+void Scene::SetDeadScreen()
+{
+	app->render->camera.x = 0;
+
+	deathScene = app->tex->Load(sourceDeath.GetString());
+
+	app->player->Dead();
+}
+
+void Scene::SetConfigMenu()
+{
+
+}
+
+void Scene::SetPauseMenu()
+{
+
+}
+
+//UPDATERS
+
+void Scene::UpdateTitle()
+{
+	app->render->DrawTexture(titleScene, 0, 0);
+
+	if (timer < 200)
+	{
+		timer++;
+	}
+	else if (timer >= 200 && timer < 230)
+	{
+		app->fade->FadeEffect(false, 30.0f);
+		timer++;
 	}
 	else
 	{
-		SString title("!!!!GOD MODE ACTIVATED!!!!");
-
-		app->win->SetTitle(title.GetString());
+		SetScene(MAIN_MENU);
 	}
+}
 
+void Scene::UpdateMainMenu()
+{
+	app->render->DrawTexture(menuScene, 0, 0);
+
+	if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+	{
+		SetScene(LVL1);
+	}
+}
+
+void Scene::UpdateLevels()
+{
+	// LOGIC --------------------------
 	if (checkpoint[0].active && app->collision->CheckCollision(app->player->playerColider, checkpoint[0].rect))
 	{
 		if (checkpoint[0].checked == false)
@@ -344,96 +561,210 @@ bool Scene::Update(float dt)
 			collectible[i].collected = true;
 		}
 	}
+	// --------------------------------
 
-	return true;
-}
+	// DRAW ---------------------------
+	// MAP
+	app->map->Draw();
 
-// Called each loop iteration
-bool Scene::PostUpdate()
-{
-	bool ret = true;
-
-	if(app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
-		ret = false;
-
-	const SDL_Rect sectionCPAnim1 = { 0, 0, 22, 22 };
-	const SDL_Rect sectionCPAnim2 = { 22, 0, 22, 22 };
-
-	if (checkpoint[0].active && !checkpoint[0].checked && currentScreen != DEAD_SCREEN)
+	// LIFEGETTERS DRAW
+	if (app->player->lifeGetter[0].active)
 	{
-		app->render->DrawTexture(checkpoint[0].checkpointTex, checkpoint[0].rect.x, checkpoint[0].rect.y, &sectionCPAnim1);
+		app->render->DrawTexture(app->player->lifeGetter[0].getterTex, app->player->lifeGetter[0].getterRect.x, app->player->lifeGetter[0].getterRect.y);
 	}
-	else if (checkpoint[0].active && checkpoint[0].checked && currentScreen != DEAD_SCREEN)
+	else if (app->player->lifeGetter[1].active)
 	{
-		app->render->DrawTexture(checkpoint[0].checkpointTex, checkpoint[0].rect.x, checkpoint[0].rect.y, &sectionCPAnim2);
+		app->render->DrawTexture(app->player->lifeGetter[1].getterTex, app->player->lifeGetter[1].getterRect.x, app->player->lifeGetter[1].getterRect.y);
 	}
 
-	if (checkpoint[1].active && !checkpoint[1].checked && currentScreen != DEAD_SCREEN)
+	// PLAYER
+	app->player->Draw();
+	// --------------------------------
+	
+	// ANIMATION ---------------------
+	//IDLE ANIMATION
+	if (strcmp(app->player->playerInfo.currentAnimation->name.GetString(), "idle") != 0 || strcmp(app->player->playerInfo.currentAnimation->name.GetString(), "idleLeft") != 0)
 	{
-		app->render->DrawTexture(checkpoint[1].checkpointTex, checkpoint[1].rect.x, checkpoint[1].rect.y, &sectionCPAnim1);
-	}
-	else if (checkpoint[1].active && checkpoint[1].checked && currentScreen != DEAD_SCREEN)
-	{
-		app->render->DrawTexture(checkpoint[1].checkpointTex, checkpoint[1].rect.x, checkpoint[1].rect.y, &sectionCPAnim2);
-	}
-
-	for (int i = 0; i < 4; i++)
-	{
-		if (collectible[i].active && !collectible[i].collected && currentScreen != DEAD_SCREEN)
+		if (!app->player->playerInfo.currentAnimation->Finished())
 		{
-			app->render->DrawTexture(collectible[i].itemTex, collectible[i].itemRect.x, collectible[i].itemRect.y);
+			app->player->playerInfo.currentAnimation->FinishAnimation();
+			app->player->UpdateAnimation("idle");
+			app->player->isMoving = false;
+		}
+	}
+	// -------------------------------
+
+	// DEBUG  ---------------------------
+	// GO TO LEVEL 1 - F1
+	if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+	{
+		checkpoint[0].checked = false;
+		SetScene(LVL1);
+	}
+
+	// GO TO LEVEL 2 - F2
+	if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
+	{
+		checkpoint[1].checked = false;
+		SetScene(LVL2);
+	}
+
+	// RESTART ACTUAL LEVEL - F3
+	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
+	{
+		if (currentScreen == LVL1)
+		{
+			checkpoint[0].checked = false;
+			SetScene(LVL1);
+		}
+
+		else if (currentScreen == LVL2)
+		{
+			checkpoint[1].checked = false;
+			SetScene(LVL2);
 		}
 	}
 
-	//COLLECTIBLES MARKER LOGIC
-	CollectibleMarkerLogic();
-
-	return ret;
-}
-
-// Called before quitting
-bool Scene::CleanUp()
-{
-	LOG("Freeing scene");
-
-	return true;
-}
-
-void Scene::CollectibleMarkerLogic()
-{
-	if (currentScreen == PLAYING)
+	// RESTART OTHER LEVEL - F4
+	if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN)
 	{
+		if (currentScreen == LVL1)
+		{
+			checkpoint[1].checked = false;
+			SetScene(LVL2);
+		}
+
+		else if (currentScreen == LVL2)
+		{
+			checkpoint[0].checked = false;
+			SetScene(LVL1);
+		}
+	}
+
+	// GO TO CHECKPOINT 1
+	if (app->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
+	{
+		checkpoint[0].checked = true;
+		SetScene(LVL1);
+	}
+
+	// GO TO CHECKPOINT 2
+	if (app->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
+	{
+		checkpoint[1].checked = true;
+		SetScene(LVL2);
+	}
+
+	// HURT PLAYER
+	if (app->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
+	{
+		if (app->player->playerLife.lifes > 0) app->player->playerLife.lifes--;
+	}
+
+	// SAVE & LOAD
+	if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
+		app->SaveRequest("save_game.xml");
+	if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN)
+		app->LoadRequest("save_game.xml");
+
+	// VOLUME SETTING
+	if (app->input->GetKey(SDL_SCANCODE_KP_PLUS) == KEY_DOWN)
+		app->audio->SetVolume(0);
+
+	if (app->input->GetKey(SDL_SCANCODE_KP_MINUS) == KEY_DOWN)
+		app->audio->SetVolume(1);
+
+	//LIFE, CP & COLLECTIBLES
+	//LIFES
+		if (app->player->playerLife.lifes == 3)
+		{
+			app->render->DrawTexture(app->player->playerLife.lifeTex, 30 - app->render->camera.x / 3, 3);
+			app->render->DrawTexture(app->player->playerLife.lifeTex, 50 - app->render->camera.x / 3, 3);
+			app->render->DrawTexture(app->player->playerLife.lifeTex, 70 - app->render->camera.x / 3, 3);
+		}
+		else if (app->player->playerLife.lifes == 2)
+		{
+			app->render->DrawTexture(app->player->playerLife.lifeTex, 30 - app->render->camera.x / 3, 3);
+			app->render->DrawTexture(app->player->playerLife.lifeTex, 50 - app->render->camera.x / 3, 3);
+		}
+		else if (app->player->playerLife.lifes == 1)
+		{
+			app->render->DrawTexture(app->player->playerLife.lifeTex, 30 - app->render->camera.x / 3, 3);
+		}
+
+		if (app->player->playerLife.lifes == 0)
+		{
+			app->player->playerLife.lifes = 3;
+			SetScene(DEAD_SCREEN);
+		}
+
+		//CP
+		const SDL_Rect sectionCPAnim1 = { 0, 0, 22, 22 };
+		const SDL_Rect sectionCPAnim2 = { 22, 0, 22, 22 };
+
+		if (checkpoint[0].active && !checkpoint[0].checked && currentScreen != DEAD_SCREEN)
+		{
+			app->render->DrawTexture(checkpoint[0].checkpointTex, checkpoint[0].rect.x, checkpoint[0].rect.y, &sectionCPAnim1);
+		}
+		else if (checkpoint[0].active && checkpoint[0].checked && currentScreen != DEAD_SCREEN)
+		{
+			app->render->DrawTexture(checkpoint[0].checkpointTex, checkpoint[0].rect.x, checkpoint[0].rect.y, &sectionCPAnim2);
+		}
+
+		if (checkpoint[1].active && !checkpoint[1].checked && currentScreen != DEAD_SCREEN)
+		{
+			app->render->DrawTexture(checkpoint[1].checkpointTex, checkpoint[1].rect.x, checkpoint[1].rect.y, &sectionCPAnim1);
+		}
+		else if (checkpoint[1].active && checkpoint[1].checked && currentScreen != DEAD_SCREEN)
+		{
+			app->render->DrawTexture(checkpoint[1].checkpointTex, checkpoint[1].rect.x, checkpoint[1].rect.y, &sectionCPAnim2);
+		}
+
+		//COLLECTIBLES
 		for (int i = 0; i < 4; i++)
 		{
-			if (collectible[i].collected)
+			if (collectible[i].active && !collectible[i].collected)
 			{
-				collectibleCount++;
+				app->render->DrawTexture(collectible[i].itemTex, collectible[i].itemRect.x, collectible[i].itemRect.y);
 			}
 		}
 
-		if (collectibleCount == 1)
-		{
-			app->render->DrawTexture(markerTex, 426 - 30 - app->render->camera.x / 3, 3);
-		}
-		else if (collectibleCount == 2)
-		{
-			app->render->DrawTexture(markerTex, 426 - 30 - app->render->camera.x / 3, 3);
-			app->render->DrawTexture(markerTex, 426 - 50 - app->render->camera.x / 3, 3);
-		}
-		else if (collectibleCount == 3)
-		{
-			app->render->DrawTexture(markerTex, 426 - 30 - app->render->camera.x / 3, 3);
-			app->render->DrawTexture(markerTex, 426 - 50 - app->render->camera.x / 3, 3);
-			app->render->DrawTexture(markerTex, 426 - 70 - app->render->camera.x / 3, 3);
-		}
-		else if (collectibleCount == 4)
-		{
-			app->render->DrawTexture(markerTex, 426 - 30 - app->render->camera.x / 3, 3);
-			app->render->DrawTexture(markerTex, 426 - 50 - app->render->camera.x / 3, 3);
-			app->render->DrawTexture(markerTex, 426 - 70 - app->render->camera.x / 3, 3);
-			app->render->DrawTexture(markerTex, 426 - 90 - app->render->camera.x / 3, 3);
-		}
+		//COLLECTIBLES MARKER LOGIC
+		CollectibleMarkerLogic();
 
-		collectibleCount = 0;
+		//WIN
+		if (app->player->CheckWin() == true)
+		{
+			if (currentScreen == LVL1)
+			{
+				checkpoint[1].checked = false;
+				SetScene(LVL2);
+			}
+
+			else if (currentScreen == LVL2)
+			{
+				checkpoint[0].checked = false;
+				SetScene(LVL1);
+			}
+		}
+}
+
+void Scene::UpdateDeadScreen()
+{
+	app->render->DrawTexture(deathScene, 0, 0);
+
+	if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+	{
+		SetScene(previousScreen);
 	}
+}
+
+void Scene::UpdateConfigMenu()
+{
+
+}
+
+void Scene::UpdatePauseMenu()
+{
+
 }
