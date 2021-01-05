@@ -3,7 +3,7 @@
 
 #include "Module.h"
 #include "List.h"
-#include "Criature.h"
+#include "Entity.h"
 
 class EnemyManager : public Module
 {
@@ -28,8 +28,8 @@ public:
 	void CreateEnemyFly(iPoint position);
 	void CreateEnemyNormal(iPoint position);
 
-	void DeleteEnemyFly(Criature* enemyFly);
-	void DeleteEnemyNormal(Criature* enemy_normal);
+	void DeleteEnemyFly(Entity* enemyFly);
+	void DeleteEnemyNormal(Entity* enemyGround);
 
 	void DeleteAllEnemies();
 
@@ -37,7 +37,7 @@ public:
 	bool Save(pugi::xml_node&)const;
 
 public:
-	List<Criature*> enemies;
+	List<Entity*> entities;
 
 };
 

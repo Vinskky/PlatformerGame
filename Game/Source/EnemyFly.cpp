@@ -9,10 +9,10 @@
 #include "Pathfinding.h"
 //ManagerCriatures
 
-EnemyFly::EnemyFly() : Criature()
+EnemyFly::EnemyFly() : Entity()
 {
 	enName.Create("enemyFly");
-	type = EN_FLY;
+	type = FLY;
 
 	//LEFT ANIMATION
 	flyLeft.PushBack({ 53, 38, 13, 19 }, "moveLeft");
@@ -65,15 +65,15 @@ bool EnemyFly::Awake()
 {
 	graphics = app->tex->Load("Assets/Textures/bat_sprite_sheet.png");
 	enemyVel.Create(0, 0);
-	enemyState = ENEMY_IDLE;
+	entState = IDLE;
 	return true;
 }
 
 bool EnemyFly::Start()
 {
 	currAnimation = &idle;
-	enemyState = ENEMY_IDLE;
-	playerLastPos = app->player->playerInfo.position;
+	entState = IDLE;
+	pastDest = app->player->playerInfo.position;
 	collider = { enemyPos.x,enemyPos.y, 16,16 };
 	return true;
 }
@@ -159,23 +159,23 @@ void EnemyFly::ReturnToZero()
 
 void EnemyFly::Draw()
 {
-	enemyState = ENEMY_FLY_L;
+	entState = FLY_L;
 	//enemyState = ENEMY_FLY_R;
-	switch (enemyState)
+	switch (entState)
 	{
-	case ENEMY_IDLE:
+	case IDLE:
 	{
 		currAnimation = &idle;
 		break;
 	}
 		
-	case ENEMY_FLY_L:
+	case FLY_L:
 	{
 		currAnimation = &flyLeft;
 		break;
 	}
 		
-	case ENEMY_FLY_R:
+	case FLY_R:
 	{
 		currAnimation = &flyRight;
 		break;
@@ -183,8 +183,8 @@ void EnemyFly::Draw()
 		
 	case DEAD:
 	{
-		if (enemyDirection == ENEMY_RIGHT) currAnimation = &dieRight;
-		else if (enemyDirection == ENEMY_LEFT) currAnimation = &dieLeft;
+		if (entDirection == RIGHT) currAnimation = &dieRight;
+		else if (entDirection == LEFT) currAnimation = &dieLeft;
 		break;
 	}
 		

@@ -1,7 +1,7 @@
 #include "EnemyManager.h"
 #include "EnemyFly.h"
-#include "EnemyNormal.h"
-#include "Criature.h"
+#include "EnemyGround.h"
+#include "Entity.h"
 #include "App.h"
 #include "Log.h"
 #include "Scene.h"
@@ -16,14 +16,14 @@ EnemyManager::EnemyManager()
 
 EnemyManager::~EnemyManager()
 {
-	ListItem<Criature*>* item = enemies.start;
+	ListItem<Entity*>* item = entities.start;
 	while (item != NULL)
 	{
-		item->data->~Criature();
-		enemies.Del(item);
+		item->data->~Entity();
+		entities.Del(item);
 		item = item->next;
 	}
-	enemies.Clear();
+	entities.Clear();
 }
 
 bool EnemyManager::Awake(pugi::xml_node& config)
@@ -54,7 +54,7 @@ bool EnemyManager::Start()
 
 bool EnemyManager::PreUpdate()
 {
-	ListItem<Criature*>* item = enemies.start;
+	ListItem<Entity*>* item = entities.start;
 	while (item != NULL)
 	{
 		item->data->PreUpdate();
@@ -67,7 +67,7 @@ bool EnemyManager::Update(float dt)
 {
 	if(app->scene->currentScreen == LVL1 || app->scene->currentScreen == LVL2)
 	{
-		ListItem<Criature*>* item = enemies.start;
+		ListItem<Entity*>* item = entities.start;
 		while (item != NULL)
 		{
  			item->data->Update(dt);
@@ -79,7 +79,7 @@ bool EnemyManager::Update(float dt)
 
 bool EnemyManager::PostUpdate()
 {
-	ListItem<Criature*>* item = enemies.start;
+	ListItem<Entity*>* item = entities.start;
 	while (item != NULL)
 	{
 		item->data->PostUpdate();
@@ -94,33 +94,33 @@ void EnemyManager::CreateEnemyFly(iPoint position)
 	enFly->Awake();
 	enFly->enemyPos = position;
 	enFly->Start();
-	enemies.Add(enFly);
+	entities.Add(enFly);
 
 	LOG("Enemy Fly Created!");
 }
 
 void EnemyManager::CreateEnemyNormal(iPoint position)
 {
-	EnemyNormal* enGround = new EnemyNormal();
+	EnemyGround* enGround = new EnemyGround();
 	enGround->Awake();
 	enGround->enemyPos = position;
 	enGround->Start();
-	enemies.Add(enGround);
+	entities.Add(enGround);
 
 	LOG("Enemy Ground Created!");
 }
 
-void EnemyManager::DeleteEnemyFly(Criature* enemyFly)
+void EnemyManager::DeleteEnemyFly(Entity* enemyFly)
 {
-	int id = enemies.Find(enemyFly);
+	int id = entities.Find(enemyFly);
 	int ds = 0;
-	ListItem<Criature*>* item = enemies.start;
+	ListItem<Entity*>* item = entities.start;
 	while (item != NULL)
 	{
 		if (id == ds)
 		{
-			item->data->~Criature();
-			enemies.Del(item);
+			item->data->~Entity();
+			entities.Del(item);
 			return;
 		}
 		ds++;
@@ -128,17 +128,17 @@ void EnemyManager::DeleteEnemyFly(Criature* enemyFly)
 	}
 }
 
-void EnemyManager::DeleteEnemyNormal(Criature* enemyNormal)
+void EnemyManager::DeleteEnemyNormal(Entity* enemyNormal)
 {
-	int id = enemies.Find(enemyNormal);
+	int id = entities.Find(enemyNormal);
 	int ds = 0;
-	ListItem<Criature*>* item = enemies.start;
+	ListItem<Entity*>* item = entities.start;
 	while (item != NULL)
 	{
 		if (id == ds)
 		{
-			item->data->~Criature();
-			enemies.Del(item);
+			item->data->~Entity();
+			entities.Del(item);
 			return;
 		}
 		ds++;
@@ -148,19 +148,19 @@ void EnemyManager::DeleteEnemyNormal(Criature* enemyNormal)
 
 void EnemyManager::DeleteAllEnemies()
 {
-	ListItem<Criature*>* item = enemies.start;
+	ListItem<Entity*>* item = entities.start;
 	while (item != NULL)
 	{
-		item->data->~Criature();
-		enemies.Del(item);
+		item->data->~Entity();
+		entities.Del(item);
 		item = item->next;
 	}
-	enemies.Clear();
+	entities.Clear();
 }
 
 bool EnemyManager::Load(pugi::xml_node& node)
 {
-	ListItem<Criature*>* item = enemies.start;
+	ListItem<Entity*>* item = entities.start;
 	while (item != NULL)
 	{
 		item->data->Load(node);
@@ -171,7 +171,7 @@ bool EnemyManager::Load(pugi::xml_node& node)
 
 bool EnemyManager::Save(pugi::xml_node& node) const
 {
-	ListItem<Criature*>* item = enemies.start;
+	ListItem<Entity*>* item = entities.start;
 	while (item != NULL)
 	{
 		item->data->Save(node);

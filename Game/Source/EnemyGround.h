@@ -1,7 +1,7 @@
-#ifndef _ENEMY_NORMAL_H_
-#define _ENEMY_NORMAL_H_
+#ifndef _ENEMY_GROUND_H_
+#define _ENEMY_GROUND_H_
 
-#include "Criature.h"
+#include "Entity.h"
 #include "Point.h"
 #include "Module.h"
 #include "DynArray.h"
@@ -9,11 +9,11 @@
 
 class PathFinding;
 
-class EnemyNormal : public Criature
+class EnemyGround : public Entity
 {
 public:
-	EnemyNormal();
-	virtual ~EnemyNormal();
+	EnemyGround();
+	virtual ~EnemyGround();
 
 	// Called before render is available
 	bool Awake();
@@ -47,15 +47,9 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	SDL_Texture* graphics = nullptr;
+	
 private:
-	EnemyState state;
-	EnemyDirection direction;
-
-	bool isMove = false;
-	bool isDead = false;
-
-	iPoint playerLastPos;
+	SDL_Texture* graphics = nullptr;
 
 	Animation* currAnimation = new Animation();
 	Animation moveRight;

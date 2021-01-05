@@ -9,7 +9,7 @@
 #include "Collider.h"
 #include "Scene.h"
 #include "EnemyManager.h"
-#include "Criature.h"
+#include "Entity.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -549,7 +549,7 @@ void Player::UpdateAnimation(char* anim)
 
 void Player::CheckHurt()
 {
-	ListItem<Criature*>* enemy = app->enManager->enemies.start;
+	ListItem<Entity*>* enemy = app->enManager->entities.start;
 	for (enemy; enemy != NULL; enemy = enemy->next)
 	{
 		//SDL_Rect temp = { 110, 115, 7, 12 };

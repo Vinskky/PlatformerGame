@@ -1,7 +1,7 @@
 #ifndef _ENEMY_FLY_H
 #define _ENEMY_FLY_H
 
-#include "Criature.h"
+#include "Entity.h"
 #include "Point.h"
 #include "Module.h"
 #include "DynArray.h"
@@ -9,7 +9,7 @@
 
 class PathFinding;
 
-class EnemyFly : public Criature
+class EnemyFly : public Entity
 {
 public:
 	EnemyFly();
@@ -52,14 +52,7 @@ public:
 	bool CleanUp();
 
 private:
-	EnemyState state;
-	EnemyDirection direction;
 	SDL_Texture* graphics = nullptr;
-
-	bool isMove = false;
-	bool isDead = false;
-
-	iPoint playerLastPos;
 
 	Animation* currAnimation = new Animation();
 	Animation idle;

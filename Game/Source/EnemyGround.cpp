@@ -1,4 +1,4 @@
-#include "EnemyNormal.h"
+#include "EnemyGround.h"
 #include "App.h"
 #include "Log.h"
 #include "Input.h"
@@ -10,10 +10,10 @@
 #include "Pathfinding.h"
 #include "EnemyManager.h"
 
-EnemyNormal::EnemyNormal() : Criature()
+EnemyGround::EnemyGround() : Entity()
 {
 	enName.Create("enemyNormal");
-	type = EnemyType::EN_NORMAL;
+	type = GROUND;
 	//LEFT ANIMATION
 	moveLeft.PushBack({ 0, 12, 24, 19 }, "moveLeft");
 	moveLeft.PushBack({ 24, 12, 24, 19 }, "moveLeft");
@@ -29,7 +29,7 @@ EnemyNormal::EnemyNormal() : Criature()
 	moveRight.speed = 0.095;
 }
 
-EnemyNormal::~EnemyNormal()
+EnemyGround::~EnemyGround()
 {
 	currAnimation = nullptr;
 	app->tex->UnLoad(graphics);
@@ -38,27 +38,27 @@ EnemyNormal::~EnemyNormal()
 	graphics = nullptr;
 }
 
-bool EnemyNormal::Awake()
+bool EnemyGround::Awake()
 {
 	enemyVel.Create(0, 0);
 	return true;
 }
 
-bool EnemyNormal::Start()
+bool EnemyGround::Start()
 {
 	graphics = app->tex->Load("Assets/Textures/ground_enemy.png");
-	enemyState = ENEMY_WALK_L;
-	playerLastPos = app->player->playerInfo.position;
+	entState = WALK_L;
+	pastDest = app->player->playerInfo.position;
 	collider = { enemyPos.x,enemyPos.y, 16,16 };
 	return true;
 }
 
-bool EnemyNormal::PreUpdate()
+bool EnemyGround::PreUpdate()
 {
 	return true;
 }
 
-bool EnemyNormal::Update(float dt)
+bool EnemyGround::Update(float dt)
 {
 	MoveEnemy();
 
@@ -72,7 +72,7 @@ bool EnemyNormal::Update(float dt)
 	return true;
 }
 
-void EnemyNormal::MoveEnemy()
+void EnemyGround::MoveEnemy()
 {
 	iPoint goal = app->player->playerInfo.position;
 	iPoint init = enemyPos;
@@ -97,7 +97,7 @@ void EnemyNormal::MoveEnemy()
 					enemyPos.x -= 1;
 					collider.x = enemyPos.x;
 				}
-				enemyState = ENEMY_WALK_L;
+				entState = WALK_L;
 			}
 			else if (distanceToMove > 0 )
 			{
@@ -107,32 +107,32 @@ void EnemyNormal::MoveEnemy()
 					collider.x = enemyPos.x;
 				}
 				
-				enemyState = ENEMY_WALK_R;
+				entState = WALK_R;
 			}
 		}
 	}
 }
 
-void EnemyNormal::ProcessPos()
+void EnemyGround::ProcessPos()
 {
 	enemyPos.y = enemyPos.y + enemyVel.y;
 }
 
-void EnemyNormal::ProcessGravity(float dt)
+void EnemyGround::ProcessGravity(float dt)
 {
 }
 
-void EnemyNormal::Draw()
+void EnemyGround::Draw()
 {
-	switch (enemyState)
+	switch (entState)
 	{
-	case ENEMY_WALK_L:
+	case WALK_L:
 	{
 		currAnimation = &moveLeft;
 		break;
 	}
 		
-	case ENEMY_WALK_R:
+	case WALK_R:
 	{
 		currAnimation = &moveRight;
 		break;
@@ -160,13 +160,13 @@ void EnemyNormal::Draw()
 	}
 }
 
-bool EnemyNormal::PostUpdate()
+bool EnemyGround::PostUpdate()
 {
 	Draw();
 	return true;
 }
 
-bool EnemyNormal::Load(pugi::xml_node& loadNode)
+bool EnemyGround::Load(pugi::xml_node& loadNode)
 {
 	enemyPos.x = loadNode.child("enemyNormal").child("enemyPosition").attribute("x").as_int();
 	enemyPos.y = loadNode.child("enemyNormal").child("enemyPosition").attribute("y").as_int();
@@ -176,7 +176,7 @@ bool EnemyNormal::Load(pugi::xml_node& loadNode)
 	return true;
 }
 
-bool EnemyNormal::Save(pugi::xml_node& saveNode) const
+bool EnemyGround::Save(pugi::xml_node& saveNode) const
 {
 	pugi::xml_node enGround = saveNode.append_child(enName.GetString());
 	pugi::xml_node position = enGround.append_child("enemyPosition");
@@ -191,17 +191,17 @@ bool EnemyNormal::Save(pugi::xml_node& saveNode) const
 	return true;
 }
 
-int EnemyNormal::GetDirection() const
+int EnemyGround::GetDirection() const
 {
 	return 0;
 }
 
-iPoint EnemyNormal::GetPosition() const
+iPoint EnemyGround::GetPosition() const
 {
 	return enemyPos;
 }
 
-bool EnemyNormal::CleanUp()
+bool EnemyGround::CleanUp()
 {
 	return true;
 }

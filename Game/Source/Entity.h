@@ -1,40 +1,43 @@
-#ifndef _CRIATURE_H_
-#define _CRIATURE_H_
+#ifndef _ENTITY_H_
+#define _ENTITY_H_
 
 #include "DynArray.h"
 #include "Collider.h"
 #include "Point.h"
 #include "Render.h"
 
-enum EnemyState
+enum State
 {
-	ENEMY_IDLE,
-	ENEMY_WALK_L,
-	ENEMY_WALK_R,
-	ENEMY_FLY_L,
-	ENEMY_FLY_R,
+	IDLE,
+	WALK_L,
+	WALK_R,
+	FLY_L,
+	FLY_R,
+	JUMP_L,
+	JUMP_R,
 	DEAD
 };
 
-enum EnemyDirection
+enum EntDirection
 {
 	NON,
-	ENEMY_UP,
-	ENEMY_DOWN,
-	ENEMY_LEFT,
-	ENEMY_RIGHT
+	UP,
+	DOWN,
+	LEFT,
+	RIGHT
 };
 
-class Criature
+class Entity
 {
 public:
-	enum EnemyType
+	enum EntityType
 	{
-		EN_NORMAL,
-		EN_FLY
+		GROUND,
+		FLY,
+		PLAYER
 	};
-	Criature();
-	virtual ~Criature();
+	Entity() {};
+	virtual ~Entity() {};
 
 	//Called before render is available
 	virtual bool Awake()
@@ -86,8 +89,8 @@ public:
 
 public:
 
-	EnemyState enemyState;
-	EnemyDirection enemyDirection;
+	State entState;
+	EntDirection entDirection;
 
 	SDL_Rect collider;
 	iPoint enemyPos;
@@ -95,12 +98,13 @@ public:
 
 	bool isFlying = false;
 	bool isInPlatform = false;
+	bool isMove = false;
+	bool isDead = false;
 
 	SString enName;
 	bool active = false;
 
-	EnemyType type;
-
+	EntityType type;
 	DynArray<iPoint> enemyPath;
 
 protected:
