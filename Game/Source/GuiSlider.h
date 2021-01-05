@@ -1,6 +1,7 @@
 #ifndef __GUISLIDER_H__
 #define __GUISLIDER_H__
 
+#include "App.h"
 #include "GuiControl.h"
 
 #include "Point.h"
@@ -13,8 +14,8 @@ public:
     GuiSlider(uint32 id, SDL_Rect bounds, const char *text);
     virtual ~GuiSlider();
 
-    bool Update(Input* input, float dt);
-    bool Draw(Render* render);
+    bool Update(float dt);
+    bool Draw();
 
 private:
 

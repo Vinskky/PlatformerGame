@@ -21,6 +21,7 @@ class PathFinding;
 class EntityManager;
 class Collisions;
 class Transition;
+class GuiManager;
 
 class App
 {
@@ -98,6 +99,8 @@ public:
 	Collisions* collision;
 	Transition* fade;
 	EntityManager* enManager;
+	GuiManager* guiManager;
+
 private:
 
 	int argc;

@@ -2,6 +2,7 @@
 #define __SCENE_H__
 
 #include "Module.h"
+#include "GuiControl.h"
 
 struct SDL_Texture;
 
@@ -73,6 +74,9 @@ private:
 	int timer = 0;
 	iPoint tempPlayerPosition;
 
+public: //GUI
+	GuiControl* button1;
+
 public:
 	//SCENE MANAGER
 	Screens currentScreen;
@@ -95,6 +99,8 @@ public:
 	void UpdateLevels();
 	void UpdateConfigMenu();
 	void UpdatePauseMenu();
+
+	bool OnGuiMouseClickEvent(GuiControl* control);
 
 	SString sourceTitle;
 	SString sourceDeath;

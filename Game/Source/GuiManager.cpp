@@ -2,6 +2,8 @@
 
 #include "GuiButton.h"
 
+
+
 GuiControl* GuiManager::CreateGuiControl(GuiControlType type)
 {
 	GuiControl* control = nullptr;
@@ -10,6 +12,7 @@ GuiControl* GuiManager::CreateGuiControl(GuiControlType type)
 	{
 		// Create the corresponding GuiControl type
 		//case GuiControlType::BUTTON: control = new GuiButton(1234);  break;
+	case GuiControlType::BUTTON: control = new GuiButton(NULL, {0, 0, 0, 0}, "0");
 		default: break;
 	}
 
@@ -17,6 +20,24 @@ GuiControl* GuiManager::CreateGuiControl(GuiControlType type)
 	if (control != nullptr) controls.Add(control);
 
 	return control;
+}
+
+GuiManager::GuiManager()
+{
+}
+
+GuiManager::~GuiManager()
+{
+}
+
+bool GuiManager::Awake(pugi::xml_node&)
+{
+	return true;
+}
+
+bool GuiManager::Start()
+{
+	return true;
 }
 
 bool GuiManager::Update(float dt)
@@ -32,6 +53,11 @@ bool GuiManager::Update(float dt)
 		doLogic = false;
 	}
 
+	return true;
+}
+
+bool GuiManager::CleanUp()
+{
 	return true;
 }
 

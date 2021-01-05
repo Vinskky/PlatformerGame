@@ -10,6 +10,7 @@
 #include "EntityManager.h"
 #include "Collider.h"
 #include "Transition.h"
+#include "GuiManager.h"
 #include "Defs.h"
 #include "Log.h"
 
@@ -33,6 +34,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	enManager = new EntityManager();
 	collision = new Collisions();
 	fade = new Transition();
+	guiManager = new GuiManager();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
@@ -46,6 +48,8 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(enManager);
 	AddModule(collision);
 	AddModule(fade);
+	AddModule(guiManager);
+
 
 	// Render last to swap buffer
 	AddModule(render);

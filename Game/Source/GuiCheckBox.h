@@ -1,6 +1,7 @@
 #ifndef __GUICHECKBOX_H__
 #define __GUICHECKBOX_H__
 
+#include "App.h"
 #include "GuiControl.h"
 
 #include "Point.h"
@@ -13,8 +14,8 @@ public:
     GuiCheckBox(uint32 id, SDL_Rect bounds, const char *text);
     virtual ~GuiCheckBox();
 
-    bool Update(Input* input, float dt);
-    bool Draw(Render* render);
+    bool Update(float dt);
+    bool Draw();
 
 private:
 

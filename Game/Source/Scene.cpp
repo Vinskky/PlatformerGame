@@ -11,6 +11,8 @@
 #include "Pathfinding.h"
 #include "Collider.h"
 #include "EntityManager.h"
+#include "GuiManager.h"
+#include "GuiControl.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -275,6 +277,12 @@ void Scene::SetTitleScreen()
 void Scene::SetMainMenu()
 {
 	menuScene = app->tex->Load(sourceIntro.GetString());
+
+	//PLAY BUTTON
+	button1 = app->guiManager->CreateGuiControl((GuiControlType)0);
+	button1->bounds = {0, 0, 30, 30};
+	button1->id = 1;
+	button1->text = "PlayButton";
 }
 
 void Scene::SetLvl1()
@@ -532,6 +540,8 @@ void Scene::UpdateMainMenu()
 {
 	app->render->DrawTexture(menuScene, 0, 0);
 
+	button1->Draw();
+
 	if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
 	{
 		SetScene(LVL1);
@@ -785,4 +795,21 @@ void Scene::UpdateConfigMenu()
 void Scene::UpdatePauseMenu()
 {
 
+}
+
+//CLICK EVENT
+
+bool Scene::OnGuiMouseClickEvent(GuiControl* control)
+{
+	switch (currentScreen)
+	{
+	case MAIN_MENU:
+		if (control->type == (GuiControlType)0)
+		{
+			//DO SOMETHING
+		}
+		break;
+	}
+
+	return true;
 }

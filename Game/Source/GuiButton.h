@@ -1,6 +1,7 @@
 #ifndef __GUIBUTTON_H__
 #define __GUIBUTTON_H__
 
+#include "App.h"
 #include "GuiControl.h"
 
 #include "Point.h"
@@ -13,8 +14,8 @@ public:
     GuiButton(uint32 id, SDL_Rect bounds, const char *text);
     virtual ~GuiButton();
 
-    bool Update(Input* input, float dt);
-    bool Draw(Render* render);
+    bool Update(float dt);
+    bool Draw();
 
 private:
 
