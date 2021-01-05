@@ -8,8 +8,7 @@
 #include "window.h"
 #include "Collider.h"
 #include "Scene.h"
-#include "EnemyManager.h"
-#include "Entity.h"
+#include "EntityManager.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -19,9 +18,10 @@
 #define WINDOW_MIDDLE_E 1065
 #define INVINCIBLETIME 100
 
-Player::Player():Module(),texture(nullptr)
+Player::Player():Entity(),texture(nullptr)
 {
-	name.Create("player");
+	enName.Create("player");
+	type = PLAYER;
 }
 
 Player::~Player()
@@ -403,10 +403,10 @@ void Player::Gravity()
 
 void Player::Dead()
 {
-	app->player->onGround = true;
-	app->player->jumpOn = false;
-	app->player->UpdateAnimation("die");
-	app->player->isMoving = false;
+	app->enManager->player->onGround = true;
+	app->enManager->player->jumpOn = false;
+	app->enManager->player->UpdateAnimation("die");
+	app->enManager->player->isMoving = false;
 	isDead = true;
 }
 

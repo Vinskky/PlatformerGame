@@ -8,7 +8,7 @@
 #include "Collider.h"
 #include "Scene.h"
 #include "Map.h"
-#include "EnemyManager.h"
+#include "EntityManager.h"
 #include "Entity.h"
 
 Collisions::Collisions():Module()
@@ -130,16 +130,16 @@ void Collisions::DebugDraw()
 		initItem = initItem->next;
 	}
 
-	app->render->DrawRectangle(app->player->playerColider, 155, 155, 255, alpha);
+	app->render->DrawRectangle(app->enManager->player->playerColider, 155, 155, 255, alpha);
 
-	app->render->DrawRectangle(app->player->swordCollider, 117, 156, 217, alpha);
+	app->render->DrawRectangle(app->enManager->player->swordCollider, 117, 156, 217, alpha);
 
 	if (app->map->lvl1)
 	{
 		app->render->DrawRectangle(app->scene->checkpoint[0].rect, 180, 20, 20, alpha);
 		app->render->DrawRectangle(app->scene->collectible[0].itemRect, 180, 20, 20, alpha);
 		app->render->DrawRectangle(app->scene->collectible[1].itemRect, 180, 20, 20, alpha);
-		app->render->DrawRectangle(app->player->lifeGetter[0].getterRect, 70, 180, 20, alpha);
+		app->render->DrawRectangle(app->enManager->player->lifeGetter[0].getterRect, 70, 180, 20, alpha);
 
 		ListItem<Entity*>* enemy = app->enManager->entities.start;
 		for (enemy; enemy != NULL; enemy = enemy->next)
@@ -153,7 +153,7 @@ void Collisions::DebugDraw()
 		app->render->DrawRectangle(app->scene->checkpoint[1].rect, 180, 20, 20, alpha);
 		app->render->DrawRectangle(app->scene->collectible[2].itemRect, 180, 20, 20, alpha);
 		app->render->DrawRectangle(app->scene->collectible[3].itemRect, 180, 20, 20, alpha);
-		app->render->DrawRectangle(app->player->lifeGetter[1].getterRect, 70, 180, 20, alpha);
+		app->render->DrawRectangle(app->enManager->player->lifeGetter[1].getterRect, 70, 180, 20, alpha);
 	}
 
 

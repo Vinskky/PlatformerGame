@@ -1,7 +1,7 @@
 #ifndef __PLAYER_H__
 #define __PLAYER_H__
 
-#include "Module.h"
+#include "Entity.h"
 #include "List.h"
 #include "Point.h"
 #include "Animation.h"
@@ -60,7 +60,7 @@ struct LifeGetter
 	bool active;
 };
 
-class Player : public Module 
+class Player : public Entity 
 {
 public:
 

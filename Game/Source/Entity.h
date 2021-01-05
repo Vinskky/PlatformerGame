@@ -6,6 +6,7 @@
 #include "Point.h"
 #include "Render.h"
 
+
 enum State
 {
 	IDLE,
@@ -40,7 +41,7 @@ public:
 	virtual ~Entity() {};
 
 	//Called before render is available
-	virtual bool Awake()
+	virtual bool Awake(pugi::xml_node&)
 	{
 		return true;
 	}
@@ -93,8 +94,8 @@ public:
 	EntDirection entDirection;
 
 	SDL_Rect collider;
-	iPoint enemyPos;
-	iPoint enemyVel;
+	iPoint pos;
+	iPoint vel;
 
 	bool isFlying = false;
 	bool isInPlatform = false;

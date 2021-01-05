@@ -5,7 +5,7 @@
 #include "Map.h"
 #include "Collider.h"
 #include "Player.h"
-#include "EnemyManager.h"
+#include "EntityManager.h"
 #include "Defs.h"
 #include "Log.h"
 
@@ -72,7 +72,7 @@ void Map::Draw()
 
                         if (strcmp(layer->name.GetString(), "Parallax 0") == 0 || strcmp(layer->name.GetString(), "Parallax 2") == 0) // Player moves to right
                         {
-                            if (app->player->isMoving == true && app->player->playerInfo.currentDir == RIGHT_DIR)
+                            if (app->enManager->player->isMoving == true && app->enManager->player->playerInfo.currentDir == RIGHT_DIR)
                             {
                                 backgroudPos.x -= PARALLAX_VEL;
                                 app->render->DrawTexture(set->imageSource, pos.x + backgroudPos.x, pos.y, &r);
@@ -84,7 +84,7 @@ void Map::Draw()
                         }
                         else if (strcmp(layer->name.GetString(), "Parallax 1") == 0 || strcmp(layer->name.GetString(), "Parallax 3") == 0) // Player moves to left
                         {
-                            if (app->player->isMoving == true && app->player->playerInfo.currentDir == LEFT_DIR)
+                            if (app->enManager->player->isMoving == true && app->enManager->player->playerInfo.currentDir == LEFT_DIR)
                             {
                                 backgroudPos.x += PARALLAX_VEL;
                                 app->render->DrawTexture(set->imageSource, pos.x + backgroudPos.x, pos.y, &r);

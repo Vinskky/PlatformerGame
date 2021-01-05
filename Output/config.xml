@@ -45,7 +45,7 @@
     <level1>level_1_platformer.tmx</level1>
     <level2>level_2_platformer.tmx</level2>
   </map>
-  <player>
+  <entities>
     <life source="Assets/Textures/heart.png" lifes="3"/>
     <lifegetter name="Assets/Textures/life_getter.png" w="21" h="21">
       <getter x="1102" y="155" active="true"/>
@@ -125,6 +125,6 @@
       </animation>
     </animations>
     <maxSpeed x ="1" y ="5" />
-  </player>
+  </entities>
   <fadeInFadeOut  width="1280" height="720" scale="3"/>
 </config>

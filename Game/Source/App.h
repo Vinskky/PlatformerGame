@@ -18,8 +18,7 @@ class Audio;
 class Scene;
 class Map;
 class PathFinding;
-class Player;
-class EnemyManager;
+class EntityManager;
 class Collisions;
 class Transition;
 
@@ -96,10 +95,9 @@ public:
 	Scene* scene;
 	Map* map;
 	PathFinding* pathfinding;
-	Player* player;
 	Collisions* collision;
 	Transition* fade;
-	EnemyManager* enManager;
+	EntityManager* enManager;
 private:
 
 	int argc;

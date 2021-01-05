@@ -7,6 +7,8 @@
 #include "Textures.h"
 #include "Player.h"
 #include "Pathfinding.h"
+#include "EntityManager.h"
+
 //ManagerCriatures
 
 EnemyFly::EnemyFly() : Entity()
@@ -64,7 +66,7 @@ EnemyFly::~EnemyFly()
 bool EnemyFly::Awake()
 {
 	graphics = app->tex->Load("Assets/Textures/bat_sprite_sheet.png");
-	enemyVel.Create(0, 0);
+	vel.Create(0, 0);
 	entState = IDLE;
 	return true;
 }
@@ -73,8 +75,8 @@ bool EnemyFly::Start()
 {
 	currAnimation = &idle;
 	entState = IDLE;
-	pastDest = app->player->playerInfo.position;
-	collider = { enemyPos.x,enemyPos.y, 16,16 };
+	pastDest = app->enManager->player->playerInfo.position;
+	collider = { pos.x,pos.y, 16,16 };
 	return true;
 }
 
@@ -85,10 +87,10 @@ bool EnemyFly::PreUpdate()
 
 bool EnemyFly::Update(float dt)
 {
-	/*if (playerLastPos.DistanceTo(app->player->playerInfo.position) > 10)
+	/*if (playerLastPos.DistanceTo(app->enManager->player->playerInfo.position) > 10)
 	{
-		if (aStar->CreatePath(enemyPos, app->player->playerInfo.position) != -1)
-			playerLastPos = app->player->playerInfo.position;
+		if (aStar->CreatePath(pos, app->enManager->player->playerInfo.position) != -1)
+			playerLastPos = app->enManager->player->playerInfo.position;
 	}*/
 
 	//MoveEnemy();
@@ -97,7 +99,7 @@ bool EnemyFly::Update(float dt)
 	//collision follows
 
 	//ENEMY DEAD
-	if (app->collision->CheckCollision(app->player->swordCollider, collider))
+	if (app->collision->CheckCollision(app->enManager->player->swordCollider, collider))
 	{
 		isDead = true;
 	}
@@ -107,36 +109,36 @@ bool EnemyFly::Update(float dt)
 
 void EnemyFly::MoveEnemy()
 {
-	iPoint goal = app->player->playerInfo.position;
-	iPoint init = enemyPos;
+	iPoint goal = app->enManager->player->playerInfo.position;
+	iPoint init = pos;
 
 	goal = app->map->WorldToMap(goal.x, goal.y);
 	init = app->map->WorldToMap(init.x, init.y);
-	if (app->player->playerInfo.position.DistanceTo(enemyPos) < 350)
+	if (app->enManager->player->playerInfo.position.DistanceTo(pos) < 350)
 	{
 		enemyPath.Clear();
 		if (app->pathfinding->CreatePath(enemyPath, init, goal) != -1)
 		{
 			iPoint temp = *enemyPath.At(enemyPath.Count() - 1);
-			int moveX = temp.x - enemyPos.x;
+			int moveX = temp.x - pos.x;
 			if (moveX < 0)
 			{
-				enemyPos.x -= 1;
+				pos.x -= 1;
 			}
 			else
 			{
-				enemyPos.x += 1;
+				pos.x += 1;
 			}
-			int moveY = temp.y - enemyPos.y;
+			int moveY = temp.y - pos.y;
 			if (moveY < 0)
 			{
-				enemyPos.y -= 1;
+				pos.y -= 1;
 			}
 			else
 			{
-				enemyPos.y += 1;
+				pos.y += 1;
 			}
-			if (enemyPos.DistanceTo(temp) < 5)
+			if (pos.DistanceTo(temp) < 5)
 			{
 				iPoint popiPoint;
 				enemyPath.Pop(popiPoint);
@@ -195,7 +197,7 @@ void EnemyFly::Draw()
 	if (app->scene->currentScreen == LVL1 || app->scene->currentScreen == LVL1)
 	{
 		if (!isDead)
-			app->render->DrawTexture(graphics, enemyPos.x - 2, enemyPos.y - 2, &currAnimation->GetCurrentFrame());
+			app->render->DrawTexture(graphics, pos.x - 2, pos.y - 2, &currAnimation->GetCurrentFrame());
 	}
 
 	if (enemyPath.Count() > 0 && app->collision->debug)
@@ -219,8 +221,8 @@ bool EnemyFly::PostUpdate()
 
 bool EnemyFly::Load(pugi::xml_node& loadNode)
 {
-	enemyPos.x = loadNode.child("enemyFly").child("enemyPosition").attribute("x").as_int();
-	enemyPos.y = loadNode.child("enemyFly").child("enemyPosition").attribute("y").as_int();
+	pos.x = loadNode.child("enemyFly").child("position").attribute("x").as_int();
+	pos.y = loadNode.child("enemyFly").child("position").attribute("y").as_int();
 	collider.x = loadNode.child("enemyFly").child("enemyCollider").attribute("x").as_int();
 	collider.y = loadNode.child("enemyFly").child("enemyCollider").attribute("y").as_int();
 
@@ -230,11 +232,11 @@ bool EnemyFly::Load(pugi::xml_node& loadNode)
 bool EnemyFly::Save(pugi::xml_node& saveNode) const
 {
 	pugi::xml_node enFLy = saveNode.append_child(enName.GetString());
-	pugi::xml_node position = enFLy.append_child("enemyPosition");
+	pugi::xml_node position = enFLy.append_child("position");
 	pugi::xml_node rect = enFLy.append_child("enemyCollider");
 
-	position.append_attribute("x").set_value(enemyPos.x);
-	position.append_attribute("y").set_value(enemyPos.y);
+	position.append_attribute("x").set_value(pos.x);
+	position.append_attribute("y").set_value(pos.y);
 
 	rect.append_attribute("x").set_value(collider.x);
 	rect.append_attribute("y").set_value(collider.y);
@@ -250,7 +252,7 @@ int EnemyFly::GetDirection() const
 
 iPoint EnemyFly::Getposition() const
 {
-	return enemyPos;
+	return pos;
 }
 
 bool EnemyFly::CleanUp()

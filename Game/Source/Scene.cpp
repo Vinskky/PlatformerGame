@@ -6,12 +6,11 @@
 #include "Window.h"
 #include "Scene.h"
 #include "Map.h"
-#include "Player.h"
 #include "Transition.h"
 #include "Map.h"
 #include "Pathfinding.h"
 #include "Collider.h"
-#include "EnemyManager.h"
+#include "EntityManager.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -198,21 +197,21 @@ void Scene::SceneCleanUp()
 		app->tex->UnLoad(pauseMenu);
 
 	//GUI UNLOAD
-	if (app->player->playerLife.lifeTex != nullptr && app->player->playerLife.lifeTex != NULL)
-		app->tex->UnLoad(app->player->playerLife.lifeTex);
+	if (app->enManager->player->playerLife.lifeTex != nullptr && app->enManager->player->playerLife.lifeTex != NULL)
+		app->tex->UnLoad(app->enManager->player->playerLife.lifeTex);
 
 	if (markerTex != nullptr && markerTex != NULL)
 		app->tex->UnLoad(markerTex);
 
 	//ENTITIES UNLOAD
-	if (app->player->lifeGetter[0].getterTex != nullptr && app->player->lifeGetter[0].getterTex != NULL)
-		app->tex->UnLoad(app->player->lifeGetter[0].getterTex);
+	if (app->enManager->player->lifeGetter[0].getterTex != nullptr && app->enManager->player->lifeGetter[0].getterTex != NULL)
+		app->tex->UnLoad(app->enManager->player->lifeGetter[0].getterTex);
 
-	if (app->player->lifeGetter[1].getterTex != nullptr && app->player->lifeGetter[1].getterTex != NULL)
-		app->tex->UnLoad(app->player->lifeGetter[1].getterTex);
+	if (app->enManager->player->lifeGetter[1].getterTex != nullptr && app->enManager->player->lifeGetter[1].getterTex != NULL)
+		app->tex->UnLoad(app->enManager->player->lifeGetter[1].getterTex);
 
-	if (app->player->texture != nullptr && app->player->texture != NULL)
-		app->tex->UnLoad(app->player->texture);
+	if (app->enManager->player->texture != nullptr && app->enManager->player->texture != NULL)
+		app->tex->UnLoad(app->enManager->player->texture);
 
 	if (checkpoint[0].checkpointTex != nullptr && checkpoint[0].checkpointTex != NULL)
 		app->tex->UnLoad(checkpoint[0].checkpointTex);
@@ -278,7 +277,7 @@ void Scene::SetMainMenu()
 
 void Scene::SetLvl1()
 {
-	app->player->texture = app->tex->Load(app->player->textPath.GetString());
+	app->enManager->player->texture = app->tex->Load(app->enManager->player->textPath.GetString());
 
 	bool checkpointState = checkpoint[0].checked;
 	bool coinState = collectible[0].collected;
@@ -296,8 +295,8 @@ void Scene::SetLvl1()
 		checkpoint[1].active = false;
 
 		//ACTIVATE LIFE GETTERS
-		app->player->lifeGetter[0].active = true;
-		app->player->lifeGetter[1].active = false;
+		app->enManager->player->lifeGetter[0].active = true;
+		app->enManager->player->lifeGetter[1].active = false;
 
 		//ACTIVATE COLLECTIBLES
 		collectible[0].active = true;
@@ -315,14 +314,14 @@ void Scene::SetLvl1()
 
 		//LOADS ------------
 		//PLAYER LIFES
-		app->player->playerLife.lifeTex = app->tex->Load(app->player->playerLife.source.GetString());
+		app->enManager->player->playerLife.lifeTex = app->tex->Load(app->enManager->player->playerLife.source.GetString());
 
 		//LIFEGETTER
-		app->player->lifeGetter[0].getterTex = app->tex->Load(app->player->lifeGetter[0].source.GetString());
-		app->player->lifeGetter[1].getterTex = app->tex->Load(app->player->lifeGetter[1].source.GetString());
+		app->enManager->player->lifeGetter[0].getterTex = app->tex->Load(app->enManager->player->lifeGetter[0].source.GetString());
+		app->enManager->player->lifeGetter[1].getterTex = app->tex->Load(app->enManager->player->lifeGetter[1].source.GetString());
 
 		//SWORD COLLIDER ------------
-		app->player->swordCollider = { -20, 0, 13, 7 };
+		app->enManager->player->swordCollider = { -20, 0, 13, 7 };
 
 		// PLAYER INITIALITZATION ------------
 		if (checkpointState)
@@ -333,7 +332,7 @@ void Scene::SetLvl1()
 
 			if (app->IsLoading() == false)
 			{
-				app->player->playerInfo.position = { app->scene->checkpoint[0].rect.x, app->scene->checkpoint[0].rect.y - 16 };
+				app->enManager->player->playerInfo.position = { app->scene->checkpoint[0].rect.x, app->scene->checkpoint[0].rect.y - 16 };
 			}
 		}
 		else
@@ -342,19 +341,19 @@ void Scene::SetLvl1()
 
 			if (app->IsLoading() == false)
 			{
-				app->player->playerInfo.position = { app->map->GetPlayerInitialPos() };
-				app->player->playerInfo.position.y += 2;
+				app->enManager->player->playerInfo.position = { app->map->GetPlayerInitialPos() };
+				app->enManager->player->playerInfo.position.y += 2;
 			}
 		}
 
 		if (app->IsLoading() == false)
 		{
-			app->player->playerColider = { app->player->playerInfo.position.x + 2, app->player->playerInfo.position.y, 14, 30 };
-			app->player->playerInfo.speed = 2;
-			app->player->playerInfo.currentDir = RIGHT_DIR;
+			app->enManager->player->playerColider = { app->enManager->player->playerInfo.position.x + 2, app->enManager->player->playerInfo.position.y, 14, 30 };
+			app->enManager->player->playerInfo.speed = 2;
+			app->enManager->player->playerInfo.currentDir = RIGHT_DIR;
 		}
 
-		app->player->playerInfo.currentAnimation = &app->player->playerInfo.idle;
+		app->enManager->player->playerInfo.currentAnimation = &app->enManager->player->playerInfo.idle;
 	}
 
 	//LOAD TEXTURES CP & COLLECTIBLES
@@ -375,7 +374,7 @@ void Scene::SetLvl1()
 
 void Scene::SetLvl2()
 {
-	app->player->texture = app->tex->Load(app->player->textPath.GetString());
+	app->enManager->player->texture = app->tex->Load(app->enManager->player->textPath.GetString());
 
 	bool checkpointState = checkpoint[1].checked;
 	bool coinState = collectible[2].collected;
@@ -393,8 +392,8 @@ void Scene::SetLvl2()
 		checkpoint[1].active = true;
 
 		//ACTIVATE LIFE GETTERS
-		app->player->lifeGetter[0].active = false;
-		app->player->lifeGetter[1].active = true;
+		app->enManager->player->lifeGetter[0].active = false;
+		app->enManager->player->lifeGetter[1].active = true;
 
 		//ACTIVATE COLLECTIBLES
 		collectible[0].active = false;
@@ -412,14 +411,14 @@ void Scene::SetLvl2()
 
 		//LOADS ------------
 		//PLAYER LIFES
-		app->player->playerLife.lifeTex = app->tex->Load(app->player->playerLife.source.GetString());
+		app->enManager->player->playerLife.lifeTex = app->tex->Load(app->enManager->player->playerLife.source.GetString());
 
 		//LIFEGETTER
-		app->player->lifeGetter[0].getterTex = app->tex->Load(app->player->lifeGetter[0].source.GetString());
-		app->player->lifeGetter[1].getterTex = app->tex->Load(app->player->lifeGetter[1].source.GetString());
+		app->enManager->player->lifeGetter[0].getterTex = app->tex->Load(app->enManager->player->lifeGetter[0].source.GetString());
+		app->enManager->player->lifeGetter[1].getterTex = app->tex->Load(app->enManager->player->lifeGetter[1].source.GetString());
 
 		//SWORD COLLIDER ------------
-		app->player->swordCollider = { -20, 0, 13, 7 };
+		app->enManager->player->swordCollider = { -20, 0, 13, 7 };
 
 		// PLAYER INITIALITZATION ------------
 		if (checkpointState)
@@ -430,7 +429,7 @@ void Scene::SetLvl2()
 
 			if (app->IsLoading() == false)
 			{
-				app->player->playerInfo.position = { checkpoint[1].rect.x, checkpoint[1].rect.y - 16 };
+				app->enManager->player->playerInfo.position = { checkpoint[1].rect.x, checkpoint[1].rect.y - 16 };
 			}
 		}
 		else
@@ -439,19 +438,19 @@ void Scene::SetLvl2()
 
 			if (app->IsLoading() == false)
 			{
-				app->player->playerInfo.position = { app->map->GetPlayerInitialPos() };
-				app->player->playerInfo.position.y += 2;
+				app->enManager->player->playerInfo.position = { app->map->GetPlayerInitialPos() };
+				app->enManager->player->playerInfo.position.y += 2;
 			}
 		}
 
 		if (app->IsLoading() == false)
 		{
-			app->player->playerColider = { app->player->playerInfo.position.x + 2, app->player->playerInfo.position.y, 14, 30 };
-			app->player->playerInfo.speed = 2;
-			app->player->playerInfo.currentDir = RIGHT_DIR;
+			app->enManager->player->playerColider = { app->enManager->player->playerInfo.position.x + 2, app->enManager->player->playerInfo.position.y, 14, 30 };
+			app->enManager->player->playerInfo.speed = 2;
+			app->enManager->player->playerInfo.currentDir = RIGHT_DIR;
 		}
 
-		app->player->playerInfo.currentAnimation = &app->player->playerInfo.idle;
+		app->enManager->player->playerInfo.currentAnimation = &app->enManager->player->playerInfo.idle;
 	}
 
 	//LOAD TEXTURES CP & COLLECTIBLES
@@ -476,7 +475,7 @@ void Scene::SetDeadScreen()
 
 	deathScene = app->tex->Load(sourceDeath.GetString());
 
-	app->player->Dead();
+	app->enManager->player->Dead();
 }
 
 void Scene::SetConfigMenu()
@@ -523,7 +522,7 @@ void Scene::UpdateMainMenu()
 void Scene::UpdateLevels()
 {
 	// LOGIC --------------------------
-	if (checkpoint[0].active && app->collision->CheckCollision(app->player->playerColider, checkpoint[0].rect))
+	if (checkpoint[0].active && app->collision->CheckCollision(app->enManager->player->playerColider, checkpoint[0].rect))
 	{
 		if (checkpoint[0].checked == false)
 		{
@@ -531,7 +530,7 @@ void Scene::UpdateLevels()
 		}
 		checkpoint[0].checked = true;
 	}
-	else if (checkpoint[1].active && app->collision->CheckCollision(app->player->playerColider, checkpoint[1].rect))
+	else if (checkpoint[1].active && app->collision->CheckCollision(app->enManager->player->playerColider, checkpoint[1].rect))
 	{
 		if (checkpoint[1].checked == false)
 		{
@@ -543,16 +542,16 @@ void Scene::UpdateLevels()
 	//LIFE GETTERS
 	for (int i = 0; i < 2; i++)
 	{
-		if (app->player->lifeGetter[i].active && app->collision->CheckCollision(app->player->playerColider, app->player->lifeGetter[i].getterRect))
+		if (app->enManager->player->lifeGetter[i].active && app->collision->CheckCollision(app->enManager->player->playerColider, app->enManager->player->lifeGetter[i].getterRect))
 		{
-			app->player->playerLife.lifes = app->player->lifeGetter[i].refill;
+			app->enManager->player->playerLife.lifes = app->enManager->player->lifeGetter[i].refill;
 		}
 	}
 
 	//COLLECTIBLES
 	for (int i = 0; i < 4; i++)
 	{
-		if (collectible[i].active && app->collision->CheckCollision(app->player->playerColider, collectible[i].itemRect))
+		if (collectible[i].active && app->collision->CheckCollision(app->enManager->player->playerColider, collectible[i].itemRect))
 		{
 			if (collectible[i].collected == false)
 			{
@@ -568,28 +567,28 @@ void Scene::UpdateLevels()
 	app->map->Draw();
 
 	// LIFEGETTERS DRAW
-	if (app->player->lifeGetter[0].active)
+	if (app->enManager->player->lifeGetter[0].active)
 	{
-		app->render->DrawTexture(app->player->lifeGetter[0].getterTex, app->player->lifeGetter[0].getterRect.x, app->player->lifeGetter[0].getterRect.y);
+		app->render->DrawTexture(app->enManager->player->lifeGetter[0].getterTex, app->enManager->player->lifeGetter[0].getterRect.x, app->enManager->player->lifeGetter[0].getterRect.y);
 	}
-	else if (app->player->lifeGetter[1].active)
+	else if (app->enManager->player->lifeGetter[1].active)
 	{
-		app->render->DrawTexture(app->player->lifeGetter[1].getterTex, app->player->lifeGetter[1].getterRect.x, app->player->lifeGetter[1].getterRect.y);
+		app->render->DrawTexture(app->enManager->player->lifeGetter[1].getterTex, app->enManager->player->lifeGetter[1].getterRect.x, app->enManager->player->lifeGetter[1].getterRect.y);
 	}
 
 	// PLAYER
-	app->player->Draw();
+	app->enManager->player->Draw();
 	// --------------------------------
 	
 	// ANIMATION ---------------------
 	//IDLE ANIMATION
-	if (strcmp(app->player->playerInfo.currentAnimation->name.GetString(), "idle") != 0 || strcmp(app->player->playerInfo.currentAnimation->name.GetString(), "idleLeft") != 0)
+	if (strcmp(app->enManager->player->playerInfo.currentAnimation->name.GetString(), "idle") != 0 || strcmp(app->enManager->player->playerInfo.currentAnimation->name.GetString(), "idleLeft") != 0)
 	{
-		if (!app->player->playerInfo.currentAnimation->Finished())
+		if (!app->enManager->player->playerInfo.currentAnimation->Finished())
 		{
-			app->player->playerInfo.currentAnimation->FinishAnimation();
-			app->player->UpdateAnimation("idle");
-			app->player->isMoving = false;
+			app->enManager->player->playerInfo.currentAnimation->FinishAnimation();
+			app->enManager->player->UpdateAnimation("idle");
+			app->enManager->player->isMoving = false;
 		}
 	}
 	// -------------------------------
@@ -658,7 +657,7 @@ void Scene::UpdateLevels()
 	// HURT PLAYER
 	if (app->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
 	{
-		if (app->player->playerLife.lifes > 0) app->player->playerLife.lifes--;
+		if (app->enManager->player->playerLife.lifes > 0) app->enManager->player->playerLife.lifes--;
 	}
 
 	// SAVE & LOAD
@@ -676,25 +675,25 @@ void Scene::UpdateLevels()
 
 	//LIFE, CP & COLLECTIBLES
 	//LIFES
-		if (app->player->playerLife.lifes == 3)
+		if (app->enManager->player->playerLife.lifes == 3)
 		{
-			app->render->DrawTexture(app->player->playerLife.lifeTex, 30 - app->render->camera.x / 3, 3);
-			app->render->DrawTexture(app->player->playerLife.lifeTex, 50 - app->render->camera.x / 3, 3);
-			app->render->DrawTexture(app->player->playerLife.lifeTex, 70 - app->render->camera.x / 3, 3);
+			app->render->DrawTexture(app->enManager->player->playerLife.lifeTex, 30 - app->render->camera.x / 3, 3);
+			app->render->DrawTexture(app->enManager->player->playerLife.lifeTex, 50 - app->render->camera.x / 3, 3);
+			app->render->DrawTexture(app->enManager->player->playerLife.lifeTex, 70 - app->render->camera.x / 3, 3);
 		}
-		else if (app->player->playerLife.lifes == 2)
+		else if (app->enManager->player->playerLife.lifes == 2)
 		{
-			app->render->DrawTexture(app->player->playerLife.lifeTex, 30 - app->render->camera.x / 3, 3);
-			app->render->DrawTexture(app->player->playerLife.lifeTex, 50 - app->render->camera.x / 3, 3);
+			app->render->DrawTexture(app->enManager->player->playerLife.lifeTex, 30 - app->render->camera.x / 3, 3);
+			app->render->DrawTexture(app->enManager->player->playerLife.lifeTex, 50 - app->render->camera.x / 3, 3);
 		}
-		else if (app->player->playerLife.lifes == 1)
+		else if (app->enManager->player->playerLife.lifes == 1)
 		{
-			app->render->DrawTexture(app->player->playerLife.lifeTex, 30 - app->render->camera.x / 3, 3);
+			app->render->DrawTexture(app->enManager->player->playerLife.lifeTex, 30 - app->render->camera.x / 3, 3);
 		}
 
-		if (app->player->playerLife.lifes == 0)
+		if (app->enManager->player->playerLife.lifes == 0)
 		{
-			app->player->playerLife.lifes = 3;
+			app->enManager->player->playerLife.lifes = 3;
 			SetScene(DEAD_SCREEN);
 		}
 
@@ -733,7 +732,7 @@ void Scene::UpdateLevels()
 		CollectibleMarkerLogic();
 
 		//WIN
-		if (app->player->CheckWin() == true)
+		if (app->enManager->player->CheckWin() == true)
 		{
 			if (currentScreen == LVL1)
 			{

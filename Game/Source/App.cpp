@@ -7,8 +7,7 @@
 #include "Audio.h"
 #include "Scene.h"
 #include "Map.h"
-#include "Player.h"
-#include "EnemyManager.h"
+#include "EntityManager.h"
 #include "Collider.h"
 #include "Transition.h"
 #include "Defs.h"
@@ -31,8 +30,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	pathfinding = new PathFinding();
 	scene = new Scene();
 	map = new Map();
-	enManager = new EnemyManager();
-	player = new Player();
+	enManager = new EntityManager();
 	collision = new Collisions();
 	fade = new Transition();
 
@@ -46,7 +44,6 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(scene);
 	AddModule(map);
 	AddModule(enManager);
-	AddModule(player);
 	AddModule(collision);
 	AddModule(fade);
 
@@ -213,7 +210,7 @@ void App::FinishUpdate()
 	sprintf_s(title, 256, "Av.FPS: %.2f | Last Frame Ms: %02u | Last Sec Frames: %i | Last dt: %.3f | Time Since Startup: %.3f | Frame Count: %I64u",
 		averageFps, lastFrameMs, framesOnLastUpdate, dt, secondsSinceStartup, frameCount);
 	
-	if(!app->player->godMode) app->win->SetTitle(title);
+	if(!app->enManager->player->godMode) app->win->SetTitle(title);
 
 	if (frameDelay > lastFrameMs && !changeFps)
 	{

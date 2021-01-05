@@ -8,7 +8,7 @@
 #include "Map.h"
 #include "Player.h"
 #include "Pathfinding.h"
-#include "EnemyManager.h"
+#include "EntityManager.h"
 
 EnemyGround::EnemyGround() : Entity()
 {
@@ -40,7 +40,7 @@ EnemyGround::~EnemyGround()
 
 bool EnemyGround::Awake()
 {
-	enemyVel.Create(0, 0);
+	vel.Create(0, 0);
 	return true;
 }
 
@@ -48,8 +48,8 @@ bool EnemyGround::Start()
 {
 	graphics = app->tex->Load("Assets/Textures/ground_enemy.png");
 	entState = WALK_L;
-	pastDest = app->player->playerInfo.position;
-	collider = { enemyPos.x,enemyPos.y, 16,16 };
+	pastDest = app->enManager->player->playerInfo.position;
+	collider = { pos.x,pos.y, 16,16 };
 	return true;
 }
 
@@ -63,7 +63,7 @@ bool EnemyGround::Update(float dt)
 	MoveEnemy();
 
 	//ENEMY DEATH
-	if (app->collision->CheckCollision(app->player->swordCollider, collider))
+	if (app->collision->CheckCollision(app->enManager->player->swordCollider, collider))
 	{
 		app->enManager->DeleteEnemyNormal(this);
 		isDead = true;
@@ -74,37 +74,37 @@ bool EnemyGround::Update(float dt)
 
 void EnemyGround::MoveEnemy()
 {
-	iPoint goal = app->player->playerInfo.position;
-	iPoint init = enemyPos;
+	iPoint goal = app->enManager->player->playerInfo.position;
+	iPoint init = pos;
 
 	goal = app->map->WorldToMap(goal.x, goal.y+16);
 	init = app->map->WorldToMap(init.x, init.y);
 
-	if (app->player->playerInfo.position.DistanceTo(enemyPos) < 125)
+	if (app->enManager->player->playerInfo.position.DistanceTo(pos) < 125)
 	{
 		enemyPath.Clear();
 		if (app->pathfinding->CreatePath(enemyPath, init, goal) != -1)
 		{
 			iPoint tmp = *enemyPath.At(enemyPath.Count() - 1);
-			int distanceToMove = tmp.x - enemyPos.x;
-			if (app->player->playerInfo.position.x > enemyPos.x)
+			int distanceToMove = tmp.x - pos.x;
+			if (app->enManager->player->playerInfo.position.x > pos.x)
 				distanceToMove = 1;
 
 			if (distanceToMove < 0 )
 			{
-				if (enemyPos.x > 176)
+				if (pos.x > 176)
 				{
-					enemyPos.x -= 1;
-					collider.x = enemyPos.x;
+					pos.x -= 1;
+					collider.x = pos.x;
 				}
 				entState = WALK_L;
 			}
 			else if (distanceToMove > 0 )
 			{
-				if (enemyPos.x < 252)
+				if (pos.x < 252)
 				{
-					enemyPos.x += 1;
-					collider.x = enemyPos.x;
+					pos.x += 1;
+					collider.x = pos.x;
 				}
 				
 				entState = WALK_R;
@@ -115,7 +115,7 @@ void EnemyGround::MoveEnemy()
 
 void EnemyGround::ProcessPos()
 {
-	enemyPos.y = enemyPos.y + enemyVel.y;
+	pos.y = pos.y + vel.y;
 }
 
 void EnemyGround::ProcessGravity(float dt)
@@ -144,7 +144,7 @@ void EnemyGround::Draw()
 	if (app->scene->currentScreen == LVL1 || app->scene->currentScreen == LVL1)
 	{
 		if (!isDead)
-			app->render->DrawTexture(graphics, enemyPos.x - 2, enemyPos.y - 2, &currAnimation->GetCurrentFrame());
+			app->render->DrawTexture(graphics, pos.x - 2, pos.y - 2, &currAnimation->GetCurrentFrame());
 	}
 
 	if (enemyPath.Count() > 0 && app->collision->debug)
@@ -168,8 +168,8 @@ bool EnemyGround::PostUpdate()
 
 bool EnemyGround::Load(pugi::xml_node& loadNode)
 {
-	enemyPos.x = loadNode.child("enemyNormal").child("enemyPosition").attribute("x").as_int();
-	enemyPos.y = loadNode.child("enemyNormal").child("enemyPosition").attribute("y").as_int();
+	pos.x = loadNode.child("enemyNormal").child("position").attribute("x").as_int();
+	pos.y = loadNode.child("enemyNormal").child("position").attribute("y").as_int();
 	collider.x = loadNode.child("enemyNormal").child("enemyCollider").attribute("x").as_int();
 	collider.y = loadNode.child("enemyNormal").child("enemyCollider").attribute("y").as_int();
 
@@ -179,11 +179,11 @@ bool EnemyGround::Load(pugi::xml_node& loadNode)
 bool EnemyGround::Save(pugi::xml_node& saveNode) const
 {
 	pugi::xml_node enGround = saveNode.append_child(enName.GetString());
-	pugi::xml_node position = enGround.append_child("enemyPosition");
+	pugi::xml_node position = enGround.append_child("position");
 	pugi::xml_node rect = enGround.append_child("enemyCollider");
 
-	position.append_attribute("x").set_value(enemyPos.x);
-	position.append_attribute("y").set_value(enemyPos.y);
+	position.append_attribute("x").set_value(pos.x);
+	position.append_attribute("y").set_value(pos.y);
 
 	rect.append_attribute("x").set_value(collider.x);
 	rect.append_attribute("y").set_value(collider.y);
@@ -198,7 +198,7 @@ int EnemyGround::GetDirection() const
 
 iPoint EnemyGround::GetPosition() const
 {
-	return enemyPos;
+	return pos;
 }
 
 bool EnemyGround::CleanUp()

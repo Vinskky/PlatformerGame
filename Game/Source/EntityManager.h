@@ -1,15 +1,16 @@
-#ifndef _ENEMY_MANAGER_H_
-#define _ENEMY_MANAGER_H_
+#ifndef _ENTITY_MANAGER_H_
+#define _ENTITY_MANAGER_H_
 
 #include "Module.h"
 #include "List.h"
 #include "Entity.h"
+#include "Player.h"
 
-class EnemyManager : public Module
+class EntityManager : public Module
 {
 public:
-	EnemyManager();
-	virtual ~EnemyManager();
+	EntityManager();
+	virtual ~EntityManager();
 
 	// Called before render is available
 	bool Awake(pugi::xml_node& config);
@@ -27,11 +28,14 @@ public:
 
 	void CreateEnemyFly(iPoint position);
 	void CreateEnemyNormal(iPoint position);
+	void CreatePlayer(pugi::xml_node&);
 
 	void DeleteEnemyFly(Entity* enemyFly);
 	void DeleteEnemyNormal(Entity* enemyGround);
+	void DeletePlayer(Entity* player);
 
 	void DeleteAllEnemies();
+	void DeleteAll();
 
 	bool Load(pugi::xml_node&);
 	bool Save(pugi::xml_node&)const;
@@ -39,6 +43,7 @@ public:
 public:
 	List<Entity*> entities;
 
+	Player* player = nullptr;
 };
 
 #endif // !_ENEMY_MANAGER_H_
