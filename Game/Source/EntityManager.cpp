@@ -53,14 +53,14 @@ bool EntityManager::Start()
 		item2 = item2->next;
 	}*/
 
-	ListItem<Entity*>* item = entities.start;
-	while (item != NULL)
+	ListItem<Entity*>* item1 = entities.start;
+	while (item1 != NULL)
 	{
-		if (item->data->type = Entity::EntityType::PLAYER)
+		if (item1->data->type = Entity::EntityType::PLAYER)
 		{
-			item->data->Start();
+			item1->data->Start();
 		}
-		item = item->next;
+		item1 = item1->next;
 	}
 	return true;
 }

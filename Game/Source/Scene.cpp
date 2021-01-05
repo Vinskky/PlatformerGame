@@ -226,6 +226,8 @@ void Scene::SceneCleanUp()
 	}
 
 	//OTHER CLEANUPS
+	app->enManager->DeleteAllEnemies();
+
 	app->collision->CleanUp();
 
 	app->map->CleanUp();
@@ -354,6 +356,23 @@ void Scene::SetLvl1()
 		}
 
 		app->enManager->player->playerInfo.currentAnimation = &app->enManager->player->playerInfo.idle;
+	}
+
+	//LOAD ENEMIES
+	ListItem<SDL_Rect>* item = app->collision->initPosEnemyGround.start;
+	while (item != NULL)
+	{
+		iPoint pos = { item->data.x, item->data.y };
+		app->enManager->CreateEnemyNormal(pos);
+		item = item->next;
+	}
+
+	ListItem<SDL_Rect>* item2 = app->collision->initPosEnemyFly.start;
+	while (item2 != NULL)
+	{
+		iPoint pos = { item2->data.x, item2->data.y };
+		app->enManager->CreateEnemyFly(pos);
+		item2 = item2->next;
 	}
 
 	//LOAD TEXTURES CP & COLLECTIBLES
