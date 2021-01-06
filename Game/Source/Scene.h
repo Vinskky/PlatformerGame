@@ -56,6 +56,10 @@ public: //GUI
 
 	GuiButton* playButton;
 	GuiButton* configButton;
+	GuiButton* resumeButton;
+	GuiButton* configPauseButton;
+	GuiButton* exitPauseButton;
+	GuiButton* mainMenuPauseButton;
 
 public:
 	//SCENE MANAGER
@@ -81,6 +85,8 @@ public:
 	void UpdatePauseMenu();
 
 	bool pause = false;
+	bool config = false;
+	bool exit = false;
 
 	SString sourceTitle;
 	SString sourceDeath;

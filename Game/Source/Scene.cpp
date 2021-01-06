@@ -90,7 +90,7 @@ bool Scene::Update(float dt)
 
 bool Scene::PostUpdate()
 {
-	return true;
+	return !exit;
 }
 
 bool Scene::CleanUp()
@@ -207,18 +207,24 @@ void Scene::SetMainMenu()
 	menuScene = app->tex->Load(sourceIntro.GetString());
 
 	//PLAY BUTTON
-	playButton = (GuiButton*)app->guiManager->CreateGuiControl((GuiControlType)0);
-	playButton->bounds = {0, 0, 105, 27};
-	playButton->id = 1;
-	playButton->text = "PlayButton";
-	playButton->SetObserver(this);
+	if (playButton == NULL && playButton == nullptr)
+	{
+		playButton = (GuiButton*)app->guiManager->CreateGuiControl((GuiControlType)0);
+		playButton->bounds = { 0, 0, 105, 27 };
+		playButton->id = 1;
+		playButton->text = "PlayButton";
+		playButton->SetObserver(this);
+	}
 
-	//PLAY BUTTON
-	configButton = (GuiButton*)app->guiManager->CreateGuiControl((GuiControlType)0);
-	configButton->bounds = { 0, 50, 105, 27 };
-	configButton->id = 2;
-	configButton->text = "ConfigButton";
-	configButton->SetObserver(this);
+	//CONFIG BUTTON
+	if (configButton == NULL && configButton == nullptr)
+	{
+		configButton = (GuiButton*)app->guiManager->CreateGuiControl((GuiControlType)0);
+		configButton->bounds = { 0, 50, 105, 27 };
+		configButton->id = 2;
+		configButton->text = "ConfigButton";
+		configButton->SetObserver(this);
+	}
 
 }
 
@@ -451,6 +457,8 @@ void Scene::SetConfigMenu()
 
 void Scene::SetPauseMenu()
 {
+	previousScreen = currentScreen;
+	currentScreen = PAUSE_MENU;
 	pausePlayerPosition = app->enManager->player->playerInfo.position;
 
 	for (int i = 0; i < app->enManager->entities.Count(); i++)
@@ -464,6 +472,46 @@ void Scene::SetPauseMenu()
 	app->guiManager->buttonSpritesheet = app->tex->Load("Assets/textures/button_spritesheet.png");
 
 	pauseMenu = app->tex->Load("Assets/textures/pause_menu.png");
+
+	//RESUME BUTTON
+	if (resumeButton == NULL && resumeButton == nullptr)
+	{
+		resumeButton = (GuiButton*)app->guiManager->CreateGuiControl((GuiControlType)0);
+		resumeButton->bounds = { 164, 122 - 25, 105, 27 };
+		resumeButton->id = 1;
+		resumeButton->text = "ResumeButton";
+		resumeButton->SetObserver(this);
+	}
+
+	//CONFIG BUTTON
+	if (configPauseButton == NULL && configPauseButton == nullptr)
+	{
+		configPauseButton = (GuiButton*)app->guiManager->CreateGuiControl((GuiControlType)0);
+		configPauseButton->bounds = { 164, 155 - 25, 105, 27 };
+		configPauseButton->id = 2;
+		configPauseButton->text = "ConfigButton";
+		configPauseButton->SetObserver(this);
+	}
+
+	//BACK TO MENU BUTTON
+	if (mainMenuPauseButton == NULL && mainMenuPauseButton == nullptr)
+	{
+		mainMenuPauseButton = (GuiButton*)app->guiManager->CreateGuiControl((GuiControlType)0);
+		mainMenuPauseButton->bounds = { 164, 188 - 25, 105, 27 };
+		mainMenuPauseButton->id = 3;
+		mainMenuPauseButton->text = "BackToMainButton";
+		mainMenuPauseButton->SetObserver(this);
+	}
+
+	//EXITGAME BUTTON
+	if (exitPauseButton == NULL && exitPauseButton == nullptr)
+	{
+		exitPauseButton = (GuiButton*)app->guiManager->CreateGuiControl((GuiControlType)0);
+		exitPauseButton->bounds = { 164, 221 - 25, 105, 27 };
+		exitPauseButton->id = 4;
+		exitPauseButton->text = "ExitButton";
+		exitPauseButton->SetObserver(this);
+	}
 }
 
 //UPDATERS
@@ -781,6 +829,16 @@ void Scene::UpdatePauseMenu()
 			app->enManager->entities.At(i)->data->pos = pauseEnemyPosition;
 		}
 	}
+
+	resumeButton->Update(1.0f);
+	configPauseButton->Update(1.0f);
+	mainMenuPauseButton->Update(1.0f);
+	exitPauseButton->Update(1.0f);
+
+	resumeButton->Draw();
+	configPauseButton->Draw();
+	mainMenuPauseButton->Draw();
+	exitPauseButton->Draw();
 }
 
 //CLICK EVENT
@@ -801,6 +859,27 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 		}
 
 		break;
+
+	case PAUSE_MENU:
+
+		if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "ResumeButton") == 0)
+		{
+			pause = false;
+			currentScreen = previousScreen;
+		}
+		else if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "ConfigButton") == 0)
+		{
+			config = true;
+		}
+		else if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "BackToMainButton") == 0)
+		{
+			SetScene(MAIN_MENU);
+			pause = false;
+		}
+		else if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "ExitButton") == 0)
+		{
+			exit = true;
+		}
 	}
 
 	return true;
