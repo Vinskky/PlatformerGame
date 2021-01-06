@@ -48,8 +48,12 @@ public:
 private:
 	int timer = 0;
 	iPoint tempPlayerPosition;
+	iPoint pausePlayerPosition;
+	iPoint pauseEnemyPosition;
 
 public: //GUI
+	bool OnGuiMouseClickEvent(GuiControl* control);
+
 	GuiButton* playButton;
 	GuiButton* configButton;
 
@@ -76,7 +80,7 @@ public:
 	void UpdateConfigMenu();
 	void UpdatePauseMenu();
 
-	bool OnGuiMouseClickEvent(GuiControl* control);
+	bool pause = false;
 
 	SString sourceTitle;
 	SString sourceDeath;

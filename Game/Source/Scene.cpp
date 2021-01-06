@@ -11,12 +11,15 @@
 #include "Pathfinding.h"
 #include "Collider.h"
 #include "EntityManager.h"
+#include "Entity.h"
 #include "GuiManager.h"
 #include "GuiControl.h"
 #include "GuiButton.h"
 
 #include "Defs.h"
 #include "Log.h"
+
+enum EntityType;
 
 Scene::Scene() : Module(), titleScene(nullptr),menuScene(nullptr), deathScene(nullptr), currentScreen(Screens::TITLE_SCREEN)
 {
@@ -448,7 +451,19 @@ void Scene::SetConfigMenu()
 
 void Scene::SetPauseMenu()
 {
+	pausePlayerPosition = app->enManager->player->playerInfo.position;
+
+	for (int i = 0; i < app->enManager->entities.Count(); i++)
+	{
+		if (app->enManager->entities.At(i)->data->type == (EntityType)0)
+		{
+			pauseEnemyPosition = app->enManager->entities.At(i)->data->pos;
+		}
+	}
+
 	app->guiManager->buttonSpritesheet = app->tex->Load("Assets/textures/button_spritesheet.png");
+
+	pauseMenu = app->tex->Load("Assets/textures/pause_menu.png");
 }
 
 //UPDATERS
@@ -492,160 +507,169 @@ void Scene::UpdateMainMenu()
 
 void Scene::UpdateLevels()
 {
-	// LOGIC --------------------------
-	if (app->enManager->props->checkpoint[0].active && app->collision->CheckCollision(app->enManager->player->playerColider, app->enManager->props->checkpoint[0].rect))
+	if (!pause)
 	{
-		if (app->enManager->props->checkpoint[0].checked == false)
+		// LOGIC --------------------------
+		if (app->enManager->props->checkpoint[0].active && app->collision->CheckCollision(app->enManager->player->playerColider, app->enManager->props->checkpoint[0].rect))
 		{
-			app->audio->PlayFx(2);
-		}
-		app->enManager->props->checkpoint[0].checked = true;
-	}
-	else if (app->enManager->props->checkpoint[1].active && app->collision->CheckCollision(app->enManager->player->playerColider, app->enManager->props->checkpoint[1].rect))
-	{
-		if (app->enManager->props->checkpoint[1].checked == false)
-		{
-			app->audio->PlayFx(2);
-		}
-		app->enManager->props->checkpoint[1].checked = true;
-	}
-
-	//LIFE GETTERS
-	for (int i = 0; i < 2; i++)
-	{
-		if (app->enManager->props->lifeGetter[i].active && app->collision->CheckCollision(app->enManager->player->playerColider, app->enManager->props->lifeGetter[i].getterRect))
-		{
-			app->enManager->player->playerLife.lifes = app->enManager->props->lifeGetter[i].refill;
-		}
-	}
-
-	//COLLECTIBLES
-	for (int i = 0; i < 4; i++)
-	{
-		if (app->enManager->props->collectible[i].active && app->collision->CheckCollision(app->enManager->player->playerColider, app->enManager->props->collectible[i].itemRect))
-		{
-			if (app->enManager->props->collectible[i].collected == false)
+			if (app->enManager->props->checkpoint[0].checked == false)
 			{
-				app->audio->PlayFx(3);
+				app->audio->PlayFx(2);
 			}
-			app->enManager->props->collectible[i].collected = true;
+			app->enManager->props->checkpoint[0].checked = true;
 		}
-	}
-	// --------------------------------
-
-	// DRAW ---------------------------
-	// MAP
-	app->map->Draw();
-
-	// LIFEGETTERS DRAW
-	if (app->enManager->props->lifeGetter[0].active)
-	{
-		app->render->DrawTexture(app->enManager->props->lifeGetter[0].getterTex, app->enManager->props->lifeGetter[0].getterRect.x, app->enManager->props->lifeGetter[0].getterRect.y);
-	}
-	else if (app->enManager->props->lifeGetter[1].active)
-	{
-		app->render->DrawTexture(app->enManager->props->lifeGetter[1].getterTex, app->enManager->props->lifeGetter[1].getterRect.x, app->enManager->props->lifeGetter[1].getterRect.y);
-	}
-
-	// PLAYER
-	app->enManager->player->Draw();
-	// --------------------------------
-	
-	// ANIMATION ---------------------
-	//IDLE ANIMATION
-	if (strcmp(app->enManager->player->playerInfo.currentAnimation->name.GetString(), "idle") != 0 || strcmp(app->enManager->player->playerInfo.currentAnimation->name.GetString(), "idleLeft") != 0)
-	{
-		if (!app->enManager->player->playerInfo.currentAnimation->Finished())
+		else if (app->enManager->props->checkpoint[1].active && app->collision->CheckCollision(app->enManager->player->playerColider, app->enManager->props->checkpoint[1].rect))
 		{
-			app->enManager->player->playerInfo.currentAnimation->FinishAnimation();
-			app->enManager->player->UpdateAnimation("idle");
-			app->enManager->player->isMoving = false;
+			if (app->enManager->props->checkpoint[1].checked == false)
+			{
+				app->audio->PlayFx(2);
+			}
+			app->enManager->props->checkpoint[1].checked = true;
 		}
-	}
-	// -------------------------------
 
-	// DEBUG  ---------------------------
-	// GO TO LEVEL 1 - F1
-	if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
-	{
-		app->enManager->props->checkpoint[0].checked = false;
-		SetScene(LVL1);
-	}
-
-	// GO TO LEVEL 2 - F2
-	if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
-	{
-		app->enManager->props->checkpoint[1].checked = false;
-		SetScene(LVL2);
-	}
-
-	// RESTART ACTUAL LEVEL - F3
-	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
-	{
-		if (currentScreen == LVL1)
+		//LIFE GETTERS
+		for (int i = 0; i < 2; i++)
 		{
-			app->enManager->props->checkpoint[0].checked = false;
-			SetScene(LVL1);
+			if (app->enManager->props->lifeGetter[i].active && app->collision->CheckCollision(app->enManager->player->playerColider, app->enManager->props->lifeGetter[i].getterRect))
+			{
+				app->enManager->player->playerLife.lifes = app->enManager->props->lifeGetter[i].refill;
+			}
 		}
 
-		else if (currentScreen == LVL2)
+		//COLLECTIBLES
+		for (int i = 0; i < 4; i++)
 		{
-			app->enManager->props->checkpoint[1].checked = false;
-			SetScene(LVL2);
+			if (app->enManager->props->collectible[i].active && app->collision->CheckCollision(app->enManager->player->playerColider, app->enManager->props->collectible[i].itemRect))
+			{
+				if (app->enManager->props->collectible[i].collected == false)
+				{
+					app->audio->PlayFx(3);
+				}
+				app->enManager->props->collectible[i].collected = true;
+			}
 		}
-	}
+		// --------------------------------
 
-	// RESTART OTHER LEVEL - F4
-	if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN)
-	{
-		if (currentScreen == LVL1)
+		// DRAW ---------------------------
+		// MAP
+		app->map->Draw();
+
+		// LIFEGETTERS DRAW
+		if (app->enManager->props->lifeGetter[0].active)
 		{
-			app->enManager->props->checkpoint[1].checked = false;
-			SetScene(LVL2);
+			app->render->DrawTexture(app->enManager->props->lifeGetter[0].getterTex, app->enManager->props->lifeGetter[0].getterRect.x, app->enManager->props->lifeGetter[0].getterRect.y);
+		}
+		else if (app->enManager->props->lifeGetter[1].active)
+		{
+			app->render->DrawTexture(app->enManager->props->lifeGetter[1].getterTex, app->enManager->props->lifeGetter[1].getterRect.x, app->enManager->props->lifeGetter[1].getterRect.y);
 		}
 
-		else if (currentScreen == LVL2)
+		// PLAYER
+		app->enManager->player->Draw();
+		// --------------------------------
+
+		// ANIMATION ---------------------
+		//IDLE ANIMATION
+		if (strcmp(app->enManager->player->playerInfo.currentAnimation->name.GetString(), "idle") != 0 || strcmp(app->enManager->player->playerInfo.currentAnimation->name.GetString(), "idleLeft") != 0)
+		{
+			if (!app->enManager->player->playerInfo.currentAnimation->Finished())
+			{
+				app->enManager->player->playerInfo.currentAnimation->FinishAnimation();
+				app->enManager->player->UpdateAnimation("idle");
+				app->enManager->player->isMoving = false;
+			}
+		}
+		// -------------------------------
+
+		// DEBUG  ---------------------------
+		// GO TO LEVEL 1 - F1
+		if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
 		{
 			app->enManager->props->checkpoint[0].checked = false;
 			SetScene(LVL1);
 		}
-	}
 
-	// GO TO CHECKPOINT 1
-	if (app->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
-	{
-		app->enManager->props->checkpoint[0].checked = true;
-		SetScene(LVL1);
-	}
+		// GO TO LEVEL 2 - F2
+		if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
+		{
+			app->enManager->props->checkpoint[1].checked = false;
+			SetScene(LVL2);
+		}
 
-	// GO TO CHECKPOINT 2
-	if (app->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
-	{
-		app->enManager->props->checkpoint[1].checked = true;
-		SetScene(LVL2);
-	}
+		// RESTART ACTUAL LEVEL - F3
+		if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
+		{
+			if (currentScreen == LVL1)
+			{
+				app->enManager->props->checkpoint[0].checked = false;
+				SetScene(LVL1);
+			}
 
-	// HURT PLAYER
-	if (app->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
-	{
-		if (app->enManager->player->playerLife.lifes > 0) app->enManager->player->playerLife.lifes--;
-	}
+			else if (currentScreen == LVL2)
+			{
+				app->enManager->props->checkpoint[1].checked = false;
+				SetScene(LVL2);
+			}
+		}
 
-	// SAVE & LOAD
-	if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
-		app->SaveRequest("save_game.xml");
-	if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN)
-		app->LoadRequest("save_game.xml");
+		// RESTART OTHER LEVEL - F4
+		if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN)
+		{
+			if (currentScreen == LVL1)
+			{
+				app->enManager->props->checkpoint[1].checked = false;
+				SetScene(LVL2);
+			}
 
-	// VOLUME SETTING
-	if (app->input->GetKey(SDL_SCANCODE_KP_PLUS) == KEY_DOWN)
-		app->audio->SetVolume(0);
+			else if (currentScreen == LVL2)
+			{
+				app->enManager->props->checkpoint[0].checked = false;
+				SetScene(LVL1);
+			}
+		}
 
-	if (app->input->GetKey(SDL_SCANCODE_KP_MINUS) == KEY_DOWN)
-		app->audio->SetVolume(1);
+		// GO TO CHECKPOINT 1
+		if (app->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
+		{
+			app->enManager->props->checkpoint[0].checked = true;
+			SetScene(LVL1);
+		}
 
-	//LIFE, CP & COLLECTIBLES
-	//LIFES
+		// GO TO CHECKPOINT 2
+		if (app->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
+		{
+			app->enManager->props->checkpoint[1].checked = true;
+			SetScene(LVL2);
+		}
+
+		// HURT PLAYER
+		if (app->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
+		{
+			if (app->enManager->player->playerLife.lifes > 0) app->enManager->player->playerLife.lifes--;
+		}
+
+		// SAVE & LOAD
+		if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
+			app->SaveRequest("save_game.xml");
+		if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN)
+			app->LoadRequest("save_game.xml");
+
+		// VOLUME SETTING
+		if (app->input->GetKey(SDL_SCANCODE_KP_PLUS) == KEY_DOWN)
+			app->audio->SetVolume(0);
+
+		if (app->input->GetKey(SDL_SCANCODE_KP_MINUS) == KEY_DOWN)
+			app->audio->SetVolume(1);
+
+		// PAUSE GAME
+		if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
+		{
+			SetPauseMenu();
+			pause = true;
+		}
+
+		//LIFE, CP & COLLECTIBLES
+		//LIFES
 		if (app->enManager->player->playerLife.lifes == 3)
 		{
 			app->render->DrawTexture(app->enManager->player->playerLife.lifeTex, 30 - app->render->camera.x / 3, 3);
@@ -717,6 +741,11 @@ void Scene::UpdateLevels()
 				SetScene(LVL1);
 			}
 		}
+	}
+	else if (pause)
+	{
+		UpdatePauseMenu();
+	}
 }
 
 void Scene::UpdateDeadScreen()
@@ -736,7 +765,22 @@ void Scene::UpdateConfigMenu()
 
 void Scene::UpdatePauseMenu()
 {
+	app->render->DrawTexture(pauseMenu, 0, 0);
 
+	if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+	{
+		pause = false;
+	}
+
+	app->enManager->player->playerInfo.position = pausePlayerPosition;
+
+	for (int i = 0; i < app->enManager->entities.Count(); i++)
+	{
+		if (app->enManager->entities.At(i)->data->type == (EntityType)0)
+		{
+			app->enManager->entities.At(i)->data->pos = pauseEnemyPosition;
+		}
+	}
 }
 
 //CLICK EVENT
