@@ -54,6 +54,7 @@ Platformer game developed during the course 2020-21 for the subject of developme
 
  - Sebastián Delgado - [Github](https://github.com/Vinskky)
  - Martí Buxeda (Raxer Sound) - [Github](https://github.com/BooStarGamer)
+ - Adrià Belmonte - [Github](https://github.com/Croaco)
 
 
 ## License
