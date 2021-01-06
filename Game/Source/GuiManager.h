@@ -6,6 +6,8 @@
 
 #include "List.h"
 
+struct SDL_Texture;
+
 class GuiManager : public Module
 {
 public:
@@ -35,6 +37,8 @@ public:
 public:
 
 	List<GuiControl*> controls;
+
+	SDL_Texture* buttonSpritesheet;
 
 	float accumulatedTime = 0.0f;
 	float updateMsCycle = 0.0f;

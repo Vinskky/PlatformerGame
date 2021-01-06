@@ -1,4 +1,5 @@
 #include "GuiButton.h"
+#include "GuiManager.h"
 
 GuiButton::GuiButton(uint32 id, SDL_Rect bounds, const char* text) : GuiControl(GuiControlType::BUTTON, id)
 {
@@ -42,18 +43,17 @@ bool GuiButton::Update(float dt)
 
 bool GuiButton::Draw()
 {
-    // Draw the right button depending on state
     switch (state)
     {
-    case GuiControlState::DISABLED: app->render->DrawRectangle(bounds, 100, 100, 100);
+    case GuiControlState::DISABLED: app->render->DrawTexture(app->guiManager->buttonSpritesheet, bounds.x, bounds.y, &Disabled);
         break;
-    case GuiControlState::NORMAL: app->render->DrawRectangle(bounds, 0, 255, 0);
+    case GuiControlState::NORMAL: app->render->DrawTexture(app->guiManager->buttonSpritesheet, bounds.x, bounds.y, &Normal);
         break;
-    case GuiControlState::FOCUSED: app->render->DrawRectangle(bounds, 255, 255, 0);
+    case GuiControlState::FOCUSED: app->render->DrawTexture(app->guiManager->buttonSpritesheet, bounds.x, bounds.y, &Focused);
         break;
-    case GuiControlState::PRESSED: app->render->DrawRectangle(bounds, 0, 255, 255);
+    case GuiControlState::PRESSED: app->render->DrawTexture(app->guiManager->buttonSpritesheet, bounds.x, bounds.y, &Pressed);
         break;
-    case GuiControlState::SELECTED: app->render->DrawRectangle(bounds, 0, 255, 0);
+    case GuiControlState::SELECTED: app->render->DrawTexture(app->guiManager->buttonSpritesheet, bounds.x, bounds.y);
         break;
     default:
         break;

@@ -125,6 +125,9 @@ void Scene::SceneCleanUp()
 	if (app->enManager->props->markerTex != nullptr && app->enManager->props->markerTex != NULL)
 		app->tex->UnLoad(app->enManager->props->markerTex);
 
+	if (app->guiManager->buttonSpritesheet != nullptr && app->guiManager->buttonSpritesheet != NULL)
+		app->tex->UnLoad(app->guiManager->buttonSpritesheet);
+
 	//ENTITIES UNLOAD
 	if (app->enManager->props->lifeGetter[0].getterTex != nullptr && app->enManager->props->lifeGetter[0].getterTex != NULL)
 		app->tex->UnLoad(app->enManager->props->lifeGetter[0].getterTex);
@@ -196,18 +199,20 @@ void Scene::SetTitleScreen()
 
 void Scene::SetMainMenu()
 {
+	app->guiManager->buttonSpritesheet = app->tex->Load("Assets/textures/button_spritesheet.png");
+	
 	menuScene = app->tex->Load(sourceIntro.GetString());
 
 	//PLAY BUTTON
 	playButton = (GuiButton*)app->guiManager->CreateGuiControl((GuiControlType)0);
-	playButton->bounds = {0, 0, 30, 30};
+	playButton->bounds = {0, 0, 105, 27};
 	playButton->id = 1;
 	playButton->text = "PlayButton";
 	playButton->SetObserver(this);
 
 	//PLAY BUTTON
 	configButton = (GuiButton*)app->guiManager->CreateGuiControl((GuiControlType)0);
-	configButton->bounds = { 0, 30, 30, 30 };
+	configButton->bounds = { 0, 50, 105, 27 };
 	configButton->id = 2;
 	configButton->text = "ConfigButton";
 	configButton->SetObserver(this);
@@ -427,6 +432,8 @@ void Scene::SetLvl2()
 
 void Scene::SetDeadScreen()
 {
+	app->guiManager->buttonSpritesheet = app->tex->Load("Assets/textures/button_spritesheet.png");
+
 	app->render->camera.x = 0;
 
 	deathScene = app->tex->Load(sourceDeath.GetString());
@@ -436,12 +443,12 @@ void Scene::SetDeadScreen()
 
 void Scene::SetConfigMenu()
 {
-
+	app->guiManager->buttonSpritesheet = app->tex->Load("Assets/textures/button_spritesheet.png");
 }
 
 void Scene::SetPauseMenu()
 {
-
+	app->guiManager->buttonSpritesheet = app->tex->Load("Assets/textures/button_spritesheet.png");
 }
 
 //UPDATERS
