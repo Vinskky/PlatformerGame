@@ -50,6 +50,7 @@ private:
 	iPoint tempPlayerPosition;
 	iPoint pausePlayerPosition;
 	iPoint pauseEnemyPosition;
+	int pauseCamPositionX;
 
 public: //GUI
 	bool OnGuiMouseClickEvent(GuiControl* control);

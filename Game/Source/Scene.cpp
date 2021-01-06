@@ -469,6 +469,9 @@ void Scene::SetPauseMenu()
 		}
 	}
 
+	pauseCamPositionX = app->render->camera.x;
+	app->render->camera.x = 0;
+
 	app->guiManager->buttonSpritesheet = app->tex->Load("Assets/textures/button_spritesheet.png");
 
 	pauseMenu = app->tex->Load("Assets/textures/pause_menu.png");
@@ -857,6 +860,10 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 		{
 			SetScene(CONFIG_MENU);
 		}
+		else if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "ExitButton") == 0)
+		{
+			SetScene(CONFIG_MENU);
+		}
 
 		break;
 
@@ -866,6 +873,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 		{
 			pause = false;
 			currentScreen = previousScreen;
+			app->render->camera.x = pauseCamPositionX;
 		}
 		else if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "ConfigButton") == 0)
 		{
