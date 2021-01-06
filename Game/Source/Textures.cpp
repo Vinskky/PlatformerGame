@@ -99,7 +99,7 @@ bool Textures::UnLoad(SDL_Texture* texture)
 }
 
 // Translate a surface into a texture
-SDL_Texture* const Textures::LoadSurface(SDL_Surface* surface)
+SDL_Texture* const Textures::LoadSurface(SDL_Surface* surface, SDL_Texture* last)
 {
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(app->render->renderer, surface);
 
@@ -110,6 +110,11 @@ SDL_Texture* const Textures::LoadSurface(SDL_Surface* surface)
 	else
 	{
 		textures.Add(texture);
+	}
+	if (last != nullptr)
+	{
+		UnLoad(last);
+		last = nullptr;
 	}
 
 	return texture;

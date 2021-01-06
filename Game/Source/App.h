@@ -22,6 +22,7 @@ class EntityManager;
 class Collisions;
 class Transition;
 class GuiManager;
+class Fonts;
 
 class App
 {
@@ -100,6 +101,7 @@ public:
 	Transition* fade;
 	EntityManager* enManager;
 	GuiManager* guiManager;
+	Fonts* font;
 
 private:
 

@@ -7,8 +7,10 @@
 
 #include "Point.h"
 #include "SString.h"
+#include "Fonts.h"
 
 #include "SDL/include/SDL.h"
+
 
 enum class GuiControlType
 {
@@ -21,7 +23,9 @@ enum class GuiControlType
     DROPDOWNBOX,
     INPUTBOX,
     VALUEBOX,
-    SPINNER
+    SPINNER,
+    IMAGE,
+    TEXT
 };
 
 enum class GuiControlState
@@ -88,7 +92,7 @@ public:
     SDL_Texture* texture;   // Texture atlas reference
     SDL_Rect section;       // Texture atlas base section
 
-    //Font font;              // Text font
+    Fonts font;              // Text font
 
     Module* observer;        // Observer module (it should probably be an array/list)
 };

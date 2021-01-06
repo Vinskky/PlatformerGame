@@ -1,7 +1,6 @@
 #include "GuiManager.h"
-
 #include "GuiButton.h"
-
+#include "GuiString.h"
 
 
 GuiControl* GuiManager::CreateGuiControl(GuiControlType type)
@@ -13,6 +12,7 @@ GuiControl* GuiManager::CreateGuiControl(GuiControlType type)
 		// Create the corresponding GuiControl type
 		//case GuiControlType::BUTTON: control = new GuiButton(1234);  break;
 	case GuiControlType::BUTTON: control = new GuiButton(NULL, { 0, 0, 0, 0 }, "0"); break;
+	case GuiControlType::TEXT: control = new GuiString(); break;
 
 	default: break;
 	}

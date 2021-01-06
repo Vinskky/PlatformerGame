@@ -11,6 +11,7 @@
 #include "Collider.h"
 #include "Transition.h"
 #include "GuiManager.h"
+#include "Fonts.h"
 #include "Defs.h"
 #include "Log.h"
 
@@ -35,6 +36,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	collision = new Collisions();
 	fade = new Transition();
 	guiManager = new GuiManager();
+	font = new Fonts();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
@@ -49,6 +51,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(collision);
 	AddModule(fade);
 	AddModule(guiManager);
+	AddModule(font);
 
 
 	// Render last to swap buffer

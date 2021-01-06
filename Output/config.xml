@@ -8,6 +8,9 @@
   <renderer>
     <vsync value="true"/>
   </renderer>
+  <fonts>
+    <default_font file="Assets/Fonts/kenvector_future_thin.ttf" size="8"/>
+  </fonts>
   <window>
     <resolution width="1280" height="720" scale="3"/>
     <fullscreen value="false"/>
