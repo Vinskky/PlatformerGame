@@ -136,10 +136,10 @@ void Collisions::DebugDraw()
 
 	if (app->map->lvl1)
 	{
-		app->render->DrawRectangle(app->scene->checkpoint[0].rect, 180, 20, 20, alpha);
-		app->render->DrawRectangle(app->scene->collectible[0].itemRect, 180, 20, 20, alpha);
-		app->render->DrawRectangle(app->scene->collectible[1].itemRect, 180, 20, 20, alpha);
-		app->render->DrawRectangle(app->enManager->player->lifeGetter[0].getterRect, 70, 180, 20, alpha);
+		app->render->DrawRectangle(app->enManager->props->checkpoint[0].rect, 180, 20, 20, alpha);
+		app->render->DrawRectangle(app->enManager->props->collectible[0].itemRect, 180, 20, 20, alpha);
+		app->render->DrawRectangle(app->enManager->props->collectible[1].itemRect, 180, 20, 20, alpha);
+		app->render->DrawRectangle(app->enManager->props->lifeGetter[0].getterRect, 70, 180, 20, alpha);
 
 		ListItem<Entity*>* enemy = app->enManager->entities.start;
 		for (enemy; enemy != NULL; enemy = enemy->next)
@@ -150,10 +150,10 @@ void Collisions::DebugDraw()
 	}
 	else if (app->map->lvl2)
 	{
-		app->render->DrawRectangle(app->scene->checkpoint[1].rect, 180, 20, 20, alpha);
-		app->render->DrawRectangle(app->scene->collectible[2].itemRect, 180, 20, 20, alpha);
-		app->render->DrawRectangle(app->scene->collectible[3].itemRect, 180, 20, 20, alpha);
-		app->render->DrawRectangle(app->enManager->player->lifeGetter[1].getterRect, 70, 180, 20, alpha);
+		app->render->DrawRectangle(app->enManager->props->checkpoint[1].rect, 180, 20, 20, alpha);
+		app->render->DrawRectangle(app->enManager->props->collectible[2].itemRect, 180, 20, 20, alpha);
+		app->render->DrawRectangle(app->enManager->props->collectible[3].itemRect, 180, 20, 20, alpha);
+		app->render->DrawRectangle(app->enManager->props->lifeGetter[1].getterRect, 70, 180, 20, alpha);
 	}
 
 

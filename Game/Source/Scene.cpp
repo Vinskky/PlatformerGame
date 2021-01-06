@@ -34,39 +34,7 @@ bool Scene::Awake(pugi::xml_node& conf)
 	sourceTitle = conf.child("title").attribute("name").as_string();
 	sourceIntro = conf.child("intro").attribute("name").as_string();
 	sourceDeath = conf.child("death").attribute("name").as_string();
-
-	pugi::xml_node cp = conf.child("checkpoints");
-
-	//Set Checkpoints
-	checkpoint[0].source.Create(cp.attribute("name").as_string());
-	checkpoint[1].source.Create(cp.attribute("name").as_string());
-
-	checkpoint[0].rect.x = cp.child("cp1").attribute("x").as_int();
-	checkpoint[0].rect.y = cp.child("cp1").attribute("y").as_int();
-
-	checkpoint[1].rect.x = cp.child("cp2").attribute("x").as_int();
-	checkpoint[1].rect.y = cp.child("cp2").attribute("y").as_int();
-
-	cp = conf.child("collectible");
-
-	for (int i = 0; i < 4; i++)
-	{
-		collectible[i].source.Create(cp.attribute("name").as_string());
-		collectible[i].itemRect.w = cp.attribute("w").as_int();
-		collectible[i].itemRect.h = cp.attribute("h").as_int();
-	}
-	int i = 0;
-	for (pugi::xml_node collect = cp.child("collect"); collect; collect = collect.next_sibling("collect"))
-	{
-		collectible[i].itemRect.x = collect.attribute("x").as_int();
-		collectible[i].itemRect.y = collect.attribute("y").as_int();
-		collectible[i].active = collect.attribute("active").as_bool();
-		i++;
-	}
-
-	cp = conf.child("collectiblemark");
-
-	sourceMarker.Create(cp.attribute("name").as_string());
+	sceneConf = conf;
 
 	return ret;
 }
@@ -83,15 +51,6 @@ bool Scene::Start()
 
 		RELEASE_ARRAY(data);
 	}
-
-	for (int i = 0; i < 2; i++)
-	{
-		checkpoint[i].cp = (Cp)i;
-		checkpoint[i].checked = false;
-		checkpoint[i].rect.w = 22;
-		checkpoint[i].rect.h = 22;
-	}
-	checkpoint[0].active = true;
 
 	SetScene(TITLE_SCREEN);
 	
@@ -128,52 +87,12 @@ bool Scene::Update(float dt)
 
 bool Scene::PostUpdate()
 {
-	bool ret = true;
-
-	return ret;
+	return true;
 }
 
 bool Scene::CleanUp()
 {
-	LOG("Freeing scene");
-
 	return true;
-}
-
-void Scene::CollectibleMarkerLogic()
-{
-		for (int i = 0; i < 4; i++)
-		{
-			if (collectible[i].collected)
-			{
-				collectibleCount++;
-			}
-		}
-
-		if (collectibleCount == 1)
-		{
-			app->render->DrawTexture(markerTex, 426 - 30 - app->render->camera.x / 3, 3);
-		}
-		else if (collectibleCount == 2)
-		{
-			app->render->DrawTexture(markerTex, 426 - 30 - app->render->camera.x / 3, 3);
-			app->render->DrawTexture(markerTex, 426 - 50 - app->render->camera.x / 3, 3);
-		}
-		else if (collectibleCount == 3)
-		{
-			app->render->DrawTexture(markerTex, 426 - 30 - app->render->camera.x / 3, 3);
-			app->render->DrawTexture(markerTex, 426 - 50 - app->render->camera.x / 3, 3);
-			app->render->DrawTexture(markerTex, 426 - 70 - app->render->camera.x / 3, 3);
-		}
-		else if (collectibleCount == 4)
-		{
-			app->render->DrawTexture(markerTex, 426 - 30 - app->render->camera.x / 3, 3);
-			app->render->DrawTexture(markerTex, 426 - 50 - app->render->camera.x / 3, 3);
-			app->render->DrawTexture(markerTex, 426 - 70 - app->render->camera.x / 3, 3);
-			app->render->DrawTexture(markerTex, 426 - 90 - app->render->camera.x / 3, 3);
-		}
-
-		collectibleCount = 0;
 }
 
 
@@ -203,29 +122,29 @@ void Scene::SceneCleanUp()
 	if (app->enManager->player->playerLife.lifeTex != nullptr && app->enManager->player->playerLife.lifeTex != NULL)
 		app->tex->UnLoad(app->enManager->player->playerLife.lifeTex);
 
-	if (markerTex != nullptr && markerTex != NULL)
-		app->tex->UnLoad(markerTex);
+	if (app->enManager->props->markerTex != nullptr && app->enManager->props->markerTex != NULL)
+		app->tex->UnLoad(app->enManager->props->markerTex);
 
 	//ENTITIES UNLOAD
-	if (app->enManager->player->lifeGetter[0].getterTex != nullptr && app->enManager->player->lifeGetter[0].getterTex != NULL)
-		app->tex->UnLoad(app->enManager->player->lifeGetter[0].getterTex);
+	if (app->enManager->props->lifeGetter[0].getterTex != nullptr && app->enManager->props->lifeGetter[0].getterTex != NULL)
+		app->tex->UnLoad(app->enManager->props->lifeGetter[0].getterTex);
 
-	if (app->enManager->player->lifeGetter[1].getterTex != nullptr && app->enManager->player->lifeGetter[1].getterTex != NULL)
-		app->tex->UnLoad(app->enManager->player->lifeGetter[1].getterTex);
+	if (app->enManager->props->lifeGetter[1].getterTex != nullptr && app->enManager->props->lifeGetter[1].getterTex != NULL)
+		app->tex->UnLoad(app->enManager->props->lifeGetter[1].getterTex);
 
 	if (app->enManager->player->texture != nullptr && app->enManager->player->texture != NULL)
 		app->tex->UnLoad(app->enManager->player->texture);
 
-	if (checkpoint[0].checkpointTex != nullptr && checkpoint[0].checkpointTex != NULL)
-		app->tex->UnLoad(checkpoint[0].checkpointTex);
+	if (app->enManager->props->checkpoint[0].checkpointTex != nullptr && app->enManager->props->checkpoint[0].checkpointTex != NULL)
+		app->tex->UnLoad(app->enManager->props->checkpoint[0].checkpointTex);
 
-	if (checkpoint[1].checkpointTex != nullptr && checkpoint[1].checkpointTex != NULL)
-		app->tex->UnLoad(checkpoint[1].checkpointTex);
+	if (app->enManager->props->checkpoint[1].checkpointTex != nullptr && app->enManager->props->checkpoint[1].checkpointTex != NULL)
+		app->tex->UnLoad(app->enManager->props->checkpoint[1].checkpointTex);
 
 	for (int i = 0; i < 4; i++)
 	{
-		if (collectible[i].itemTex != nullptr && collectible[i].itemTex != NULL)
-			app->tex->UnLoad(collectible[i].itemTex);
+		if (app->enManager->props->collectible[i].itemTex != nullptr && app->enManager->props->collectible[i].itemTex != NULL)
+			app->tex->UnLoad(app->enManager->props->collectible[i].itemTex);
 	}
 
 	//OTHER CLEANUPS
@@ -299,8 +218,8 @@ void Scene::SetLvl1()
 {
 	app->enManager->player->texture = app->tex->Load(app->enManager->player->textPath.GetString());
 
-	bool checkpointState = checkpoint[0].checked;
-	bool coinState = collectible[0].collected;
+	bool checkpointState = app->enManager->props->checkpoint[0].checked;
+	bool coinState = app->enManager->props->collectible[0].collected;
 
 	//LEVEL  ------------
 	app->map->lvl1 = true;
@@ -311,34 +230,34 @@ void Scene::SetLvl1()
 
 		//ACTIVATE ------------
 		//ACTIVATE CHECKPOINTS
-		checkpoint[0].active = true;
-		checkpoint[1].active = false;
+		app->enManager->props->checkpoint[0].active = true;
+		app->enManager->props->checkpoint[1].active = false;
 
 		//ACTIVATE LIFE GETTERS
-		app->enManager->player->lifeGetter[0].active = true;
-		app->enManager->player->lifeGetter[1].active = false;
+		app->enManager->props->lifeGetter[0].active = true;
+		app->enManager->props->lifeGetter[1].active = false;
 
 		//ACTIVATE COLLECTIBLES
-		collectible[0].active = true;
-		collectible[1].active = true;
-		collectible[2].active = false;
-		collectible[3].active = false;
+		app->enManager->props->collectible[0].active = true;
+		app->enManager->props->collectible[1].active = true;
+		app->enManager->props->collectible[2].active = false;
+		app->enManager->props->collectible[3].active = false;
 
 		//RESTART ------------
 		//RESTART CHECKPOINTS
-		checkpoint[0].checked = false;
-		checkpoint[1].checked = false;
+		app->enManager->props->checkpoint[0].checked = false;
+		app->enManager->props->checkpoint[1].checked = false;
 
 		//RESTART COLLECTIBLES
-		for (int i = 0; i < 4; i++) collectible[i].collected = false;
+		for (int i = 0; i < 4; i++) app->enManager->props->collectible[i].collected = false;
 
 		//LOADS ------------
 		//PLAYER LIFES
 		app->enManager->player->playerLife.lifeTex = app->tex->Load(app->enManager->player->playerLife.source.GetString());
 
 		//LIFEGETTER
-		app->enManager->player->lifeGetter[0].getterTex = app->tex->Load(app->enManager->player->lifeGetter[0].source.GetString());
-		app->enManager->player->lifeGetter[1].getterTex = app->tex->Load(app->enManager->player->lifeGetter[1].source.GetString());
+		app->enManager->props->lifeGetter[0].getterTex = app->tex->Load(app->enManager->props->lifeGetter[0].source.GetString());
+		app->enManager->props->lifeGetter[1].getterTex = app->tex->Load(app->enManager->props->lifeGetter[1].source.GetString());
 
 		//SWORD COLLIDER ------------
 		app->enManager->player->swordCollider = { -20, 0, 13, 7 };
@@ -346,13 +265,13 @@ void Scene::SetLvl1()
 		// PLAYER INITIALITZATION ------------
 		if (checkpointState)
 		{
-			collectible[0].collected = coinState;
+			app->enManager->props->collectible[0].collected = coinState;
 
 			app->render->camera.x = -2364;
 
 			if (app->IsLoading() == false)
 			{
-				app->enManager->player->playerInfo.position = { app->scene->checkpoint[0].rect.x, app->scene->checkpoint[0].rect.y - 16 };
+				app->enManager->player->playerInfo.position = { app->enManager->props->checkpoint[0].rect.x, app->enManager->props->checkpoint[0].rect.y - 16 };
 			}
 		}
 		else
@@ -396,16 +315,16 @@ void Scene::SetLvl1()
 	//LOAD TEXTURES CP & COLLECTIBLES
 	//COLLECTABLE MARKER
 
-	markerTex = app->tex->Load(sourceMarker.GetString());
+	app->enManager->props->markerTex = app->tex->Load(app->enManager->props->sourceMarker.GetString());
 
 	//CP
-	checkpoint[0].checkpointTex = app->tex->Load(checkpoint[0].source.GetString());
-	checkpoint[1].checkpointTex = app->tex->Load(checkpoint[0].source.GetString());
+	app->enManager->props->checkpoint[0].checkpointTex = app->tex->Load(app->enManager->props->checkpoint[0].source.GetString());
+	app->enManager->props->checkpoint[1].checkpointTex = app->tex->Load(app->enManager->props->checkpoint[1].source.GetString());
 
 	//COLLECTIBLES
 	for (int i = 0; i < 4; i++)
 	{
-		collectible[i].itemTex = app->tex->Load(collectible[i].source.GetString());
+		app->enManager->props->collectible[i].itemTex = app->tex->Load(app->enManager->props->collectible[i].source.GetString());
 	}
 }
 
@@ -413,8 +332,8 @@ void Scene::SetLvl2()
 {
 	app->enManager->player->texture = app->tex->Load(app->enManager->player->textPath.GetString());
 
-	bool checkpointState = checkpoint[1].checked;
-	bool coinState = collectible[2].collected;
+	bool checkpointState = app->enManager->props->checkpoint[1].checked;
+	bool coinState = app->enManager->props->collectible[2].collected;
 
 	//LEVEL  ------------
 	app->map->lvl1 = false;
@@ -425,34 +344,34 @@ void Scene::SetLvl2()
 
 		//ACTIVATE ------------
 		//ACTIVATE CHECKPOINTS
-		checkpoint[0].active = false;
-		checkpoint[1].active = true;
+		app->enManager->props->checkpoint[0].active = false;
+		app->enManager->props->checkpoint[1].active = true;
 
 		//ACTIVATE LIFE GETTERS
-		app->enManager->player->lifeGetter[0].active = false;
-		app->enManager->player->lifeGetter[1].active = true;
+		app->enManager->props->lifeGetter[0].active = false;
+		app->enManager->props->lifeGetter[1].active = true;
 
 		//ACTIVATE COLLECTIBLES
-		collectible[0].active = false;
-		collectible[1].active = false;
-		collectible[2].active = true;
-		collectible[3].active = true;
+		app->enManager->props->collectible[0].active = false;
+		app->enManager->props->collectible[1].active = false;
+		app->enManager->props->collectible[2].active = true;
+		app->enManager->props->collectible[3].active = true;
 
 		//RESTART ------------
 		//RESTART CHECKPOINTS
-		checkpoint[0].checked = false;
-		checkpoint[1].checked = false;
+		app->enManager->props->checkpoint[0].checked = false;
+		app->enManager->props->checkpoint[1].checked = false;
 
 		//RESTART COLLECTIBLES
-		for (int i = 0; i < 4; i++) collectible[i].collected = false;
+		for (int i = 0; i < 4; i++) app->enManager->props->collectible[i].collected = false;
 
 		//LOADS ------------
 		//PLAYER LIFES
 		app->enManager->player->playerLife.lifeTex = app->tex->Load(app->enManager->player->playerLife.source.GetString());
 
 		//LIFEGETTER
-		app->enManager->player->lifeGetter[0].getterTex = app->tex->Load(app->enManager->player->lifeGetter[0].source.GetString());
-		app->enManager->player->lifeGetter[1].getterTex = app->tex->Load(app->enManager->player->lifeGetter[1].source.GetString());
+		app->enManager->props->lifeGetter[0].getterTex = app->tex->Load(app->enManager->props->lifeGetter[0].source.GetString());
+		app->enManager->props->lifeGetter[1].getterTex = app->tex->Load(app->enManager->props->lifeGetter[1].source.GetString());
 
 		//SWORD COLLIDER ------------
 		app->enManager->player->swordCollider = { -20, 0, 13, 7 };
@@ -460,13 +379,13 @@ void Scene::SetLvl2()
 		// PLAYER INITIALITZATION ------------
 		if (checkpointState)
 		{
-			collectible[2].collected = coinState;
+			app->enManager->props->collectible[2].collected = coinState;
 
 			app->render->camera.x = -765;
 
 			if (app->IsLoading() == false)
 			{
-				app->enManager->player->playerInfo.position = { checkpoint[1].rect.x, checkpoint[1].rect.y - 16 };
+				app->enManager->player->playerInfo.position = { app->enManager->props->checkpoint[1].rect.x, app->enManager->props->checkpoint[1].rect.y - 16 };
 			}
 		}
 		else
@@ -493,16 +412,16 @@ void Scene::SetLvl2()
 	//LOAD TEXTURES CP & COLLECTIBLES
 	//COLLECTABLE MARKER
 
-	markerTex = app->tex->Load(sourceMarker.GetString());
+	app->enManager->props->markerTex = app->tex->Load(app->enManager->props->sourceMarker.GetString());
 
 	//CP
-	checkpoint[0].checkpointTex = app->tex->Load(checkpoint[0].source.GetString());
-	checkpoint[1].checkpointTex = app->tex->Load(checkpoint[0].source.GetString());
+	app->enManager->props->checkpoint[0].checkpointTex = app->tex->Load(app->enManager->props->checkpoint[0].source.GetString());
+	app->enManager->props->checkpoint[1].checkpointTex = app->tex->Load(app->enManager->props->checkpoint[1].source.GetString());
 
 	//COLLECTIBLES
 	for (int i = 0; i < 4; i++)
 	{
-		collectible[i].itemTex = app->tex->Load(collectible[i].source.GetString());
+		app->enManager->props->collectible[i].itemTex = app->tex->Load(app->enManager->props->collectible[i].source.GetString());
 	}
 }
 
@@ -567,42 +486,42 @@ void Scene::UpdateMainMenu()
 void Scene::UpdateLevels()
 {
 	// LOGIC --------------------------
-	if (checkpoint[0].active && app->collision->CheckCollision(app->enManager->player->playerColider, checkpoint[0].rect))
+	if (app->enManager->props->checkpoint[0].active && app->collision->CheckCollision(app->enManager->player->playerColider, app->enManager->props->checkpoint[0].rect))
 	{
-		if (checkpoint[0].checked == false)
+		if (app->enManager->props->checkpoint[0].checked == false)
 		{
 			app->audio->PlayFx(2);
 		}
-		checkpoint[0].checked = true;
+		app->enManager->props->checkpoint[0].checked = true;
 	}
-	else if (checkpoint[1].active && app->collision->CheckCollision(app->enManager->player->playerColider, checkpoint[1].rect))
+	else if (app->enManager->props->checkpoint[1].active && app->collision->CheckCollision(app->enManager->player->playerColider, app->enManager->props->checkpoint[1].rect))
 	{
-		if (checkpoint[1].checked == false)
+		if (app->enManager->props->checkpoint[1].checked == false)
 		{
 			app->audio->PlayFx(2);
 		}
-		checkpoint[1].checked = true;
+		app->enManager->props->checkpoint[1].checked = true;
 	}
 
 	//LIFE GETTERS
 	for (int i = 0; i < 2; i++)
 	{
-		if (app->enManager->player->lifeGetter[i].active && app->collision->CheckCollision(app->enManager->player->playerColider, app->enManager->player->lifeGetter[i].getterRect))
+		if (app->enManager->props->lifeGetter[i].active && app->collision->CheckCollision(app->enManager->player->playerColider, app->enManager->props->lifeGetter[i].getterRect))
 		{
-			app->enManager->player->playerLife.lifes = app->enManager->player->lifeGetter[i].refill;
+			app->enManager->player->playerLife.lifes = app->enManager->props->lifeGetter[i].refill;
 		}
 	}
 
 	//COLLECTIBLES
 	for (int i = 0; i < 4; i++)
 	{
-		if (collectible[i].active && app->collision->CheckCollision(app->enManager->player->playerColider, collectible[i].itemRect))
+		if (app->enManager->props->collectible[i].active && app->collision->CheckCollision(app->enManager->player->playerColider, app->enManager->props->collectible[i].itemRect))
 		{
-			if (collectible[i].collected == false)
+			if (app->enManager->props->collectible[i].collected == false)
 			{
 				app->audio->PlayFx(3);
 			}
-			collectible[i].collected = true;
+			app->enManager->props->collectible[i].collected = true;
 		}
 	}
 	// --------------------------------
@@ -612,13 +531,13 @@ void Scene::UpdateLevels()
 	app->map->Draw();
 
 	// LIFEGETTERS DRAW
-	if (app->enManager->player->lifeGetter[0].active)
+	if (app->enManager->props->lifeGetter[0].active)
 	{
-		app->render->DrawTexture(app->enManager->player->lifeGetter[0].getterTex, app->enManager->player->lifeGetter[0].getterRect.x, app->enManager->player->lifeGetter[0].getterRect.y);
+		app->render->DrawTexture(app->enManager->props->lifeGetter[0].getterTex, app->enManager->props->lifeGetter[0].getterRect.x, app->enManager->props->lifeGetter[0].getterRect.y);
 	}
-	else if (app->enManager->player->lifeGetter[1].active)
+	else if (app->enManager->props->lifeGetter[1].active)
 	{
-		app->render->DrawTexture(app->enManager->player->lifeGetter[1].getterTex, app->enManager->player->lifeGetter[1].getterRect.x, app->enManager->player->lifeGetter[1].getterRect.y);
+		app->render->DrawTexture(app->enManager->props->lifeGetter[1].getterTex, app->enManager->props->lifeGetter[1].getterRect.x, app->enManager->props->lifeGetter[1].getterRect.y);
 	}
 
 	// PLAYER
@@ -642,14 +561,14 @@ void Scene::UpdateLevels()
 	// GO TO LEVEL 1 - F1
 	if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
 	{
-		checkpoint[0].checked = false;
+		app->enManager->props->checkpoint[0].checked = false;
 		SetScene(LVL1);
 	}
 
 	// GO TO LEVEL 2 - F2
 	if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
 	{
-		checkpoint[1].checked = false;
+		app->enManager->props->checkpoint[1].checked = false;
 		SetScene(LVL2);
 	}
 
@@ -658,13 +577,13 @@ void Scene::UpdateLevels()
 	{
 		if (currentScreen == LVL1)
 		{
-			checkpoint[0].checked = false;
+			app->enManager->props->checkpoint[0].checked = false;
 			SetScene(LVL1);
 		}
 
 		else if (currentScreen == LVL2)
 		{
-			checkpoint[1].checked = false;
+			app->enManager->props->checkpoint[1].checked = false;
 			SetScene(LVL2);
 		}
 	}
@@ -674,13 +593,13 @@ void Scene::UpdateLevels()
 	{
 		if (currentScreen == LVL1)
 		{
-			checkpoint[1].checked = false;
+			app->enManager->props->checkpoint[1].checked = false;
 			SetScene(LVL2);
 		}
 
 		else if (currentScreen == LVL2)
 		{
-			checkpoint[0].checked = false;
+			app->enManager->props->checkpoint[0].checked = false;
 			SetScene(LVL1);
 		}
 	}
@@ -688,14 +607,14 @@ void Scene::UpdateLevels()
 	// GO TO CHECKPOINT 1
 	if (app->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
-		checkpoint[0].checked = true;
+		app->enManager->props->checkpoint[0].checked = true;
 		SetScene(LVL1);
 	}
 
 	// GO TO CHECKPOINT 2
 	if (app->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
 	{
-		checkpoint[1].checked = true;
+		app->enManager->props->checkpoint[1].checked = true;
 		SetScene(LVL2);
 	}
 
@@ -746,48 +665,48 @@ void Scene::UpdateLevels()
 		const SDL_Rect sectionCPAnim1 = { 0, 0, 22, 22 };
 		const SDL_Rect sectionCPAnim2 = { 22, 0, 22, 22 };
 
-		if (checkpoint[0].active && !checkpoint[0].checked && currentScreen != DEAD_SCREEN)
+		if (app->enManager->props->checkpoint[0].active && !app->enManager->props->checkpoint[0].checked && currentScreen != DEAD_SCREEN)
 		{
-			app->render->DrawTexture(checkpoint[0].checkpointTex, checkpoint[0].rect.x, checkpoint[0].rect.y, &sectionCPAnim1);
+			app->render->DrawTexture(app->enManager->props->checkpoint[0].checkpointTex, app->enManager->props->checkpoint[0].rect.x, app->enManager->props->checkpoint[0].rect.y, &sectionCPAnim1);
 		}
-		else if (checkpoint[0].active && checkpoint[0].checked && currentScreen != DEAD_SCREEN)
+		else if (app->enManager->props->checkpoint[0].active && app->enManager->props->checkpoint[0].checked && currentScreen != DEAD_SCREEN)
 		{
-			app->render->DrawTexture(checkpoint[0].checkpointTex, checkpoint[0].rect.x, checkpoint[0].rect.y, &sectionCPAnim2);
+			app->render->DrawTexture(app->enManager->props->checkpoint[0].checkpointTex, app->enManager->props->checkpoint[0].rect.x, app->enManager->props->checkpoint[0].rect.y, &sectionCPAnim2);
 		}
 
-		if (checkpoint[1].active && !checkpoint[1].checked && currentScreen != DEAD_SCREEN)
+		if (app->enManager->props->checkpoint[1].active && !app->enManager->props->checkpoint[1].checked && currentScreen != DEAD_SCREEN)
 		{
-			app->render->DrawTexture(checkpoint[1].checkpointTex, checkpoint[1].rect.x, checkpoint[1].rect.y, &sectionCPAnim1);
+			app->render->DrawTexture(app->enManager->props->checkpoint[1].checkpointTex, app->enManager->props->checkpoint[1].rect.x, app->enManager->props->checkpoint[1].rect.y, &sectionCPAnim1);
 		}
-		else if (checkpoint[1].active && checkpoint[1].checked && currentScreen != DEAD_SCREEN)
+		else if (app->enManager->props->checkpoint[1].active && app->enManager->props->checkpoint[1].checked && currentScreen != DEAD_SCREEN)
 		{
-			app->render->DrawTexture(checkpoint[1].checkpointTex, checkpoint[1].rect.x, checkpoint[1].rect.y, &sectionCPAnim2);
+			app->render->DrawTexture(app->enManager->props->checkpoint[1].checkpointTex, app->enManager->props->checkpoint[1].rect.x, app->enManager->props->checkpoint[1].rect.y, &sectionCPAnim2);
 		}
 
 		//COLLECTIBLES
 		for (int i = 0; i < 4; i++)
 		{
-			if (collectible[i].active && !collectible[i].collected)
+			if (app->enManager->props->collectible[i].active && !app->enManager->props->collectible[i].collected)
 			{
-				app->render->DrawTexture(collectible[i].itemTex, collectible[i].itemRect.x, collectible[i].itemRect.y);
+				app->render->DrawTexture(app->enManager->props->collectible[i].itemTex, app->enManager->props->collectible[i].itemRect.x, app->enManager->props->collectible[i].itemRect.y);
 			}
 		}
 
 		//COLLECTIBLES MARKER LOGIC
-		CollectibleMarkerLogic();
+		app->enManager->props->CollectibleMarkerLogic();
 
 		//WIN
 		if (app->enManager->player->CheckWin() == true)
 		{
 			if (currentScreen == LVL1)
 			{
-				checkpoint[1].checked = false;
+				app->enManager->props->checkpoint[1].checked = false;
 				SetScene(LVL2);
 			}
 
 			else if (currentScreen == LVL2)
 			{
-				checkpoint[0].checked = false;
+				app->enManager->props->checkpoint[0].checked = false;
 				SetScene(LVL1);
 			}
 		}

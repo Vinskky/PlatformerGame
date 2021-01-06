@@ -35,9 +35,12 @@ public:
 	{
 		GROUND,
 		FLY,
-		PLAYER
+		PLAYER,
+		PROPS
 	};
+
 	Entity() {};
+
 	virtual ~Entity() {};
 
 	//Called before render is available

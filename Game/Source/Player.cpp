@@ -34,6 +34,7 @@ bool Player::Awake(pugi::xml_node& config)
 
 	bool ret = true;
 	textPath = config.child("source").attribute("name").as_string();
+	playerConf = config;
 	
 	pugi::xml_node frame;
 	for (pugi::xml_node anim = config.child("animations").first_child(); anim; anim = anim.next_sibling("animation"))
@@ -131,27 +132,8 @@ bool Player::Awake(pugi::xml_node& config)
 		}
 	}
 
-	//LOG("%s", config.child("life").attribute("source").as_string());
 	playerLife.source.Create(config.child("life").attribute("source").as_string());
 	playerLife.lifes = config.child("life").attribute("lifes").as_int();
-
-	//LIFEGETTER
-	for (int i = 0; i < 2; i++)
-	{
-		lifeGetter[i].source.Create(config.child("lifegetter").attribute("name").as_string());
-		lifeGetter[i].getterRect.w = config.child("lifegetter").attribute("w").as_int();
-		lifeGetter[i].getterRect.h = config.child("lifegetter").attribute("h").as_int();
-	}
-
-	int a = 0;
-	for (pugi::xml_node getter = config.child("lifegetter").child("getter"); getter; getter = getter.next_sibling("getter"))
-	{
-		lifeGetter[a].getterRect.x = getter.attribute("x").as_int();
-		lifeGetter[a].getterRect.y = getter.attribute("y").as_int();
-		lifeGetter[a].active = getter.attribute("active").as_bool();
-
-		a++;
-	}
 	
 	return ret;
 }
@@ -552,8 +534,6 @@ void Player::CheckHurt()
 	ListItem<Entity*>* enemy = app->enManager->entities.start;
 	for (enemy; enemy != NULL; enemy = enemy->next)
 	{
-		//SDL_Rect temp = { 110, 115, 7, 12 };
-		//app->render->DrawRectangle(temp, 25, 154, 86);
 		if (app->collision->CheckCollision(playerColider, enemy->data->collider))
 		{
 			if (!isInvincible)

@@ -5,6 +5,7 @@
 #include "List.h"
 #include "Entity.h"
 #include "Player.h"
+#include "Props.h"
 
 class EntityManager : public Module
 {
@@ -29,10 +30,12 @@ public:
 	void CreateEnemyFly(iPoint position);
 	void CreateEnemyNormal(iPoint position);
 	void CreatePlayer(pugi::xml_node&);
+	void CreateProps(pugi::xml_node&);
 
 	void DeleteEnemyFly(Entity* enemyFly);
 	void DeleteEnemyNormal(Entity* enemyGround);
 	void DeletePlayer(Entity* player);
+	void DeleteProps(Entity* props);
 
 	void DeleteAllEnemies();
 	void DeleteAll();
@@ -44,6 +47,8 @@ public:
 	List<Entity*> entities;
 
 	Player* player = nullptr;
+
+	Props* props = nullptr;
 };
 
 #endif // !_ENEMY_MANAGER_H_

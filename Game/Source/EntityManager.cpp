@@ -2,6 +2,7 @@
 #include "EnemyFly.h"
 #include "EnemyGround.h"
 #include "Player.h"
+#include "Props.h"
 #include "Entity.h"
 #include "App.h"
 #include "Log.h"
@@ -31,32 +32,22 @@ bool EntityManager::Awake(pugi::xml_node& config)
 {
 	bool ret = true;
 	CreatePlayer(config);
+
+	CreateProps(config);
 	
 	return ret;
 }
 
 bool EntityManager::Start()
 {
-	/*ListItem<SDL_Rect>* item = app->collision->initPosEnemyGround.start;
-	while (item != NULL)
-	{
-		iPoint pos = { item->data.x, item->data.y };
-		CreateEnemyNormal(pos);
-		item = item->next;
-	}
-
-	ListItem<SDL_Rect>* item2 = app->collision->initPosEnemyFly.start;
-	while (item2 != NULL)
-	{
-		iPoint pos = { item2->data.x, item2->data.y };
-		CreateEnemyFly(pos);
-		item2 = item2->next;
-	}*/
-
 	ListItem<Entity*>* item1 = entities.start;
 	while (item1 != NULL)
 	{
 		if (item1->data->type = Entity::EntityType::PLAYER)
+		{
+			item1->data->Start();
+		}
+		else if (item1->data->type = Entity::EntityType::PROPS)
 		{
 			item1->data->Start();
 		}
@@ -130,6 +121,13 @@ void EntityManager::CreatePlayer(pugi::xml_node& config)
 	entities.Add(player);
 }
 
+void EntityManager::CreateProps(pugi::xml_node& config)
+{
+	props = new Props();
+	props->Awake(config);
+	entities.Add(props);
+}
+
 void EntityManager::DeleteEnemyFly(Entity* enemyFly)
 {
 	int id = entities.Find(enemyFly);
@@ -184,6 +182,24 @@ void EntityManager::DeletePlayer(Entity* player)
 	}
 }
 
+void EntityManager::DeleteProps(Entity* props)
+{
+	int id = entities.Find(props);
+	int ds = 0;
+	ListItem<Entity*>* item = entities.start;
+	while (item != NULL)
+	{
+		if (id == ds)
+		{
+			item->data->~Entity();
+			entities.Del(item);
+			return;
+		}
+		ds++;
+		item = item->next;
+	}
+}
+
 void EntityManager::DeleteAllEnemies()
 {
 	ListItem<Entity*>* item = entities.start;
@@ -191,8 +207,11 @@ void EntityManager::DeleteAllEnemies()
 	{
 		if (item->data->type != Entity::EntityType::PLAYER)
 		{
-			item->data->~Entity();
-			entities.Del(item);
+			if (item->data->type != Entity::EntityType::PROPS)
+			{
+				item->data->~Entity();
+				entities.Del(item);
+			}
 		}
 		item = item->next;
 	}
@@ -209,8 +228,6 @@ void EntityManager::DeleteAll()
 	}
 	entities.Clear();
 }
-
-
 
 bool EntityManager::Load(pugi::xml_node& node)
 {

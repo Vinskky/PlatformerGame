@@ -18,32 +18,6 @@ enum Screens
 	PAUSE_MENU,
 };
 
-enum Cp
-{
-	CP1 = 0,
-	CP2,
-};
-
-struct Checkpoint
-{
-	SDL_Rect rect;
-	Cp cp;
-	bool checked;
-	bool active = false;
-	SDL_Texture* checkpointTex;
-	SString source;
-	int collectibles;
-};
-
-struct Collectible
-{
-	SString source;
-	SDL_Rect itemRect;
-	bool active;
-	bool collected = false;
-	SDL_Texture* itemTex;
-};
-
 class Scene : public Module
 {
 public:
@@ -114,14 +88,7 @@ public:
 	SDL_Texture* configMenu;
 	SDL_Texture* pauseMenu;
 
-public:
-	void CollectibleMarkerLogic();
-	Checkpoint checkpoint[2];
-	Collectible collectible[4];
-
-	SDL_Texture* markerTex;
-	SString sourceMarker;
-	int collectibleCount = 0;
+	pugi::xml_node sceneConf;
 };
 
 #endif // __SCENE_H__

@@ -22,6 +22,7 @@ enum Level
 	LVL_1 = 1,
 	LVL_2
 };
+
 struct PlayerData
 {
 	Animation* currentAnimation;
@@ -49,15 +50,6 @@ struct Life
 	SDL_Texture* lifeTex;
 	int lifes;
 	SString source;
-};
-
-struct LifeGetter
-{
-	SDL_Texture* getterTex;
-	SString source;
-	const int refill = 3;
-	SDL_Rect getterRect;
-	bool active;
 };
 
 class Player : public Entity 
@@ -114,8 +106,8 @@ public:
 	bool godMode = false;
 	bool isMoving;
 	bool isInvincible = false;
-	LifeGetter lifeGetter[2];
 	uint invincibleTimer;
+	pugi::xml_node playerConf;
 	SDL_Texture* texture;
 	SString textPath;
 	bool isDead = false;
