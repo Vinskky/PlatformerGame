@@ -5,6 +5,7 @@
 #include "GuiControl.h"
 
 struct SDL_Texture;
+class GuiButton;
 
 enum Screens
 {
@@ -75,7 +76,8 @@ private:
 	iPoint tempPlayerPosition;
 
 public: //GUI
-	GuiControl* button1;
+	GuiButton* playButton;
+	GuiButton* configButton;
 
 public:
 	//SCENE MANAGER

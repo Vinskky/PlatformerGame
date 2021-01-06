@@ -13,6 +13,7 @@
 #include "EntityManager.h"
 #include "GuiManager.h"
 #include "GuiControl.h"
+#include "GuiButton.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -279,10 +280,19 @@ void Scene::SetMainMenu()
 	menuScene = app->tex->Load(sourceIntro.GetString());
 
 	//PLAY BUTTON
-	button1 = app->guiManager->CreateGuiControl((GuiControlType)0);
-	button1->bounds = {0, 0, 30, 30};
-	button1->id = 1;
-	button1->text = "PlayButton";
+	playButton = (GuiButton*)app->guiManager->CreateGuiControl((GuiControlType)0);
+	playButton->bounds = {0, 0, 30, 30};
+	playButton->id = 1;
+	playButton->text = "PlayButton";
+	playButton->SetObserver(this);
+
+	//PLAY BUTTON
+	configButton = (GuiButton*)app->guiManager->CreateGuiControl((GuiControlType)0);
+	configButton->bounds = { 0, 30, 30, 30 };
+	configButton->id = 2;
+	configButton->text = "ConfigButton";
+	configButton->SetObserver(this);
+
 }
 
 void Scene::SetLvl1()
@@ -540,7 +550,13 @@ void Scene::UpdateMainMenu()
 {
 	app->render->DrawTexture(menuScene, 0, 0);
 
-	button1->Draw();
+	//UPDATE BUTTONS
+	playButton->Update(1.0f);
+	configButton->Update(1.0f);
+
+	//DRAW BUTTONS
+	playButton->Draw();
+	configButton->Draw();
 
 	if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
 	{
@@ -804,10 +820,16 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 	switch (currentScreen)
 	{
 	case MAIN_MENU:
-		if (control->type == (GuiControlType)0)
+
+		if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "PlayButton") == 0)
 		{
-			//DO SOMETHING
+			SetScene(LVL1);
 		}
+		else if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "ConfigButton") == 0)
+		{
+			SetScene(CONFIG_MENU);
+		}
+
 		break;
 	}
 

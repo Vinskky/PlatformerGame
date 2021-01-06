@@ -12,8 +12,9 @@ GuiControl* GuiManager::CreateGuiControl(GuiControlType type)
 	{
 		// Create the corresponding GuiControl type
 		//case GuiControlType::BUTTON: control = new GuiButton(1234);  break;
-	case GuiControlType::BUTTON: control = new GuiButton(NULL, {0, 0, 0, 0}, "0");
-		default: break;
+	case GuiControlType::BUTTON: control = new GuiButton(NULL, { 0, 0, 0, 0 }, "0"); break;
+
+	default: break;
 	}
 
 	// Created entities are added to the list
