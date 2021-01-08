@@ -15,6 +15,7 @@
 #include "GuiManager.h"
 #include "GuiControl.h"
 #include "GuiButton.h"
+#include "Fonts.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -226,6 +227,7 @@ void Scene::SetMainMenu()
 		continueButton->id = 2;
 		continueButton->text = "ContinueButton";
 		continueButton->SetObserver(this);
+		continueButton->state = GuiControlState::DISABLED;
 	}
 
 	//CONFIG BUTTON
@@ -766,7 +768,10 @@ void Scene::UpdateLevels()
 
 		// SAVE & LOAD
 		if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
+		{
 			app->SaveRequest("save_game.xml");
+			continueButton->state = GuiControlState::NORMAL;
+		}
 		if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN)
 			app->LoadRequest("save_game.xml");
 
@@ -938,7 +943,8 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 			}
 			else if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "ContinueButton") == 0)
 			{
-				//TODO CONTINUE
+				SetScene(LVL1);
+				app->LoadRequest("save_game.xml");
 			}
 			else if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "ConfigButton") == 0)
 			{

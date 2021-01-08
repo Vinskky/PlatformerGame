@@ -3,9 +3,11 @@
 
 #include "Module.h"
 #include "GuiControl.h"
+#include "Fonts.h"
 
 struct SDL_Texture;
 class GuiButton;
+class Fonts;
 
 enum Screens
 {
@@ -68,6 +70,10 @@ public: //GUI
 	GuiButton* mainMenuPauseButton;
 	//CONFIG
 	GuiButton* backToPauseButton;
+
+public: //TEXT
+
+	Fonts* playMainText;
 
 public:
 	//SCENE MANAGER

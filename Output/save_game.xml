@@ -1,17 +1,28 @@
 <?xml version="1.0"?>
 <saveState>
 	<renderer>
-		<camera x="0" y="0" />
+		<camera x="-702" y="0" />
 	</renderer>
+	<fonts />
+	<:anonymous />
 	<transition />
 	<collisions />
-	<player>
-		<position x="194" y="130" />
-		<collider x="194" y="130" />
+	<entities>
+		<position x="444" y="162" />
+		<collider x="444" y="162" />
 		<level value="5" />
 		<direction value="1" />
-	</player>
-	<criatures />
+		<cp>
+			<cp1 checked="false" />
+			<cp2 checked="true" />
+		</cp>
+		<collect>
+			<collect1 collected="false" />
+			<collect2 collected="false" />
+			<collect3 collected="true" />
+			<collect4 collected="false" />
+		</collect>
+	</entities>
 	<map />
 	<scene />
 	<pathfinding />

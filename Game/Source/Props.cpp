@@ -102,13 +102,34 @@ bool Props::CleanUp()
 	return true;
 }
 
-bool Props::Load(pugi::xml_node&)
+bool Props::Load(pugi::xml_node& load)
 {
+	pugi::xml_node cp = load.child("cp");
+	pugi::xml_node collect = load.child("collect");
+
+	checkpoint[0].checked = cp.child("cp1").attribute("checked").as_bool();
+	checkpoint[1].checked = cp.child("cp2").attribute("checked").as_bool();
+
+	collectible[0].collected = collect.child("collect1").attribute("collected").as_bool();
+	collectible[1].collected = collect.child("collect2").attribute("collected").as_bool();
+	collectible[2].collected = collect.child("collect3").attribute("collected").as_bool();
+	collectible[3].collected = collect.child("collect4").attribute("collected").as_bool();
+
 	return true;
 }
 
-bool Props::Save(pugi::xml_node&) const
+bool Props::Save(pugi::xml_node& save) const
 {
+	pugi::xml_node cp = save.append_child("cp");
+	pugi::xml_node collect = save.append_child("collect");
+
+	cp.append_child("cp1").append_attribute("checked").set_value(checkpoint[0].checked);
+	cp.append_child("cp2").append_attribute("checked").set_value(checkpoint[1].checked);
+
+	collect.append_child("collect1").append_attribute("collected").set_value(collectible[0].collected);
+	collect.append_child("collect2").append_attribute("collected").set_value(collectible[1].collected);
+	collect.append_child("collect3").append_attribute("collected").set_value(collectible[2].collected);
+	collect.append_child("collect4").append_attribute("collected").set_value(collectible[3].collected);
 	return true;
 }
 
