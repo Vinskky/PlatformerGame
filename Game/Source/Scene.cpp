@@ -896,7 +896,7 @@ void Scene::UpdateDeadScreen()
 
 	if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
 	{
-		SetScene(previousScreen);
+		SetScene(MAIN_MENU);
 	}
 }
 
