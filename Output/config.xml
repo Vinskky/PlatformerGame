@@ -29,7 +29,7 @@
   </audio>
   <scene>
     <title name="Assets/Textures/title_screen_platformer.png"/>
-    <intro name="Assets/Textures/intro_placeholder.png" />
+    <intro name="Assets/Textures/main_menu.png" />
     <death name="Assets/Textures/die_screen_platformer.png"/>
     <checkpoints name ="Assets/Textures/checkpoint_sheet.png">
       <cp1 x ="995" y = "138"/>

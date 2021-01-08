@@ -55,12 +55,19 @@ private:
 public: //GUI
 	bool OnGuiMouseClickEvent(GuiControl* control);
 
+	//MAIN MENU
 	GuiButton* playButton;
+	GuiButton* continueButton;
 	GuiButton* configButton;
+	GuiButton* creditsButton;
+	GuiButton* exitMainButton;
+
 	GuiButton* resumeButton;
 	GuiButton* configPauseButton;
 	GuiButton* exitPauseButton;
 	GuiButton* mainMenuPauseButton;
+	//CONFIG
+	GuiButton* backToPauseButton;
 
 public:
 	//SCENE MANAGER
@@ -87,6 +94,7 @@ public:
 
 	bool pause = false;
 	bool config = false;
+	bool credits = false;
 	bool exit = false;
 
 	SString sourceTitle;
@@ -98,6 +106,7 @@ public:
 	SDL_Texture* deathScene;
 	SDL_Texture* configMenu;
 	SDL_Texture* pauseMenu;
+	SDL_Texture* creditsMenu;
 
 	pugi::xml_node sceneConf;
 };

@@ -121,15 +121,15 @@ void Scene::SceneCleanUp()
 	if (pauseMenu != nullptr && pauseMenu != NULL)
 		app->tex->UnLoad(pauseMenu);
 
+	if (creditsMenu != nullptr && creditsMenu != NULL)
+		app->tex->UnLoad(creditsMenu);
+
 	//GUI UNLOAD
 	if (app->enManager->player->playerLife.lifeTex != nullptr && app->enManager->player->playerLife.lifeTex != NULL)
 		app->tex->UnLoad(app->enManager->player->playerLife.lifeTex);
 
 	if (app->enManager->props->markerTex != nullptr && app->enManager->props->markerTex != NULL)
 		app->tex->UnLoad(app->enManager->props->markerTex);
-
-	if (app->guiManager->buttonSpritesheet != nullptr && app->guiManager->buttonSpritesheet != NULL)
-		app->tex->UnLoad(app->guiManager->buttonSpritesheet);
 
 	//ENTITIES UNLOAD
 	if (app->enManager->props->lifeGetter[0].getterTex != nullptr && app->enManager->props->lifeGetter[0].getterTex != NULL)
@@ -201,29 +201,61 @@ void Scene::SetTitleScreen()
 }
 
 void Scene::SetMainMenu()
-{
-	app->guiManager->buttonSpritesheet = app->tex->Load("Assets/textures/button_spritesheet.png");
-	
+{	
 	menuScene = app->tex->Load(sourceIntro.GetString());
+
+	creditsMenu = app->tex->Load("Assets/textures/credits.png");
+
+	configMenu = app->tex->Load("Assets/textures/config_menu.png");
 
 	//PLAY BUTTON
 	if (playButton == NULL && playButton == nullptr)
 	{
 		playButton = (GuiButton*)app->guiManager->CreateGuiControl((GuiControlType)0);
-		playButton->bounds = { 0, 0, 105, 27 };
+		playButton->bounds = { 164, 122 - 60, 105, 27 };
 		playButton->id = 1;
 		playButton->text = "PlayButton";
 		playButton->SetObserver(this);
+	}
+
+	//CONTINUE BUTTON
+	if (continueButton == NULL && continueButton == nullptr)
+	{
+		continueButton = (GuiButton*)app->guiManager->CreateGuiControl((GuiControlType)0);
+		continueButton->bounds = { 164, 155 - 60, 105, 27 };
+		continueButton->id = 2;
+		continueButton->text = "ContinueButton";
+		continueButton->SetObserver(this);
 	}
 
 	//CONFIG BUTTON
 	if (configButton == NULL && configButton == nullptr)
 	{
 		configButton = (GuiButton*)app->guiManager->CreateGuiControl((GuiControlType)0);
-		configButton->bounds = { 0, 50, 105, 27 };
+		configButton->bounds = { 164, 188 - 60, 105, 27 };
 		configButton->id = 2;
 		configButton->text = "ConfigButton";
 		configButton->SetObserver(this);
+	}
+
+	//CREDITS BUTTON
+	if (creditsButton == NULL && creditsButton == nullptr)
+	{
+		creditsButton = (GuiButton*)app->guiManager->CreateGuiControl((GuiControlType)0);
+		creditsButton->bounds = { 164, 221 - 60, 105, 27 };
+		creditsButton->id = 2;
+		creditsButton->text = "CreditsButton";
+		creditsButton->SetObserver(this);
+	}
+
+	//EXITGAME BUTTON
+	if (exitMainButton == NULL && exitMainButton == nullptr)
+	{
+		exitMainButton = (GuiButton*)app->guiManager->CreateGuiControl((GuiControlType)0);
+		exitMainButton->bounds = { 164, 254 - 60, 105, 27 };
+		exitMainButton->id = 4;
+		exitMainButton->text = "ExitButton";
+		exitMainButton->SetObserver(this);
 	}
 
 }
@@ -441,7 +473,7 @@ void Scene::SetLvl2()
 
 void Scene::SetDeadScreen()
 {
-	app->guiManager->buttonSpritesheet = app->tex->Load("Assets/textures/button_spritesheet.png");
+	//app->guiManager->buttonSpritesheet = app->tex->Load("Assets/textures/button_spritesheet.png");
 
 	app->render->camera.x = 0;
 
@@ -452,7 +484,17 @@ void Scene::SetDeadScreen()
 
 void Scene::SetConfigMenu()
 {
-	app->guiManager->buttonSpritesheet = app->tex->Load("Assets/textures/button_spritesheet.png");
+	if (currentScreen != MAIN_MENU) configMenu = app->tex->Load("Assets/textures/config_menu.png");
+
+	//BACK TO PAUSE BUTTON
+	if (backToPauseButton == NULL && backToPauseButton == nullptr)
+	{
+		backToPauseButton = (GuiButton*)app->guiManager->CreateGuiControl((GuiControlType)0);
+		backToPauseButton->bounds = { 164, 200, 105, 27 };
+		backToPauseButton->id = 1;
+		backToPauseButton->text = "BackToButton";
+		backToPauseButton->SetObserver(this);
+	}
 }
 
 void Scene::SetPauseMenu()
@@ -472,8 +514,7 @@ void Scene::SetPauseMenu()
 	pauseCamPositionX = app->render->camera.x;
 	app->render->camera.x = 0;
 
-	app->guiManager->buttonSpritesheet = app->tex->Load("Assets/textures/button_spritesheet.png");
-
+	app->tex->UnLoad(pauseMenu);
 	pauseMenu = app->tex->Load("Assets/textures/pause_menu.png");
 
 	//RESUME BUTTON
@@ -540,19 +581,43 @@ void Scene::UpdateTitle()
 
 void Scene::UpdateMainMenu()
 {
-	app->render->DrawTexture(menuScene, 0, 0);
-
-	//UPDATE BUTTONS
-	playButton->Update(1.0f);
-	configButton->Update(1.0f);
-
-	//DRAW BUTTONS
-	playButton->Draw();
-	configButton->Draw();
-
-	if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+	if (!config)
 	{
-		SetScene(LVL1);
+		if (!credits)
+		{
+			app->render->DrawTexture(menuScene, 0, 0);
+			//UPDATE BUTTONS
+			playButton->Update(1.0f);
+			continueButton->Update(1.0f);
+			configButton->Update(1.0f);
+			creditsButton->Update(1.0f);
+			exitMainButton->Update(1.0f);
+			//DRAW BUTTONS
+			playButton->Draw();
+			continueButton->Draw();
+			configButton->Draw();
+			creditsButton->Draw();
+			exitMainButton->Draw();
+		}
+		else if (credits)
+		{
+			app->render->DrawTexture(configMenu, 0, 0);
+
+			//DRAW BUTTONS
+			playButton->Draw();
+			continueButton->Draw();
+			configButton->Draw();
+			creditsButton->Draw();
+			exitMainButton->Draw();
+
+			app->render->DrawTexture(creditsMenu, 142, 47);
+
+			if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) credits = false;
+		}
+	}
+	else if (config)
+	{
+		UpdateConfigMenu();
 	}
 }
 
@@ -811,37 +876,50 @@ void Scene::UpdateDeadScreen()
 
 void Scene::UpdateConfigMenu()
 {
+	app->render->DrawTexture(configMenu, 0, 0);
+
+	backToPauseButton->Update(0.0f);
+
+	backToPauseButton->Draw();
+
 
 }
 
 void Scene::UpdatePauseMenu()
 {
-	app->render->DrawTexture(pauseMenu, 0, 0);
-
-	if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+	if (!config)
 	{
-		pause = false;
-	}
+		app->render->DrawTexture(pauseMenu, 0, 0);
 
-	app->enManager->player->playerInfo.position = pausePlayerPosition;
-
-	for (int i = 0; i < app->enManager->entities.Count(); i++)
-	{
-		if (app->enManager->entities.At(i)->data->type == (EntityType)0)
+		if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
 		{
-			app->enManager->entities.At(i)->data->pos = pauseEnemyPosition;
+			pause = false;
 		}
+
+		app->enManager->player->playerInfo.position = pausePlayerPosition;
+
+		for (int i = 0; i < app->enManager->entities.Count(); i++)
+		{
+			if (app->enManager->entities.At(i)->data->type == (EntityType)0)
+			{
+				app->enManager->entities.At(i)->data->pos = pauseEnemyPosition;
+			}
+		}
+
+		resumeButton->Update(1.0f);
+		configPauseButton->Update(1.0f);
+		mainMenuPauseButton->Update(1.0f);
+		exitPauseButton->Update(1.0f);
+
+		resumeButton->Draw();
+		configPauseButton->Draw();
+		mainMenuPauseButton->Draw();
+		exitPauseButton->Draw();
 	}
-
-	resumeButton->Update(1.0f);
-	configPauseButton->Update(1.0f);
-	mainMenuPauseButton->Update(1.0f);
-	exitPauseButton->Update(1.0f);
-
-	resumeButton->Draw();
-	configPauseButton->Draw();
-	mainMenuPauseButton->Draw();
-	exitPauseButton->Draw();
+	else if (config)
+	{
+		UpdateConfigMenu();
+	}
 }
 
 //CLICK EVENT
@@ -852,42 +930,75 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 	{
 	case MAIN_MENU:
 
-		if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "PlayButton") == 0)
+		if (!config)
 		{
-			SetScene(LVL1);
+			if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "PlayButton") == 0)
+			{
+				SetScene(LVL1);
+			}
+			else if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "ContinueButton") == 0)
+			{
+				//TODO CONTINUE
+			}
+			else if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "ConfigButton") == 0)
+			{
+				SetConfigMenu();
+				config = true;
+			}
+			else if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "CreditsButton") == 0)
+			{
+				credits = true;
+			}
+			else if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "ExitButton") == 0)
+			{
+				exit = true;
+			}
 		}
-		else if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "ConfigButton") == 0)
+		else if (config)
 		{
-			SetScene(CONFIG_MENU);
-		}
-		else if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "ExitButton") == 0)
-		{
-			SetScene(CONFIG_MENU);
+			if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "BackToButton") == 0)
+			{
+				config = false;
+			}
 		}
 
 		break;
 
 	case PAUSE_MENU:
 
-		if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "ResumeButton") == 0)
+		if (!config)
 		{
-			pause = false;
-			currentScreen = previousScreen;
-			app->render->camera.x = pauseCamPositionX;
+			if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "ResumeButton") == 0)
+			{
+				pause = false;
+				currentScreen = previousScreen;
+				app->render->camera.x = pauseCamPositionX;
+			}
+			else if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "ConfigButton") == 0)
+			{
+				SetConfigMenu();
+				config = true;
+			}
+			else if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "BackToMainButton") == 0)
+			{
+				SetScene(MAIN_MENU);
+				pause = false;
+			}
+			else if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "ExitButton") == 0)
+			{
+				exit = true;
+			}
 		}
-		else if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "ConfigButton") == 0)
+		else if (config)
 		{
-			config = true;
+			if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "BackToButton") == 0)
+			{
+				config = false;
+				app->tex->UnLoad(configMenu);
+			}
 		}
-		else if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "BackToMainButton") == 0)
-		{
-			SetScene(MAIN_MENU);
-			pause = false;
-		}
-		else if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "ExitButton") == 0)
-		{
-			exit = true;
-		}
+
+		break;
 	}
 
 	return true;

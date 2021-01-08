@@ -1,6 +1,8 @@
 #include "GuiManager.h"
 #include "GuiButton.h"
 #include "GuiString.h"
+#include "App.h"
+#include "Textures.h"
 
 
 GuiControl* GuiManager::CreateGuiControl(GuiControlType type)
@@ -38,6 +40,7 @@ bool GuiManager::Awake(pugi::xml_node&)
 
 bool GuiManager::Start()
 {
+	buttonSpritesheet = app->tex->Load("Assets/textures/button_spritesheet.png");
 	return true;
 }
 
