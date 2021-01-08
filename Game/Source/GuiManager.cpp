@@ -1,5 +1,7 @@
 #include "GuiManager.h"
 #include "GuiButton.h"
+#include "GuiCheckBox.h"
+#include "GuiSlider.h"
 #include "GuiString.h"
 #include "App.h"
 #include "Textures.h"
@@ -14,6 +16,7 @@ GuiControl* GuiManager::CreateGuiControl(GuiControlType type)
 		// Create the corresponding GuiControl type
 		//case GuiControlType::BUTTON: control = new GuiButton(1234);  break;
 	case GuiControlType::BUTTON: control = new GuiButton(NULL, { 0, 0, 0, 0 }, "0"); break;
+	case GuiControlType::CHECKBOX: control = new GuiCheckBox(NULL, {0, 0, 0, 0}, "0"); break;
 	case GuiControlType::TEXT: control = new GuiString(); break;
 
 	default: break;
@@ -41,6 +44,7 @@ bool GuiManager::Awake(pugi::xml_node&)
 bool GuiManager::Start()
 {
 	buttonSpritesheet = app->tex->Load("Assets/textures/button_spritesheet.png");
+	checkBoxSpritesheet = app->tex->Load("Assets/textures/checkbox.png");
 	return true;
 }
 

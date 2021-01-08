@@ -1,4 +1,5 @@
 #include "GuiCheckBox.h"
+#include "GuiManager.h"
 
 GuiCheckBox::GuiCheckBox(uint32 id, SDL_Rect bounds, const char* text) : GuiControl(GuiControlType::CHECKBOX, id)
 {
@@ -50,16 +51,26 @@ bool GuiCheckBox::Draw()
     {
         if (checked) app->render->DrawRectangle(bounds, 100, 100, 100, 255 );
         else app->render->DrawRectangle(bounds, 100, 100, 100, 255 );
+
     } break;
     case GuiControlState::NORMAL: 
     {
-        if (checked) app->render->DrawRectangle(bounds, 0, 255, 0, 255 );
-        else app->render->DrawRectangle(bounds, 0, 255, 0, 255 );
+        if (checked) app->render->DrawTexture(app->guiManager->checkBoxSpritesheet, bounds.x, bounds.y, &NormalC);
+        else app->render->DrawTexture(app->guiManager->checkBoxSpritesheet, bounds.x, bounds.y, &Normal);
+
     } break;
-    case GuiControlState::FOCUSED: app->render->DrawRectangle(bounds, 255, 255, 0, 255 );
+    case GuiControlState::FOCUSED: 
+    {
+        if (checked) app->render->DrawTexture(app->guiManager->checkBoxSpritesheet, bounds.x, bounds.y, &FocusedC);
+        else app->render->DrawTexture(app->guiManager->checkBoxSpritesheet, bounds.x, bounds.y, &Focused);
         break;
-    case GuiControlState::PRESSED: app->render->DrawRectangle(bounds, 0, 255, 255, 255 );
+    }
+    case GuiControlState::PRESSED:
+    {
+        if (checked) app->render->DrawTexture(app->guiManager->checkBoxSpritesheet, bounds.x, bounds.y, &FocusedC);
+        else app->render->DrawTexture(app->guiManager->checkBoxSpritesheet, bounds.x, bounds.y, &Focused);
         break;
+    }
     case GuiControlState::SELECTED: app->render->DrawRectangle(bounds, 0, 255, 0, 255 );
         break;
     default:

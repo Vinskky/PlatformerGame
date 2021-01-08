@@ -15,6 +15,8 @@
 #include "GuiManager.h"
 #include "GuiControl.h"
 #include "GuiButton.h"
+#include "GuiCheckBox.h"
+#include "GuiSlider.h"
 #include "Fonts.h"
 
 #include "Defs.h"
@@ -497,6 +499,25 @@ void Scene::SetConfigMenu()
 		backToPauseButton->text = "BackToButton";
 		backToPauseButton->SetObserver(this);
 	}
+
+	//VSYNC CHECKBOX
+	if (vSyncCheckBox == NULL && vSyncCheckBox == nullptr)
+	{
+		vSyncCheckBox = (GuiCheckBox*)app->guiManager->CreateGuiControl((GuiControlType)GuiControlType::CHECKBOX);
+		vSyncCheckBox->bounds = { 70, 70, 25, 25 };
+		vSyncCheckBox->id = 1;
+		vSyncCheckBox->text = "VSyncCheckBox";
+		vSyncCheckBox->SetObserver(this);
+	}
+
+	if (fullScreenCheckBox == NULL && fullScreenCheckBox == nullptr)
+	{
+		fullScreenCheckBox = (GuiCheckBox*)app->guiManager->CreateGuiControl((GuiControlType)GuiControlType::CHECKBOX);
+		fullScreenCheckBox->bounds = { 70, 100, 25, 25 };
+		fullScreenCheckBox->id = 2;
+		fullScreenCheckBox->text = "FullScreenCheckBox";
+		fullScreenCheckBox->SetObserver(this);
+	}
 }
 
 void Scene::SetPauseMenu()
@@ -884,10 +905,13 @@ void Scene::UpdateConfigMenu()
 	app->render->DrawTexture(configMenu, 0, 0);
 
 	backToPauseButton->Update(0.0f);
-
 	backToPauseButton->Draw();
 
+	vSyncCheckBox->Update(0.0f);
+	vSyncCheckBox->Draw();
 
+	fullScreenCheckBox->Update(0.0f);
+	fullScreenCheckBox->Draw();
 }
 
 void Scene::UpdatePauseMenu()
@@ -962,9 +986,35 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 		}
 		else if (config)
 		{
-			if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "BackToButton") == 0)
+
+			if (control->type == (GuiControlType)GuiControlType::BUTTON)
 			{
-				config = false;
+				if (strcmp(control->text.GetString(), "BackToButton") == 0) config = false;
+			}
+			else if (control->type == (GuiControlType)GuiControlType::CHECKBOX)
+			{
+				if (strcmp(control->text.GetString(), "VSyncCheckBox") == 0)
+				{
+					if (vSyncCheckBox->GetCheckedState())
+					{
+						app->render->SetVSync(true);
+					}
+					else if (!vSyncCheckBox->GetCheckedState())
+					{
+						app->render->SetVSync(false);
+					}
+				}
+				else if (strcmp(control->text.GetString(), "FullScreenCheckBox") == 0)
+				{
+					if (fullScreenCheckBox->GetCheckedState()) 
+					{ 
+						app->win->SetWinFullScreen(true); 
+					}
+					else if (!fullScreenCheckBox->GetCheckedState())
+					{
+						app->win->SetWinFullScreen(false);
+					}
+				}
 			}
 		}
 
@@ -997,10 +1047,28 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 		}
 		else if (config)
 		{
-			if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "BackToButton") == 0)
+			if (control->type == (GuiControlType)GuiControlType::BUTTON)
 			{
-				config = false;
-				app->tex->UnLoad(configMenu);
+				if (strcmp(control->text.GetString(), "BackToButton") == 0) config = false;
+			}
+			else if (control->type == (GuiControlType)GuiControlType::CHECKBOX)
+			{
+				if (strcmp(control->text.GetString(), "VSyncCheckBox") == 0)
+				{
+					if (vSyncCheckBox->GetCheckedState()) int bla;
+					else if (!vSyncCheckBox->GetCheckedState()) int bla;
+				}
+				else if (strcmp(control->text.GetString(), "FullScreenCheckBox") == 0)
+				{
+					if (fullScreenCheckBox->GetCheckedState())
+					{
+						app->win->SetWinFullScreen(true);
+					}
+					else if (!fullScreenCheckBox->GetCheckedState())
+					{
+						app->win->SetWinFullScreen(false);
+					}
+				}
 			}
 		}
 

@@ -7,6 +7,7 @@
 
 struct SDL_Texture;
 class GuiButton;
+class GuiCheckBox;
 class Fonts;
 
 enum Screens
@@ -64,12 +65,16 @@ public: //GUI
 	GuiButton* creditsButton;
 	GuiButton* exitMainButton;
 
+	//PAUSE MENU
 	GuiButton* resumeButton;
 	GuiButton* configPauseButton;
 	GuiButton* exitPauseButton;
 	GuiButton* mainMenuPauseButton;
+
 	//CONFIG
 	GuiButton* backToPauseButton;
+	GuiCheckBox* vSyncCheckBox;
+	GuiCheckBox* fullScreenCheckBox;
 
 public: //TEXT
 

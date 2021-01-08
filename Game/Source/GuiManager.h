@@ -39,6 +39,7 @@ public:
 	List<GuiControl*> controls;
 
 	SDL_Texture* buttonSpritesheet;
+	SDL_Texture* checkBoxSpritesheet;
 
 	float accumulatedTime = 0.0f;
 	float updateMsCycle = 0.0f;

@@ -94,6 +94,18 @@ void Window::GetWindowSize(uint& width, uint& height) const
 	height = this->height;
 }
 
+void Window::SetWinFullScreen(bool full)
+{
+	if (full)
+	{
+		SDL_SetWindowFullscreen(app->win->window, SDL_WINDOW_FULLSCREEN);
+	}
+	else if (!full)
+	{
+		SDL_SetWindowFullscreen(app->win->window, 0);
+	}
+}
+
 uint Window::GetScale() const
 {
 	return scale;

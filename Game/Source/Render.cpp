@@ -115,6 +115,18 @@ void Render::SetBackgroundColor(SDL_Color color)
 	background = color;
 }
 
+void Render::SetVSync(bool vSync)
+{
+	if (vSync)
+	{
+		SDL_GL_SetSwapInterval(-1);
+	}
+	else if (!vSync)
+	{
+		SDL_GL_SetSwapInterval(0);
+	}
+}
+
 void Render::SetViewPort(const SDL_Rect& rect)
 {
 	SDL_RenderSetViewport(renderer, &rect);

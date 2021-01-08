@@ -17,11 +17,20 @@ public:
     bool Update(float dt);
     bool Draw();
 
+    bool GetCheckedState() const
+    {
+        return checked;
+    }
+
 private:
 
     // GuiCheckBox specific properties
     // Maybe some animation properties for state change?
     bool checked;
+    const SDL_Rect Normal = { 0, 0, 25, 25 };
+    const SDL_Rect NormalC = { 0, 25, 25, 25 };
+    const SDL_Rect Focused = { 0, 50, 25, 25 };
+    const SDL_Rect FocusedC = { 0, 76, 25, 25 };
 };
 
 #endif // __GUICHECKBOX_H__
