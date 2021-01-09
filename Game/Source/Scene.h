@@ -111,6 +111,9 @@ public: //GUI
 public: //TEXT
 
 	Fonts* playMainText;
+	
+	//UTILS
+	bool activeContinue;
 
 public:
 	//SCENE MANAGER

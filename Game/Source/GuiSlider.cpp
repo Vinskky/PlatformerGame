@@ -43,6 +43,7 @@ bool GuiSlider::Update(float dt)
                 {
                     slider.x = bounds.x;
                 }
+                UpdateValue();
             }
 
             if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_UP)
@@ -110,6 +111,18 @@ void GuiSlider::SetMaxValue(int val)
     maxValue = val;
 }
 
+void GuiSlider::SetValue(int val)
+{
+    value = val;
+}
+
+void GuiSlider::UpdateValue()
+{
+    percentValue = ((slider.x + (slider.w * 0.5)) - (bounds.x)) /
+        ((bounds.x + bounds.w) - bounds.x);
+    value = floor(percentValue * maxValue);
+}
+
 int GuiSlider::GetMinValue() const
 {
     return minValue;
@@ -120,7 +133,18 @@ int GuiSlider::GetMaxValue() const
     return maxValue;
 }
 
+int GuiSlider::GetValue() const
+{
+    return value;
+}
+
+float GuiSlider::GetPercentValue() const
+{
+    return percentValue *100;
+}
+
 void GuiSlider::SetSlider(SDL_Rect bounds)
 {
     slider = { (bounds.x + (int)(bounds.w * 0.5)) - (int)(bounds.h * 0.5), bounds.y, bounds.h,bounds.h };
+    UpdateValue();
 }

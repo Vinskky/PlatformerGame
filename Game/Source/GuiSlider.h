@@ -19,10 +19,13 @@ public:
 
     void SetMinValue(int val);
     void SetMaxValue(int val);
+    void SetValue(int val);
+    void UpdateValue();
 
     int GetMinValue()const;
     int GetMaxValue()const;
-
+    int GetValue()const;
+    float GetPercentValue()const;
     void SetSlider(SDL_Rect bounds);
 
 
@@ -32,6 +35,7 @@ private:
     // Maybe some animation properties for state change?
     SDL_Rect slider;
     int value;
+    float percentValue;
 
     int minValue;
     int maxValue;

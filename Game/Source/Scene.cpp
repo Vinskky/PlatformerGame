@@ -1,4 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
 
 #include "App.h"
 #include "Input.h"
@@ -59,6 +60,16 @@ bool Scene::Start()
 		if(app->map->CreateWalkabilityMap(&w, &h, &data)) app->pathfinding->SetMap(w, h, data);
 
 		RELEASE_ARRAY(data);
+	}
+
+	if (FILE* file = fopen("save_game.xml", "r"))
+	{
+		fclose(file);
+		activeContinue = true;
+	}
+	else
+	{
+		activeContinue = false;
 	}
 
 	SetScene(TITLE_SCREEN);
@@ -270,7 +281,14 @@ void Scene::SetMainMenu()
 		continueButton->id = 2;
 		continueButton->text = "ContinueButton";
 		continueButton->SetObserver(this);
-		continueButton->state = GuiControlState::DISABLED;
+		if (activeContinue == false)
+		{
+			continueButton->state = GuiControlState::DISABLED;
+		}
+		else
+		{
+			continueButton->state = GuiControlState::NORMAL;
+		}
 		strContinue = (GuiString*)app->guiManager->CreateGuiControl(GuiControlType::TEXT);
 		strContinue->bounds = { continueButton->bounds.x + 8, continueButton->bounds.y + 3, 105, 27 };
 		strContinue->SetString("Continue");
@@ -560,6 +578,9 @@ void Scene::SetConfigMenu()
 		strVolume = (GuiString*)app->guiManager->CreateGuiControl(GuiControlType::TEXT);
 		strVolume->bounds = { sliderVolume->bounds.x - 100, sliderVolume->bounds.y, 105, 27 };
 		strVolume->SetString("Volume");
+		strVolumeValue = (GuiString*)app->guiManager->CreateGuiControl(GuiControlType::TEXT);
+		strVolumeValue->bounds = { sliderVolume->bounds.x + 125, sliderVolume->bounds.y, 105, 27 };
+		
 	}
 	//SLIDER FX
 	if (sliderFX == NULL && sliderFX == nullptr)
@@ -574,6 +595,9 @@ void Scene::SetConfigMenu()
 		strFX = (GuiString*)app->guiManager->CreateGuiControl(GuiControlType::TEXT);
 		strFX->bounds = { sliderFX->bounds.x - 100, sliderFX->bounds.y, 105, 27 };
 		strFX->SetString("FX");
+		strFXValue = (GuiString*)app->guiManager->CreateGuiControl(GuiControlType::TEXT);
+		strFXValue->bounds = { sliderFX->bounds.x + 125, sliderFX->bounds.y, 105, 27 };
+
 	}
 	//BACK TO PAUSE BUTTON
 	if (backToPauseButton == NULL && backToPauseButton == nullptr)
@@ -1025,10 +1049,17 @@ void Scene::UpdateConfigMenu()
 	sliderVolume->Update(0.0f);
 	sliderVolume->Draw();
 	strVolume->Draw();
+	char volValue[64];
+	sprintf(volValue, "%d",(int) sliderVolume->GetPercentValue());
+	strVolumeValue->SetString(volValue);
+	strVolumeValue->Draw();
 
 	sliderFX->Update(0.0f);
 	sliderFX->Draw();
 	strFX->Draw();
+	sprintf(volValue, "%d", (int)sliderFX->GetPercentValue());
+	strFXValue->SetString(volValue);
+	strFXValue->Draw();
 
 	backToPauseButton->Update(0.0f);
 	backToPauseButton->Draw();
