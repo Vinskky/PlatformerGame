@@ -24,7 +24,6 @@ enum class GuiControlType
     INPUTBOX,
     VALUEBOX,
     SPINNER,
-    IMAGE,
     TEXT
 };
 

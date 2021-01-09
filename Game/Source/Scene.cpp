@@ -211,6 +211,14 @@ void Scene::SetMainMenu()
 
 	configMenu = app->tex->Load("Assets/textures/config_menu.png");
 
+	//TEST SLIDER
+	sliderTest = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER);
+	sliderTest->bounds = { 10,10,100,10 };
+	sliderTest->id = 666;
+	sliderTest->text = "test";
+	sliderTest->SetSlider(sliderTest->bounds);
+	sliderTest->SetObserver(this);
+
 	//PLAY BUTTON
 	if (playButton == NULL && playButton == nullptr)
 	{
@@ -610,12 +618,14 @@ void Scene::UpdateMainMenu()
 		{
 			app->render->DrawTexture(menuScene, 0, 0);
 			//UPDATE BUTTONS
+			sliderTest->Update(1.0f);
 			playButton->Update(1.0f);
 			continueButton->Update(1.0f);
 			configButton->Update(1.0f);
 			creditsButton->Update(1.0f);
 			exitMainButton->Update(1.0f);
 			//DRAW BUTTONS
+			sliderTest->Draw();
 			playButton->Draw();
 			continueButton->Draw();
 			configButton->Draw();

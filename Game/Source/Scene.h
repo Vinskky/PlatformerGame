@@ -8,6 +8,7 @@
 struct SDL_Texture;
 class GuiButton;
 class GuiCheckBox;
+class GuiSlider;
 class Fonts;
 
 enum Screens
@@ -57,6 +58,9 @@ private:
 
 public: //GUI
 	bool OnGuiMouseClickEvent(GuiControl* control);
+
+	//SLIDER TEST
+	GuiSlider* sliderTest;
 
 	//MAIN MENU
 	GuiButton* playButton;

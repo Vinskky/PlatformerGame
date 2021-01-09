@@ -17,6 +17,15 @@ public:
     bool Update(float dt);
     bool Draw();
 
+    void SetMinValue(int val);
+    void SetMaxValue(int val);
+
+    int GetMinValue()const;
+    int GetMaxValue()const;
+
+    void SetSlider(SDL_Rect bounds);
+
+
 private:
 
     // GuiSlider specific properties

@@ -17,6 +17,7 @@ GuiControl* GuiManager::CreateGuiControl(GuiControlType type)
 		//case GuiControlType::BUTTON: control = new GuiButton(1234);  break;
 	case GuiControlType::BUTTON: control = new GuiButton(NULL, { 0, 0, 0, 0 }, "0"); break;
 	case GuiControlType::CHECKBOX: control = new GuiCheckBox(NULL, {0, 0, 0, 0}, "0"); break;
+	case GuiControlType::SLIDER: control = new GuiSlider(NULL, {0, 0, 0, 0}, "0"); break;
 	case GuiControlType::TEXT: control = new GuiString(); break;
 
 	default: break;
