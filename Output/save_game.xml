@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<saveState>
+	<renderer>
+		<camera x="0" y="0" />
+	</renderer>
+	<fonts />
+	<:anonymous />
+	<transition />
+	<collisions />
+	<entities>
+		<position x="96" y="114" />
+		<collider x="96" y="114" />
+		<level value="4" />
+		<direction value="1" />
+		<timer currentTime="5886" />
+		<cp>
+			<cp1 checked="false" />
+			<cp2 checked="false" />
+		</cp>
+		<collect>
+			<collect1 collected="false" />
+			<collect2 collected="false" />
+			<collect3 collected="false" />
+			<collect4 collected="false" />
+		</collect>
+		<enemyNormal>
+			<position x="256" y="144" />
+			<enemyCollider x="256" y="144" />
+		</enemyNormal>
+		<enemyFly>
+			<position x="864" y="112" />
+			<enemyCollider x="864" y="112" />
+		</enemyFly>
+	</entities>
+	<map />
+	<scene />
+	<pathfinding />
+	<audio>
+		<volume value="64" />
+	</audio>
+	<textures />
+	<window />
+	<input />
+</saveState>

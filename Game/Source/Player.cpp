@@ -328,7 +328,7 @@ bool Player::Load(pugi::xml_node& load)
 	playerColider.x = load.child("collider").attribute("x").as_int();
 	playerColider.y = load.child("collider").attribute("y").as_int();
 	playerInfo.currentDir = (Direction)load.child("direction").attribute("value").as_int();
-
+	app->scene->count = load.child("timer").attribute("currentTime").as_int();
 	return true;
 }
 
@@ -338,6 +338,7 @@ bool Player::Save(pugi::xml_node& saveNode) const
 	pugi::xml_node rect = saveNode.append_child("collider");
 	pugi::xml_node currentLvl = saveNode.append_child("level");
 	pugi::xml_node currentDir = saveNode.append_child("direction");
+	pugi::xml_node timer = saveNode.append_child("timer");
 
 	position.append_attribute("x").set_value(playerInfo.position.x);
 	position.append_attribute("y").set_value(playerInfo.position.y);
@@ -347,6 +348,8 @@ bool Player::Save(pugi::xml_node& saveNode) const
 
 	currentLvl.append_attribute("value").set_value(app->scene->currentScreen);
 	currentDir.append_attribute("value").set_value(playerInfo.currentDir);
+
+	timer.append_attribute("currentTime").set_value(app->scene->count);
 
 	return true;
 }
