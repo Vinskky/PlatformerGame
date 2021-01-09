@@ -19,7 +19,7 @@ GuiString::~GuiString()
 
 void GuiString::Draw()
 {
-	app->render->DrawTexture(textTexture, bounds.x - app->render->camera.x, bounds.y - app->render->camera.y);
+	app->render->DrawTexture(textTexture, bounds.x - app->render->camera.x / 3, bounds.y - app->render->camera.y);
 }
 
 void GuiString::SetString(char* newText)

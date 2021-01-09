@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include "App.h"
 #include "Input.h"
 #include "Textures.h"
@@ -100,6 +102,34 @@ bool Scene::PostUpdate()
 bool Scene::CleanUp()
 {
 	return true;
+}
+
+// TIMER
+
+void Scene::UpdateTimer()
+{
+	int prevTime = count;
+
+	if (count > 0)
+	{
+		count--;
+		time = count / 60;
+		if (currentScreen == PAUSE_MENU || app->enManager->player->godMode) count = prevTime;
+
+		sprintf(timerText, "%d", time);
+		strTimer->SetString(timerText);
+	}
+	else if (count <= 0)
+	{
+		ResetTimer();
+		SetScene(DEAD_SCREEN);
+	}
+}
+
+void Scene::ResetTimer()
+{
+	count = LEVEL_TIME;
+	time = count / 60;
 }
 
 
@@ -212,6 +242,12 @@ void Scene::SetMainMenu()
 
 	configMenu = app->tex->Load("Assets/textures/config_menu.png");
 
+	if (strTimer == NULL && strTimer == nullptr)
+	{
+		strTimer = (GuiString*)app->guiManager->CreateGuiControl(GuiControlType::TEXT);
+		strTimer->bounds = { 220,8, 105, 27 };
+	}
+
 	//PLAY BUTTON
 	if (playButton == NULL && playButton == nullptr)
 	{
@@ -283,6 +319,8 @@ void Scene::SetMainMenu()
 
 void Scene::SetLvl1()
 {
+	ResetTimer();
+
 	app->enManager->player->texture = app->tex->Load(app->enManager->player->textPath.GetString());
 
 	bool checkpointState = app->enManager->props->checkpoint[0].checked;
@@ -397,6 +435,8 @@ void Scene::SetLvl1()
 
 void Scene::SetLvl2()
 {
+	ResetTimer();
+
 	app->enManager->player->texture = app->tex->Load(app->enManager->player->textPath.GetString());
 
 	bool checkpointState = app->enManager->props->checkpoint[1].checked;
@@ -721,6 +761,8 @@ void Scene::UpdateLevels()
 {
 	if (!pause)
 	{
+		UpdateTimer();
+
 		// LOGIC --------------------------
 		if (app->enManager->props->checkpoint[0].active && app->collision->CheckCollision(app->enManager->player->playerColider, app->enManager->props->checkpoint[0].rect))
 		{
@@ -778,6 +820,8 @@ void Scene::UpdateLevels()
 
 		// PLAYER
 		app->enManager->player->Draw();
+		
+		strTimer->Draw();
 		// --------------------------------
 
 		// ANIMATION ---------------------

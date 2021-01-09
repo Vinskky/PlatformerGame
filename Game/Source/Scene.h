@@ -5,6 +5,8 @@
 #include "GuiControl.h"
 #include "Fonts.h"
 
+#define LEVEL_TIME 6000 //18000
+
 struct SDL_Texture;
 class GuiButton;
 class GuiCheckBox;
@@ -50,12 +52,19 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+public:
+	void UpdateTimer();
+	void ResetTimer();
+	int count = LEVEL_TIME;
+	int time = count / 60;
+
 private:
 	int timer = 0;
 	iPoint tempPlayerPosition;
 	iPoint pausePlayerPosition;
 	iPoint pauseEnemyPosition;
 	int pauseCamPositionX;
+	char timerText[5];
 
 public: //GUI
 	bool OnGuiMouseClickEvent(GuiControl* control);
@@ -71,6 +80,7 @@ public: //GUI
 	GuiString* strCredits;
 	GuiButton* exitMainButton;
 	GuiString* strExit;
+	GuiString* strTimer;
 
 	//PAUSE MENU
 	GuiButton* resumeButton;
