@@ -108,6 +108,10 @@ public: //GUI
 	GuiCheckBox* fullScreenCheckBox;
 	GuiString* strFullScreen;
 
+	//CREDITS
+	GuiButton* backCreditsButton;
+	GuiString* strBackCredits;
+
 public: //TEXT
 
 	Fonts* playMainText;

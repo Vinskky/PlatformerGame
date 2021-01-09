@@ -762,17 +762,25 @@ void Scene::UpdateMainMenu()
 		else if (credits)
 		{
 			app->render->DrawTexture(configMenu, 0, 0);
+			app->render->DrawTexture(creditsMenu, 107, 0);
 
-			//DRAW BUTTONS
-			/*playButton->Draw();
-			continueButton->Draw();
-			configButton->Draw();
-			creditsButton->Draw();
-			exitMainButton->Draw();*/
+			//PLAY BUTTON
+			if (backCreditsButton == NULL && backCreditsButton == nullptr)
+			{
+				backCreditsButton = (GuiButton*)app->guiManager->CreateGuiControl((GuiControlType)0);
+				backCreditsButton->bounds = { 168, 200, 105, 27 };
+				backCreditsButton->id = 1;
+				backCreditsButton->text = "CreditsReturnButton";
+				backCreditsButton->SetObserver(this);
 
-			app->render->DrawTexture(creditsMenu, 142, 47);
+				strBackCredits = (GuiString*)app->guiManager->CreateGuiControl(GuiControlType::TEXT);
+				strBackCredits->bounds = { backCreditsButton->bounds.x + 27, backCreditsButton->bounds.y + 3, 105, 27 };
+				strBackCredits->SetString("BACK");
+			}
 
-			if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) credits = false;
+			backCreditsButton->Update(0.0f);
+			backCreditsButton->Draw();
+			strBackCredits->Draw();
 		}
 	}
 	else if (config)
@@ -936,13 +944,6 @@ void Scene::UpdateLevels()
 		}
 		if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN)
 			app->LoadRequest("save_game.xml");
-
-		// VOLUME SETTING
-		if (app->input->GetKey(SDL_SCANCODE_KP_PLUS) == KEY_DOWN)
-			app->audio->SetVolume(0);
-
-		if (app->input->GetKey(SDL_SCANCODE_KP_MINUS) == KEY_DOWN)
-			app->audio->SetVolume(1);
 
 		// PAUSE GAME
 		if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
@@ -1147,6 +1148,10 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 			{
 				exit = true;
 			}
+			else if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "CreditsReturnButton") == 0)
+			{
+				credits = false;
+			}
 		}
 		else if (config)
 		{
@@ -1180,6 +1185,17 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 					}
 				}
 			}
+			else if (control->type == GuiControlType::SLIDER)
+			{
+				if (strcmp(control->text.GetString(), "VolumeSlider") == 0)
+				{
+					app->audio->SetVolume(sliderVolume->GetValue());
+				}
+				else if (strcmp(control->text.GetString(), "FXSlider") == 0)
+				{
+					app->audio->SetFXVolume(sliderFX->GetValue());
+				}
+			}
 		}
 
 		break;
@@ -1211,6 +1227,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 		}
 		else if (config)
 		{
+
 			if (control->type == (GuiControlType)GuiControlType::BUTTON)
 			{
 				if (strcmp(control->text.GetString(), "BackToButton") == 0) config = false;
@@ -1219,8 +1236,14 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 			{
 				if (strcmp(control->text.GetString(), "VSyncCheckBox") == 0)
 				{
-					if (vSyncCheckBox->GetCheckedState()) int bla;
-					else if (!vSyncCheckBox->GetCheckedState()) int bla;
+					if (vSyncCheckBox->GetCheckedState())
+					{
+						app->render->SetVSync(true);
+					}
+					else if (!vSyncCheckBox->GetCheckedState())
+					{
+						app->render->SetVSync(false);
+					}
 				}
 				else if (strcmp(control->text.GetString(), "FullScreenCheckBox") == 0)
 				{
@@ -1232,6 +1255,17 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 					{
 						app->win->SetWinFullScreen(false);
 					}
+				}
+			}
+			else if (control->type == GuiControlType::SLIDER)
+			{
+				if (strcmp(control->text.GetString(), "VolumeSlider") == 0)
+				{
+					app->audio->SetVolume(sliderVolume->GetValue());
+				}
+				else if (strcmp(control->text.GetString(), "FXSlider") == 0)
+				{
+					app->audio->SetFXVolume(sliderFX->GetValue());
 				}
 			}
 		}

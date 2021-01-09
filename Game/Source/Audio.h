@@ -38,6 +38,7 @@ public:
 	bool PlayFx(unsigned int fx, int repeat = 0);
 
 	void SetVolume(uint value);
+	void SetFXVolume(uint value);
 
 	//Load & Save for volume 
 	bool Load(pugi::xml_node&);

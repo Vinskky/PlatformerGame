@@ -214,35 +214,27 @@ bool Audio::PlayFx(unsigned int id, int repeat)
 
 void Audio::SetVolume(uint value)
 {
-	if (value == 0)
+	if (value < 5)
 	{
-		//increase volume
-		volume += 10;
-		fxVolume += 10;
-		if (volume > 128)
-		{
-			volume = 128;
-			fxVolume = 128;
-			LOG("Max. volume reached!");
-		}
-	}
-	else if (value == 1)
-	{
-		//increase volume
-		volume -= 10;
-		fxVolume -= 10;
-		if (volume < 0)
-		{
-			volume = 0;
-			fxVolume = 0;
-			LOG("Min. volume reached!");
-		}
+		volume = 0;
 	}
 	else
 	{
-		LOG("Error trying to increase/decrease volume. check parameter value");
+		volume = value;
 	}
+}
 
+void Audio::SetFXVolume(uint value)
+{
+	if (value < 5)
+	{
+		fxVolume = 0;
+	}
+	else
+	{
+		fxVolume = value;
+	}
+	
 }
 
 bool Audio::Load(pugi::xml_node &loadNode)
