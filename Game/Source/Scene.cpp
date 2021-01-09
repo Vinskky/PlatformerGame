@@ -13,6 +13,7 @@
 #include "EntityManager.h"
 #include "Entity.h"
 #include "GuiManager.h"
+#include "GuiString.h"
 #include "GuiControl.h"
 #include "GuiButton.h"
 #include "GuiCheckBox.h"
@@ -212,12 +213,12 @@ void Scene::SetMainMenu()
 	configMenu = app->tex->Load("Assets/textures/config_menu.png");
 
 	//TEST SLIDER
-	sliderTest = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER);
+	/*sliderTest = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER);
 	sliderTest->bounds = { 10,10,100,10 };
 	sliderTest->id = 666;
 	sliderTest->text = "test";
 	sliderTest->SetSlider(sliderTest->bounds);
-	sliderTest->SetObserver(this);
+	sliderTest->SetObserver(this);*/
 
 	//PLAY BUTTON
 	if (playButton == NULL && playButton == nullptr)
@@ -227,6 +228,10 @@ void Scene::SetMainMenu()
 		playButton->id = 1;
 		playButton->text = "PlayButton";
 		playButton->SetObserver(this);
+
+		strPlay = (GuiString*)app->guiManager->CreateGuiControl(GuiControlType::TEXT);
+		strPlay->bounds = { playButton->bounds.x + 27, playButton->bounds.y + 3, 105, 27 };
+		strPlay->SetString("Play");
 	}
 
 	//CONTINUE BUTTON
@@ -238,6 +243,9 @@ void Scene::SetMainMenu()
 		continueButton->text = "ContinueButton";
 		continueButton->SetObserver(this);
 		continueButton->state = GuiControlState::DISABLED;
+		strContinue = (GuiString*)app->guiManager->CreateGuiControl(GuiControlType::TEXT);
+		strContinue->bounds = { continueButton->bounds.x + 8, continueButton->bounds.y + 3, 105, 27 };
+		strContinue->SetString("Continue");
 	}
 
 	//CONFIG BUTTON
@@ -248,6 +256,9 @@ void Scene::SetMainMenu()
 		configButton->id = 2;
 		configButton->text = "ConfigButton";
 		configButton->SetObserver(this);
+		strConfig = (GuiString*)app->guiManager->CreateGuiControl(GuiControlType::TEXT);
+		strConfig->bounds = { configButton->bounds.x + 10, configButton->bounds.y + 3, 105, 27 };
+		strConfig->SetString("Settings");
 	}
 
 	//CREDITS BUTTON
@@ -258,6 +269,9 @@ void Scene::SetMainMenu()
 		creditsButton->id = 2;
 		creditsButton->text = "CreditsButton";
 		creditsButton->SetObserver(this);
+		strCredits = (GuiString*)app->guiManager->CreateGuiControl(GuiControlType::TEXT);
+		strCredits->bounds = { creditsButton->bounds.x + 15, creditsButton->bounds.y + 3, 105, 27 };
+		strCredits->SetString("Credits");
 	}
 
 	//EXITGAME BUTTON
@@ -268,6 +282,9 @@ void Scene::SetMainMenu()
 		exitMainButton->id = 4;
 		exitMainButton->text = "ExitButton";
 		exitMainButton->SetObserver(this);
+		strExit = (GuiString*)app->guiManager->CreateGuiControl(GuiControlType::TEXT);
+		strExit->bounds = { exitMainButton->bounds.x + 32, exitMainButton->bounds.y + 3, 105, 27 };
+		strExit->SetString("Exit");
 	}
 
 }
@@ -506,6 +523,9 @@ void Scene::SetConfigMenu()
 		backToPauseButton->id = 1;
 		backToPauseButton->text = "BackToButton";
 		backToPauseButton->SetObserver(this);
+		strBackToPause = (GuiString*)app->guiManager->CreateGuiControl(GuiControlType::TEXT);
+		strBackToPause->bounds = { backToPauseButton->bounds.x + 30, backToPauseButton->bounds.y, 105, 27 };
+		strBackToPause->SetString("Back");
 	}
 
 	//VSYNC CHECKBOX
@@ -516,6 +536,9 @@ void Scene::SetConfigMenu()
 		vSyncCheckBox->id = 1;
 		vSyncCheckBox->text = "VSyncCheckBox";
 		vSyncCheckBox->SetObserver(this);
+		strVsync = (GuiString*)app->guiManager->CreateGuiControl(GuiControlType::TEXT);
+		strVsync->bounds = { vSyncCheckBox->bounds.x + 30, vSyncCheckBox->bounds.y + 2, 0, 0 };
+		strVsync->SetString("Vsync");
 	}
 
 	if (fullScreenCheckBox == NULL && fullScreenCheckBox == nullptr)
@@ -525,6 +548,9 @@ void Scene::SetConfigMenu()
 		fullScreenCheckBox->id = 2;
 		fullScreenCheckBox->text = "FullScreenCheckBox";
 		fullScreenCheckBox->SetObserver(this);
+		strFullScreen = (GuiString*)app->guiManager->CreateGuiControl(GuiControlType::TEXT);
+		strFullScreen->bounds = { fullScreenCheckBox->bounds.x + 30, fullScreenCheckBox->bounds.y + 2, 0, 0 };
+		strFullScreen->SetString("FullScreen");
 	}
 }
 
@@ -556,6 +582,9 @@ void Scene::SetPauseMenu()
 		resumeButton->id = 1;
 		resumeButton->text = "ResumeButton";
 		resumeButton->SetObserver(this);
+		strResume = (GuiString*)app->guiManager->CreateGuiControl(GuiControlType::TEXT);
+		strResume->bounds = { resumeButton->bounds.x + 15, resumeButton->bounds.y, 0,0 };
+		strResume->SetString("Resume");
 	}
 
 	//CONFIG BUTTON
@@ -566,6 +595,9 @@ void Scene::SetPauseMenu()
 		configPauseButton->id = 2;
 		configPauseButton->text = "ConfigButton";
 		configPauseButton->SetObserver(this);
+		strConfigPause = (GuiString*)app->guiManager->CreateGuiControl(GuiControlType::TEXT);
+		strConfigPause->bounds = { configPauseButton->bounds.x + 10, configPauseButton->bounds.y, 0,0 };
+		strConfigPause->SetString("Settings");
 	}
 
 	//BACK TO MENU BUTTON
@@ -576,6 +608,9 @@ void Scene::SetPauseMenu()
 		mainMenuPauseButton->id = 3;
 		mainMenuPauseButton->text = "BackToMainButton";
 		mainMenuPauseButton->SetObserver(this);
+		strMainMenu = (GuiString*)app->guiManager->CreateGuiControl(GuiControlType::TEXT);
+		strMainMenu->bounds = { mainMenuPauseButton->bounds.x + 2, mainMenuPauseButton->bounds.y, 0,0 };
+		strMainMenu->SetString("Main Menu");
 	}
 
 	//EXITGAME BUTTON
@@ -586,6 +621,9 @@ void Scene::SetPauseMenu()
 		exitPauseButton->id = 4;
 		exitPauseButton->text = "ExitButton";
 		exitPauseButton->SetObserver(this);
+		strExitPause = (GuiString*)app->guiManager->CreateGuiControl(GuiControlType::TEXT);
+		strExitPause->bounds = { exitPauseButton->bounds.x + 5, exitPauseButton->bounds.y, 0,0 };
+		strExitPause->SetString("Exit Game");
 	}
 }
 
@@ -618,30 +656,35 @@ void Scene::UpdateMainMenu()
 		{
 			app->render->DrawTexture(menuScene, 0, 0);
 			//UPDATE BUTTONS
-			sliderTest->Update(1.0f);
+			//sliderTest->Update(1.0f);
 			playButton->Update(1.0f);
 			continueButton->Update(1.0f);
 			configButton->Update(1.0f);
 			creditsButton->Update(1.0f);
 			exitMainButton->Update(1.0f);
-			//DRAW BUTTONS
-			sliderTest->Draw();
+			//DRAW BUTTONS && TEXT
+			//sliderTest->Draw();
 			playButton->Draw();
+			strPlay->Draw();
 			continueButton->Draw();
+			strContinue->Draw();
 			configButton->Draw();
+			strConfig->Draw();
 			creditsButton->Draw();
+			strCredits->Draw();
 			exitMainButton->Draw();
+			strExit->Draw();
 		}
 		else if (credits)
 		{
 			app->render->DrawTexture(configMenu, 0, 0);
 
 			//DRAW BUTTONS
-			playButton->Draw();
+			/*playButton->Draw();
 			continueButton->Draw();
 			configButton->Draw();
 			creditsButton->Draw();
-			exitMainButton->Draw();
+			exitMainButton->Draw();*/
 
 			app->render->DrawTexture(creditsMenu, 142, 47);
 
@@ -916,12 +959,15 @@ void Scene::UpdateConfigMenu()
 
 	backToPauseButton->Update(0.0f);
 	backToPauseButton->Draw();
+	strBackToPause->Draw();
 
 	vSyncCheckBox->Update(0.0f);
 	vSyncCheckBox->Draw();
+	strVsync->Draw();
 
 	fullScreenCheckBox->Update(0.0f);
 	fullScreenCheckBox->Draw();
+	strFullScreen->Draw();
 }
 
 void Scene::UpdatePauseMenu()
@@ -951,9 +997,13 @@ void Scene::UpdatePauseMenu()
 		exitPauseButton->Update(1.0f);
 
 		resumeButton->Draw();
+		strResume->Draw();
 		configPauseButton->Draw();
+		strConfigPause->Draw();
 		mainMenuPauseButton->Draw();
+		strMainMenu->Draw();
 		exitPauseButton->Draw();
+		strExitPause->Draw();
 	}
 	else if (config)
 	{

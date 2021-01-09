@@ -8,6 +8,7 @@
 struct SDL_Texture;
 class GuiButton;
 class GuiCheckBox;
+class GuiString;
 class GuiSlider;
 class Fonts;
 
@@ -64,21 +65,33 @@ public: //GUI
 
 	//MAIN MENU
 	GuiButton* playButton;
+	GuiString* strPlay;
 	GuiButton* continueButton;
+	GuiString* strContinue;
 	GuiButton* configButton;
+	GuiString* strConfig;
 	GuiButton* creditsButton;
+	GuiString* strCredits;
 	GuiButton* exitMainButton;
+	GuiString* strExit;
 
 	//PAUSE MENU
 	GuiButton* resumeButton;
+	GuiString* strResume;
 	GuiButton* configPauseButton;
+	GuiString* strConfigPause;
 	GuiButton* exitPauseButton;
+	GuiString* strExitPause;
 	GuiButton* mainMenuPauseButton;
+	GuiString* strMainMenu;
 
 	//CONFIG
 	GuiButton* backToPauseButton;
+	GuiString* strBackToPause;
 	GuiCheckBox* vSyncCheckBox;
+	GuiString* strVsync;
 	GuiCheckBox* fullScreenCheckBox;
+	GuiString* strFullScreen;
 
 public: //TEXT
 
