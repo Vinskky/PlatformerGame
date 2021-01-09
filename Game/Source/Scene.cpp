@@ -212,14 +212,6 @@ void Scene::SetMainMenu()
 
 	configMenu = app->tex->Load("Assets/textures/config_menu.png");
 
-	//TEST SLIDER
-	/*sliderTest = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER);
-	sliderTest->bounds = { 10,10,100,10 };
-	sliderTest->id = 666;
-	sliderTest->text = "test";
-	sliderTest->SetSlider(sliderTest->bounds);
-	sliderTest->SetObserver(this);*/
-
 	//PLAY BUTTON
 	if (playButton == NULL && playButton == nullptr)
 	{
@@ -515,6 +507,34 @@ void Scene::SetConfigMenu()
 {
 	if (currentScreen != MAIN_MENU) configMenu = app->tex->Load("Assets/textures/config_menu.png");
 
+	//SLIDER VOLUME
+	if (sliderVolume == NULL && sliderVolume == nullptr)
+	{
+		sliderVolume = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER);
+		sliderVolume->bounds = { 194, 70, 110, 10 };
+		sliderVolume->text = "VolumeSlider";
+		sliderVolume->SetMinValue(0);
+		sliderVolume->SetMaxValue(124);
+		sliderVolume->SetSlider(sliderVolume->bounds);
+		sliderVolume->SetObserver(this);
+		strVolume = (GuiString*)app->guiManager->CreateGuiControl(GuiControlType::TEXT);
+		strVolume->bounds = { sliderVolume->bounds.x - 100, sliderVolume->bounds.y, 105, 27 };
+		strVolume->SetString("Volume");
+	}
+	//SLIDER FX
+	if (sliderFX == NULL && sliderFX == nullptr)
+	{
+		sliderFX = (GuiSlider*)app->guiManager->CreateGuiControl(GuiControlType::SLIDER);
+		sliderFX->bounds = { 194, 40, 110, 10 };
+		sliderFX->text = "FXSlider";
+		sliderFX->SetMinValue(0);
+		sliderFX->SetMaxValue(124);
+		sliderFX->SetSlider(sliderFX->bounds);
+		sliderFX->SetObserver(this);
+		strFX = (GuiString*)app->guiManager->CreateGuiControl(GuiControlType::TEXT);
+		strFX->bounds = { sliderFX->bounds.x - 100, sliderFX->bounds.y, 105, 27 };
+		strFX->SetString("FX");
+	}
 	//BACK TO PAUSE BUTTON
 	if (backToPauseButton == NULL && backToPauseButton == nullptr)
 	{
@@ -532,7 +552,7 @@ void Scene::SetConfigMenu()
 	if (vSyncCheckBox == NULL && vSyncCheckBox == nullptr)
 	{
 		vSyncCheckBox = (GuiCheckBox*)app->guiManager->CreateGuiControl((GuiControlType)GuiControlType::CHECKBOX);
-		vSyncCheckBox->bounds = { 70, 70, 25, 25 };
+		vSyncCheckBox->bounds = { 70, 100, 25, 25 };
 		vSyncCheckBox->id = 1;
 		vSyncCheckBox->text = "VSyncCheckBox";
 		vSyncCheckBox->SetObserver(this);
@@ -544,7 +564,7 @@ void Scene::SetConfigMenu()
 	if (fullScreenCheckBox == NULL && fullScreenCheckBox == nullptr)
 	{
 		fullScreenCheckBox = (GuiCheckBox*)app->guiManager->CreateGuiControl((GuiControlType)GuiControlType::CHECKBOX);
-		fullScreenCheckBox->bounds = { 70, 100, 25, 25 };
+		fullScreenCheckBox->bounds = { 70, 130, 25, 25 };
 		fullScreenCheckBox->id = 2;
 		fullScreenCheckBox->text = "FullScreenCheckBox";
 		fullScreenCheckBox->SetObserver(this);
@@ -655,15 +675,15 @@ void Scene::UpdateMainMenu()
 		if (!credits)
 		{
 			app->render->DrawTexture(menuScene, 0, 0);
+
 			//UPDATE BUTTONS
-			//sliderTest->Update(1.0f);
 			playButton->Update(1.0f);
 			continueButton->Update(1.0f);
 			configButton->Update(1.0f);
 			creditsButton->Update(1.0f);
 			exitMainButton->Update(1.0f);
+
 			//DRAW BUTTONS && TEXT
-			//sliderTest->Draw();
 			playButton->Draw();
 			strPlay->Draw();
 			continueButton->Draw();
@@ -956,6 +976,15 @@ void Scene::UpdateDeadScreen()
 void Scene::UpdateConfigMenu()
 {
 	app->render->DrawTexture(configMenu, 0, 0);
+	
+
+	sliderVolume->Update(0.0f);
+	sliderVolume->Draw();
+	strVolume->Draw();
+
+	sliderFX->Update(0.0f);
+	sliderFX->Draw();
+	strFX->Draw();
 
 	backToPauseButton->Update(0.0f);
 	backToPauseButton->Draw();

@@ -1,4 +1,6 @@
 #include "GuiSlider.h"
+#include "GuiManager.h"
+
 
 GuiSlider::GuiSlider(uint32 id, SDL_Rect bounds, const char* text) : GuiControl(GuiControlType::SLIDER, id)
 {
@@ -63,32 +65,32 @@ bool GuiSlider::Draw()
     {
     case GuiControlState::DISABLED: 
     {
-        app->render->DrawRectangle(bounds, 0, 255, 0, 255);
-        app->render->DrawRectangle(slider, 100, 255, 100, 255);
+        app->render->DrawTexture(app->guiManager->sliderSpriteSheet, bounds.x, bounds.y, &normalBar);
+        app->render->DrawTexture(app->guiManager->sliderSpriteSheet, slider.x, slider.y, &normalSlider);
     }
         break;
     case GuiControlState::NORMAL:
     {
-        app->render->DrawRectangle(bounds, 0, 255, 0, 255);
-        app->render->DrawRectangle(slider, 155, 255, 0, 255);
+        app->render->DrawTexture(app->guiManager->sliderSpriteSheet, bounds.x, bounds.y, &normalBar);
+        app->render->DrawTexture(app->guiManager->sliderSpriteSheet, slider.x, slider.y, &normalSlider);
     }
         break;
     case GuiControlState::FOCUSED:
     {
-        app->render->DrawRectangle(bounds, 0, 255, 0, 255);
-        app->render->DrawRectangle(slider, 255, 255, 100, 255);
+        app->render->DrawTexture(app->guiManager->sliderSpriteSheet, bounds.x, bounds.y, &pressedBar);
+        app->render->DrawTexture(app->guiManager->sliderSpriteSheet, slider.x, slider.y, &normalSlider);
     }
         break;
     case GuiControlState::PRESSED: 
     {
-        app->render->DrawRectangle(bounds, 0, 255, 0, 255);
-        app->render->DrawRectangle(slider, 125, 255, 255, 255);
+        app->render->DrawTexture(app->guiManager->sliderSpriteSheet, bounds.x, bounds.y, &normalBar);
+        app->render->DrawTexture(app->guiManager->sliderSpriteSheet, slider.x, slider.y, &normalSlider);
     }
         break;
     case GuiControlState::SELECTED: 
     {
-        app->render->DrawRectangle(bounds, 0, 255, 0, 255);
-        app->render->DrawRectangle(slider, 125, 255, 0, 255);
+        app->render->DrawTexture(app->guiManager->sliderSpriteSheet, bounds.x, bounds.y, &pressedBar);
+        app->render->DrawTexture(app->guiManager->sliderSpriteSheet, slider.x, slider.y, &pressedSlider);
     }
         break;
     default:

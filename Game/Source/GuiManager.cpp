@@ -44,8 +44,9 @@ bool GuiManager::Awake(pugi::xml_node&)
 
 bool GuiManager::Start()
 {
-	buttonSpritesheet = app->tex->Load("Assets/textures/button_spritesheet.png");
-	checkBoxSpritesheet = app->tex->Load("Assets/textures/checkbox.png");
+	buttonSpriteSheet = app->tex->Load("Assets/textures/button_spritesheet.png");
+	checkBoxSpriteSheet = app->tex->Load("Assets/textures/checkbox.png");
+	sliderSpriteSheet = app->tex->Load("Assets/textures/slider_spritesheet.png");
 	return true;
 }
 

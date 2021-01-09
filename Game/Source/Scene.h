@@ -60,9 +60,6 @@ private:
 public: //GUI
 	bool OnGuiMouseClickEvent(GuiControl* control);
 
-	//SLIDER TEST
-	GuiSlider* sliderTest;
-
 	//MAIN MENU
 	GuiButton* playButton;
 	GuiString* strPlay;
@@ -86,6 +83,14 @@ public: //GUI
 	GuiString* strMainMenu;
 
 	//CONFIG
+	GuiSlider* sliderVolume;
+	GuiString* strVolume;
+	GuiString* strVolumeValue;
+
+	GuiSlider* sliderFX;
+	GuiString* strFX;
+	GuiString* strFXValue;
+
 	GuiButton* backToPauseButton;
 	GuiString* strBackToPause;
 	GuiCheckBox* vSyncCheckBox;

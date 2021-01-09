@@ -35,6 +35,12 @@ private:
 
     int minValue;
     int maxValue;
+
+    const SDL_Rect normalBar = { 0, 0, 119, 15 };
+    const SDL_Rect pressedBar = { 0, 15, 119, 15 };
+
+    const SDL_Rect normalSlider = { 0, 30, 17, 17 };
+    const SDL_Rect pressedSlider = { 18, 30, 17, 17 };
 };
 
 #endif // __GUISLIDER_H__
