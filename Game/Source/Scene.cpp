@@ -687,7 +687,7 @@ void Scene::UpdateMainMenu()
 			playButton->Draw();
 			strPlay->Draw();
 			continueButton->Draw();
-			strContinue->Draw();
+			if (continueButton->state != GuiControlState::DISABLED) strContinue->Draw();
 			configButton->Draw();
 			strConfig->Draw();
 			creditsButton->Draw();
