@@ -22,6 +22,30 @@ Platformer game developed during the course 2020-21 for the subject of developme
  - Destroyable enemies with attack
  - Frame Capped 60 or 30 fps
  - Invincibility frames when player hurt
+ - Implemented GUI (NEW!)
+     - Buttons
+     - Sliders
+     - Check Boxs
+ - Main menu scene (NEW!)
+     - Play button
+     - Continue button
+     - Settings button
+     - Credits button
+     - Exit button
+ - Settings scene (NEW!)
+     - Volume & Fx slider
+     - vSync & Full Screen Mode
+ - Ingame Pause menu scene (NEW!)
+     - Resume button
+     - Settings button
+     - Main menu button
+     - Exit button
+ - Ingame death timer (NEW!)
+ - Updated Fx (NEW!)
+ - Implemented fonts using TTF (NEW!)
+ - Saved game detection (NEW!)
+       WARNING: There's no !save_game.xml! file created. It is generated automatically when saved 1rst time. If you want to delete your progress, delete
+       "save_game.xml" file in the /Output folder. The "DISABLED" state of "Continue" button (in Main Menu) depends on the existance of this file.
  
 ## Controls
 
@@ -29,8 +53,7 @@ Platformer game developed during the course 2020-21 for the subject of developme
  - D: Moves Right
  - Spacebar: Jump
  - M: Sword attack
- - "+": Increase volume of the game and sound fx
- - "-": Decrease volume of the game and sound fx
+ - ESC: Pause menu ingame (NEW!)
  
  - Aditional controls in GOD MODE:
  - W: Moves Up (with height limitations)
@@ -46,6 +69,7 @@ Platformer game developed during the course 2020-21 for the subject of developme
  - F3: Start from the beggining of the current level
  - F5: Save current state of the game
  - F6: Load the previous state (even across levels)
+ - F8: View GUI colliders / logic (NEW!)
  - F9: View colliders / logic
  - F10: God Mode
  - F11: Capped 60/30 fps
@@ -54,7 +78,6 @@ Platformer game developed during the course 2020-21 for the subject of developme
 
  - Sebastián Delgado - [Github](https://github.com/Vinskky)
  - Martí Buxeda (Raxer Sound) - [Github](https://github.com/BooStarGamer)
-
 
 ## License
 
@@ -66,3 +89,5 @@ This project is licensed under an unmodified MIT license, which is an OSI-certif
 - [Jumping wav details](https://github.com/Vinskky/PlatformerGame/blob/master/Output/Assets/audio/fx/jump.wav%20licence)
 - [Music and FX except Jump by Raxer Sound](https://lnkfi.re/EhBCPZ4v)
 - [Bat enemy](https://elthen.itch.io/bat-sprite-pack)
+- [Main Menu Background](https://www.deviantart.com/mockingjay1701/art/Pixel-art-landscape-525082296)
+- [GUI & TTF font](https://www.kenney.nl/assets/ui-pack)
