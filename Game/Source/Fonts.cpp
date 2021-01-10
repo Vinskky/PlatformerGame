@@ -16,7 +16,8 @@ Fonts::Fonts() : Module()
 
 // Destructor
 Fonts::~Fonts()
-{}
+{
+}
 
 // Called before render is available
 bool Fonts::Awake(pugi::xml_node& conf)
@@ -100,9 +101,13 @@ bool Fonts::CalcSize(const char* text, int& width, int& height, _TTF_Font* font)
 	bool ret = false;
 
 	if (TTF_SizeText((font) ? font : default, text, & width, & height) != 0)
+	{
 		LOG("Unable to calc size of text surface! SDL_ttf Error: %s\n", TTF_GetError());
+	}
 	else
+	{
 		ret = true;
+	}
 
 	return ret;
 }

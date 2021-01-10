@@ -30,9 +30,6 @@ public:
 
 	// Additional methods
 	GuiControl* CreateGuiControl(GuiControlType type);
-	void DestroyGuiControl(GuiControl* entity);
-
-	void AddGuiControl(GuiControl* entity);
 
 public:
 

@@ -146,7 +146,6 @@ void Collisions::DebugDraw()
 		{
 			app->render->DrawRectangle(enemy->data->collider, 180, 20, 180, alpha);
 		}
-
 	}
 	else if (app->map->lvl2)
 	{
@@ -155,11 +154,4 @@ void Collisions::DebugDraw()
 		app->render->DrawRectangle(app->enManager->props->collectible[3].itemRect, 180, 20, 20, alpha);
 		app->render->DrawRectangle(app->enManager->props->lifeGetter[1].getterRect, 70, 180, 20, alpha);
 	}
-
-
-
-
-
-
-
 }

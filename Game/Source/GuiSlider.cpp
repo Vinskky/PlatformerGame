@@ -38,7 +38,7 @@ bool GuiSlider::Update(float dt)
                 {
                     app->audio->PlayFx(6);
                 }
-                state = GuiControlState::SELECTED; 
+                state = GuiControlState::SELECTED;
                 if (mouseX > bounds.x && mouseX < (bounds.x + bounds.w))
                 {
                     //you can move sliderbox
@@ -57,7 +57,6 @@ bool GuiSlider::Update(float dt)
 
             if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_UP)
             {
-                
                 NotifyObserver();
             }
             // TODO.
@@ -80,30 +79,35 @@ bool GuiSlider::Draw()
         app->render->DrawTexture(app->guiManager->sliderSpriteSheet, slider.x, slider.y, &normalSlider);
     }
     break;
+
     case GuiControlState::NORMAL:
     {
         app->render->DrawTexture(app->guiManager->sliderSpriteSheet, bounds.x, bounds.y, &normalBar);
         app->render->DrawTexture(app->guiManager->sliderSpriteSheet, slider.x, slider.y, &normalSlider);
     }
     break;
+
     case GuiControlState::FOCUSED:
     {
         app->render->DrawTexture(app->guiManager->sliderSpriteSheet, bounds.x, bounds.y, &pressedBar);
         app->render->DrawTexture(app->guiManager->sliderSpriteSheet, slider.x, slider.y, &normalSlider);
     }
     break;
+
     case GuiControlState::PRESSED:
     {
         app->render->DrawTexture(app->guiManager->sliderSpriteSheet, bounds.x, bounds.y, &normalBar);
         app->render->DrawTexture(app->guiManager->sliderSpriteSheet, slider.x, slider.y, &normalSlider);
     }
     break;
+
     case GuiControlState::SELECTED:
     {
         app->render->DrawTexture(app->guiManager->sliderSpriteSheet, bounds.x, bounds.y, &pressedBar);
         app->render->DrawTexture(app->guiManager->sliderSpriteSheet, slider.x, slider.y, &pressedSlider);
     }
     break;
+
     default:
         break;
     }
@@ -117,30 +121,35 @@ bool GuiSlider::Draw()
             app->render->DrawRectangle(slider, 150, 100, 100, 80);
         }
         break;
+
         case GuiControlState::NORMAL:
         {
             app->render->DrawRectangle(bounds, 0, 255, 0, 80);
             app->render->DrawRectangle(slider, 0, 200, 0, 80);
         }
         break;
+
         case GuiControlState::FOCUSED: 
         {
             app->render->DrawRectangle(bounds, 255, 255, 0, 80);
             app->render->DrawRectangle(slider, 255, 255, 0, 80);
         }
-            break;
+        break;
+
         case GuiControlState::PRESSED: 
         {
             app->render->DrawRectangle(bounds, 0, 255, 255, 80);
             app->render->DrawRectangle(slider, 0, 200, 200, 80);
         }
-            break;
+        break;
+
         case GuiControlState::SELECTED:
         {
             app->render->DrawRectangle(bounds, 255, 255, 0, 80);
             app->render->DrawRectangle(slider, 200, 200, 0, 80);
         }
-            break;
+        break;
+
         default:
             break;
         }
@@ -166,8 +175,8 @@ void GuiSlider::SetValue(int val)
 
 void GuiSlider::UpdateValue()
 {
-    percentValue = ((slider.x + (slider.w * 0.5)) - (bounds.x)) /
-        ((bounds.x + bounds.w) - bounds.x);
+    percentValue = ((slider.x + (slider.w * 0.5)) - (bounds.x)) / ((bounds.x + bounds.w) - bounds.x);
+
     value = floor(percentValue * maxValue);
 }
 

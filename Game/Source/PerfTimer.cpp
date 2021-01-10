@@ -22,7 +22,9 @@ PerfTimer::PerfTimer()
 	Start();
 }
 
-PerfTimer::~PerfTimer() {};
+PerfTimer::~PerfTimer()
+{
+};
 
 bool PerfTimer::Start()
 {

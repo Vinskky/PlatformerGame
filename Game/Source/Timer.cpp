@@ -19,7 +19,9 @@ Timer::Timer()
 	name.Create("timer");
 }
 
-Timer::~Timer() {}
+Timer::~Timer()
+{
+}
 
 bool Timer::Start()
 {

@@ -49,7 +49,7 @@ private:
 	float volume = 0.0f;
 	float fxVolume = 0.0f;
 	_Mix_Music* music;
-	List<Mix_Chunk *> fx;
+	List<Mix_Chunk*> fx;
 };
 
 #endif // __AUDIO_H__

@@ -48,7 +48,9 @@ public:
         bounds(bounds),
         text(text) 
     {
-        color.r = 255; color.g = 255; color.b = 255;
+        color.r = 255;
+        color.g = 255;
+        color.b = 255;
         texture = NULL;
     }
 
@@ -84,16 +86,16 @@ public:
     GuiControlType type;
     GuiControlState state;
 
-    SString text;           // Control text (if required)
-    SDL_Rect bounds;        // Position and size
-    SDL_Color color;        // Tint color
+    SString text;
+    SDL_Rect bounds;
+    SDL_Color color;
 
-    SDL_Texture* texture;   // Texture atlas reference
-    SDL_Rect section;       // Texture atlas base section
+    SDL_Texture* texture;
+    SDL_Rect section;
 
-    Fonts font;              // Text font
+    Fonts font;
 
-    Module* observer;        // Observer module (it should probably be an array/list)
+    Module* observer;
 };
 
 #endif // __GUICONTROL_H__

@@ -171,7 +171,7 @@ private:
     SString folder;
     SString level1;
     SString level2;
-    bool mapLoaded; 
+    bool mapLoaded;
 };
 
 #endif // __MAP_H__

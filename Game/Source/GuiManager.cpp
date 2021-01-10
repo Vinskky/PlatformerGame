@@ -14,7 +14,6 @@ GuiControl* GuiManager::CreateGuiControl(GuiControlType type)
 	switch (type)
 	{
 		// Create the corresponding GuiControl type
-		//case GuiControlType::BUTTON: control = new GuiButton(1234);  break;
 	case GuiControlType::BUTTON: control = new GuiButton(NULL, { 0, 0, 0, 0 }, "0"); break;
 	case GuiControlType::CHECKBOX: control = new GuiCheckBox(NULL, {0, 0, 0, 0}, "0"); break;
 	case GuiControlType::SLIDER: control = new GuiSlider(NULL, {0, 0, 0, 0}, "0"); break;
@@ -56,7 +55,6 @@ bool GuiManager::Update(float dt)
 	if (accumulatedTime >= updateMsCycle) doLogic = true;
 
 	//UpdateAll(dt, doLogic);
-
 	if (doLogic == true)
 	{
 		accumulatedTime = 0.0f;

@@ -112,11 +112,8 @@ public: //GUI
 	GuiButton* backCreditsButton = nullptr;
 	GuiString* strBackCredits = nullptr;
 
-public: //TEXT
+public:
 
-	Fonts* playMainText = nullptr;
-	
-	//UTILS
 	bool activeContinue;
 
 public:

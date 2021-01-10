@@ -179,11 +179,11 @@ bool Player::Update(float dt)
 			{
 				if (playerInfo.position.x > 0)
 				{
-					playerColider.x -= 1 * playerInfo.speed /** dt * velAugm*/;
+					playerColider.x -= 1 * playerInfo.speed;
 					playerInfo.position.x = playerColider.x;
 					isMoving = true;
 					if (playerInfo.position.x >= WINDOW_MIDDLE_S && playerInfo.position.x <= WINDOW_MIDDLE_E)
-						app->render->camera.x += 6 /** dt * velAugm*/;
+						app->render->camera.x += 6;
 				}
 			}
 			UpdateAnimation("walk");
@@ -196,13 +196,13 @@ bool Player::Update(float dt)
 		{
 			if (godMode == false)
 			{
-				playerColider.x += 1 * playerInfo.speed /** dt * velAugm*/;
+				playerColider.x += 1 * playerInfo.speed;
 				if (CheckCollision() == false)
 				{
 					playerInfo.position.x = playerColider.x;
 					isMoving = true;
 					if (playerInfo.position.x >= WINDOW_MIDDLE_S && playerInfo.position.x <= WINDOW_MIDDLE_E)
-						app->render->camera.x -= 6 /** dt * velAugm*/;
+						app->render->camera.x -= 6;
 				}
 				else
 				{
@@ -214,11 +214,11 @@ bool Player::Update(float dt)
 			{
 				if (playerInfo.position.x < 1255)
 				{
-					playerColider.x += 1 * playerInfo.speed /** dt * velAugm*/;
+					playerColider.x += 1 * playerInfo.speed;
 					playerInfo.position.x = playerColider.x;
 					isMoving = true;
 					if (playerInfo.position.x >= WINDOW_MIDDLE_S && playerInfo.position.x <= WINDOW_MIDDLE_E)
-						app->render->camera.x -= 6 /** dt * velAugm*/;
+						app->render->camera.x -= 6;
 				}
 			}
 			playerInfo.currentDir = RIGHT_DIR;
@@ -249,7 +249,6 @@ bool Player::Update(float dt)
 			{
 				playerInfo.attacking = false;
 			}
-
 		}
 		else
 		{

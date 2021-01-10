@@ -51,7 +51,7 @@ void Map::Draw()
 {
 	if (mapLoaded == false) return;
 
-    ListItem<MapLayer*>* item = mapInfo.layers.start; 
+    ListItem<MapLayer*>* item = mapInfo.layers.start;
 
     while(item != NULL)
     {
@@ -248,7 +248,7 @@ bool Map::Load(const char* filename)
     if(ret == true)
     {
         // L03: TODO 5: LOG all the data loaded iterate all tilesets and LOG everything
-        LOG("Successfully parsed map XML file : %s", GetLevelToLoad().GetString());  
+        LOG("Successfully parsed map XML file : %s", GetLevelToLoad().GetString());
         LOG(" width : %d height : %d", mapInfo.width, mapInfo.height);
         LOG(" tile_width : %d tile_height : %d", mapInfo.tileWidth, mapInfo.tileHeight);
 
@@ -271,10 +271,6 @@ bool Map::Load(const char* filename)
             LOG("name : %s ", item2->data->name.GetString());
             LOG("width : %d height : %d", item2->data->width, item2->data->height);
             LOG("Tiles in Layer %s ----", item2->data->name.GetString());
-            /*for (int i = 0; i < (item2->data->width * item2->data->height * sizeof(uint)); i++)
-            {
-                LOG("tile gid: %d", item2->data->data[i]);
-            }*/
             item2 = item2->prev;
         }  
     }
@@ -292,9 +288,13 @@ SString Map::GetFolder() const
 SString Map::GetLevelToLoad() const
 {
     if (lvl1 && !lvl2)
+    {
         return level1;
+    }        
     else if (lvl2 && !lvl1)
-        return level2;  
+    {
+        return level2;
+    }
 }
 
 bool Map::LoadMapData()

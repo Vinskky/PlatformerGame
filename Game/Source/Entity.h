@@ -6,7 +6,6 @@
 #include "Point.h"
 #include "Render.h"
 
-
 enum State
 {
 	IDLE,
@@ -39,9 +38,13 @@ public:
 		PROPS
 	};
 
-	Entity() {};
+	Entity()
+	{
+	};
 
-	virtual ~Entity() {};
+	virtual ~Entity()
+	{
+	};
 
 	//Called before render is available
 	virtual bool Awake(pugi::xml_node&)

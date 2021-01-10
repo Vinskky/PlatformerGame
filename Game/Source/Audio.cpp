@@ -238,7 +238,6 @@ void Audio::SetFXVolume(uint value)
 	{
 		fxVolume = value;
 	}
-	
 }
 
 bool Audio::Load(pugi::xml_node &loadNode)

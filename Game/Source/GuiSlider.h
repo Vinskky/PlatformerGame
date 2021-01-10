@@ -22,10 +22,10 @@ public:
     void SetValue(int val);
     void UpdateValue();
 
-    int GetMinValue()const;
-    int GetMaxValue()const;
-    int GetValue()const;
-    float GetPercentValue()const;
+    int GetMinValue() const;
+    int GetMaxValue() const;
+    int GetValue() const;
+    float GetPercentValue() const;
     void SetSlider(SDL_Rect bounds);
 
 

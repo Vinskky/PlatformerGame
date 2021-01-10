@@ -110,7 +110,7 @@ private:
 	SString title;
 	SString organization;
 
-	List<Module *> modules;
+	List<Module*> modules;
 
 	// L01: DONE 2: Create new variables from pugui namespace:
 	// xml_document to store the config file and
