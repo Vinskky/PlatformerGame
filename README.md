@@ -2,6 +2,8 @@
 
 Platformer game developed during the course 2020-21 for the subject of development with the aim to achive 2D programming skills. 
 
+![Title Screen](https://github.com/Vinskky/PlatformerGame/blob/master/Screenshots/screenshot_title.png?raw=true)
+
 ## Key Features
 
  - Xml config file loading for different modules.
@@ -32,14 +34,20 @@ Platformer game developed during the course 2020-21 for the subject of developme
      - Settings button
      - Credits button
      - Exit button
+     ![menuSreenshot](https://github.com/Vinskky/PlatformerGame/blob/master/Screenshots/screenshot_main_menu.png?raw=true)
+     
  - Settings scene (NEW!)
      - Volume & Fx slider
      - vSync & Full Screen Mode
+     ![settingsMenu](https://github.com/Vinskky/PlatformerGame/blob/master/Screenshots/screenshot_config_menu.png?raw=true)
+     
  - Ingame Pause menu scene (NEW!)
      - Resume button
      - Settings button
      - Main menu button
      - Exit button
+     ![pause](https://github.com/Vinskky/PlatformerGame/blob/master/Screenshots/screenshot_ingame_pause.png?raw=true)
+     
  - Ingame death timer (NEW!)
  - Updated Fx (NEW!)
  - Implemented fonts using TTF (NEW!)
