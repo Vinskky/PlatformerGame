@@ -1,5 +1,8 @@
+#include "App.h"
 #include "GuiButton.h"
 #include "GuiManager.h"
+#include "Audio.h"
+
 
 GuiButton::GuiButton(uint32 id, SDL_Rect bounds, const char* text) : GuiControl(GuiControlType::BUTTON, id)
 {
@@ -22,8 +25,11 @@ bool GuiButton::Update(float dt)
         if ((mouseX > bounds.x) && (mouseX < (bounds.x + bounds.w)) && 
             (mouseY > bounds.y) && (mouseY < (bounds.y + bounds.h)))
         {
+            if (state == GuiControlState::NORMAL)
+            {
+                app->audio->PlayFx(5);
+            }
             state = GuiControlState::FOCUSED;
-
             if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_REPEAT)
             {
                 state = GuiControlState::PRESSED;
@@ -32,6 +38,7 @@ bool GuiButton::Update(float dt)
             // If mouse button pressed -> Generate event!
             if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_UP)
             {
+                app->audio->PlayFx(6);
                 NotifyObserver();
             }
         }

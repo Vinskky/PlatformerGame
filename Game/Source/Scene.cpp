@@ -816,8 +816,9 @@ void Scene::UpdateLevels()
 		//LIFE GETTERS
 		for (int i = 0; i < 2; i++)
 		{
-			if (app->enManager->props->lifeGetter[i].active && app->collision->CheckCollision(app->enManager->player->playerColider, app->enManager->props->lifeGetter[i].getterRect))
+			if (app->enManager->props->lifeGetter[i].active && app->collision->CheckCollision(app->enManager->player->playerColider, app->enManager->props->lifeGetter[i].getterRect) && app->enManager->player->playerLife.lifes < 3)
 			{
+				app->audio->PlayFx(4);
 				app->enManager->player->playerLife.lifes = app->enManager->props->lifeGetter[i].refill;
 			}
 		}

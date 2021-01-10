@@ -1,5 +1,7 @@
+#include "App.h"
 #include "GuiCheckBox.h"
 #include "GuiManager.h"
+#include "Audio.h"
 
 GuiCheckBox::GuiCheckBox(uint32 id, SDL_Rect bounds, const char* text) : GuiControl(GuiControlType::CHECKBOX, id)
 {
@@ -22,6 +24,10 @@ bool GuiCheckBox::Update(float dt)
         if ((mouseX > bounds.x) && (mouseX < (bounds.x + bounds.w)) && 
             (mouseY > bounds.y) && (mouseY < (bounds.y + bounds.h)))
         {
+            if (state == GuiControlState::NORMAL)
+            {
+                app->audio->PlayFx(5);
+            }
             state = GuiControlState::FOCUSED;
 
             if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_REPEAT)
@@ -33,6 +39,7 @@ bool GuiCheckBox::Update(float dt)
             if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_UP)
             {
                 checked = !checked;
+                app->audio->PlayFx(6);
                 NotifyObserver();
             }
         }

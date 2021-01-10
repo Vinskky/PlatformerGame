@@ -541,6 +541,7 @@ void Player::CheckHurt()
 		{
 			if (!isInvincible)
 			{
+				app->audio->PlayFx(7);
 				playerLife.lifes--;
 				isInvincible = true;
 			}

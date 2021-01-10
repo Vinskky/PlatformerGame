@@ -61,6 +61,10 @@ bool Audio::Awake(pugi::xml_node& config)
 		LoadFx(config.child("fx").child("jump").attribute("name").as_string());
 		LoadFx(config.child("fx").child("checkpoint").attribute("name").as_string());
 		LoadFx(config.child("fx").child("collectible").attribute("name").as_string());
+		LoadFx(config.child("fx").child("healthRefill").attribute("name").as_string());
+		LoadFx(config.child("fx").child("mouseHover").attribute("name").as_string());
+		LoadFx(config.child("fx").child("mouseClick").attribute("name").as_string());
+		LoadFx(config.child("fx").child("playerHurt").attribute("name").as_string());
 		//Load checkpoint sound
 		fxVolume = config.child("fx").child("volume").attribute("value").as_int();
 	}

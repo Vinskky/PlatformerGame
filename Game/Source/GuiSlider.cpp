@@ -1,6 +1,7 @@
+#include "App.h"
 #include "GuiSlider.h"
 #include "GuiManager.h"
-
+#include "Audio.h"
 
 GuiSlider::GuiSlider(uint32 id, SDL_Rect bounds, const char* text) : GuiControl(GuiControlType::SLIDER, id)
 {
@@ -25,10 +26,18 @@ bool GuiSlider::Update(float dt)
         if ((mouseX > slider.x) && (mouseX < (slider.x + slider.w)) &&
             (mouseY > slider.y) && (mouseY < (slider.y + slider.h)))
         {
+            if (state == GuiControlState::NORMAL)
+            {
+                app->audio->PlayFx(5);
+            }
             state = GuiControlState::FOCUSED;
 
             if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_REPEAT)
             {
+                if (state == GuiControlState::FOCUSED)
+                {
+                    app->audio->PlayFx(6);
+                }
                 state = GuiControlState::SELECTED; 
                 if (mouseX > bounds.x && mouseX < (bounds.x + bounds.w))
                 {
