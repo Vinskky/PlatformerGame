@@ -5,7 +5,7 @@
 #include "GuiControl.h"
 #include "Fonts.h"
 
-#define LEVEL_TIME 6000 //18000
+#define LEVEL_TIME 3000 
 
 struct SDL_Texture;
 class GuiButton;
@@ -70,51 +70,51 @@ public: //GUI
 	bool OnGuiMouseClickEvent(GuiControl* control);
 
 	//MAIN MENU
-	GuiButton* playButton;
-	GuiString* strPlay;
-	GuiButton* continueButton;
-	GuiString* strContinue;
-	GuiButton* configButton;
-	GuiString* strConfig;
-	GuiButton* creditsButton;
-	GuiString* strCredits;
-	GuiButton* exitMainButton;
-	GuiString* strExit;
-	GuiString* strTimer;
+	GuiButton* playButton = nullptr;
+	GuiString* strPlay = nullptr;
+	GuiButton* continueButton = nullptr;
+	GuiString* strContinue = nullptr;
+	GuiButton* configButton = nullptr;
+	GuiString* strConfig = nullptr;
+	GuiButton* creditsButton = nullptr;
+	GuiString* strCredits = nullptr;
+	GuiButton* exitMainButton = nullptr;
+	GuiString* strExit = nullptr;
+	GuiString* strTimer = nullptr;
 
 	//PAUSE MENU
-	GuiButton* resumeButton;
-	GuiString* strResume;
-	GuiButton* configPauseButton;
-	GuiString* strConfigPause;
-	GuiButton* exitPauseButton;
-	GuiString* strExitPause;
-	GuiButton* mainMenuPauseButton;
-	GuiString* strMainMenu;
+	GuiButton* resumeButton = nullptr;
+	GuiString* strResume = nullptr;
+	GuiButton* configPauseButton = nullptr;
+	GuiString* strConfigPause = nullptr;
+	GuiButton* exitPauseButton = nullptr;
+	GuiString* strExitPause = nullptr;
+	GuiButton* mainMenuPauseButton = nullptr;
+	GuiString* strMainMenu = nullptr;
 
 	//CONFIG
-	GuiSlider* sliderVolume;
-	GuiString* strVolume;
-	GuiString* strVolumeValue;
+	GuiSlider* sliderVolume = nullptr;
+	GuiString* strVolume = nullptr;
+	GuiString* strVolumeValue = nullptr;
 
-	GuiSlider* sliderFX;
-	GuiString* strFX;
-	GuiString* strFXValue;
+	GuiSlider* sliderFX = nullptr;
+	GuiString* strFX = nullptr;
+	GuiString* strFXValue = nullptr;
 
-	GuiButton* backToPauseButton;
-	GuiString* strBackToPause;
-	GuiCheckBox* vSyncCheckBox;
-	GuiString* strVsync;
-	GuiCheckBox* fullScreenCheckBox;
-	GuiString* strFullScreen;
+	GuiButton* backToPauseButton = nullptr;
+	GuiString* strBackToPause = nullptr;
+	GuiCheckBox* vSyncCheckBox = nullptr;
+	GuiString* strVsync = nullptr;
+	GuiCheckBox* fullScreenCheckBox = nullptr;
+	GuiString* strFullScreen = nullptr;
 
 	//CREDITS
-	GuiButton* backCreditsButton;
-	GuiString* strBackCredits;
+	GuiButton* backCreditsButton = nullptr;
+	GuiString* strBackCredits = nullptr;
 
 public: //TEXT
 
-	Fonts* playMainText;
+	Fonts* playMainText = nullptr;
 	
 	//UTILS
 	bool activeContinue;
@@ -151,12 +151,12 @@ public:
 	SString sourceDeath;
 	SString sourceIntro;
 
-	SDL_Texture* titleScene;
-	SDL_Texture* menuScene;
-	SDL_Texture* deathScene;
-	SDL_Texture* configMenu;
-	SDL_Texture* pauseMenu;
-	SDL_Texture* creditsMenu;
+	SDL_Texture* titleScene = nullptr;
+	SDL_Texture* menuScene = nullptr;
+	SDL_Texture* deathScene = nullptr;
+	SDL_Texture* configMenu = nullptr;
+	SDL_Texture* pauseMenu = nullptr;
+	SDL_Texture* creditsMenu = nullptr;
 
 	pugi::xml_node sceneConf;
 };

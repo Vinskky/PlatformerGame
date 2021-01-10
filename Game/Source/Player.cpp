@@ -405,7 +405,7 @@ bool Player::CheckCollision()
 	bool ret = false;
 
 	ListItem<SDL_Rect>* item = app->collision->noWalkable.start;
-	for (item; item != app->collision->noWalkable.end; item = item->next)
+	for (item; item != app->collision->noWalkable.end ; item = item->next)
 	{
 		ret = app->collision->CheckCollision(playerColider, item->data);
 		if (ret)

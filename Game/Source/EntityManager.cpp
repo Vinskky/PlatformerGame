@@ -21,7 +21,6 @@ EntityManager::~EntityManager()
 	ListItem<Entity*>* item = entities.start;
 	while (item != NULL)
 	{
-		item->data->~Entity();
 		entities.Del(item);
 		item = item->next;
 	}
@@ -137,7 +136,6 @@ void EntityManager::DeleteEnemyFly(Entity* enemyFly)
 	{
 		if (id == ds)
 		{
-			item->data->~Entity();
 			entities.Del(item);
 			return;
 		}
@@ -155,7 +153,6 @@ void EntityManager::DeleteEnemyNormal(Entity* enemyNormal)
 	{
 		if (id == ds)
 		{
-			item->data->~Entity();
 			entities.Del(item);
 			return;
 		}
@@ -173,7 +170,6 @@ void EntityManager::DeletePlayer(Entity* player)
 	{
 		if (id == ds)
 		{
-			item->data->~Entity();
 			entities.Del(item);
 			return;
 		}
@@ -191,7 +187,6 @@ void EntityManager::DeleteProps(Entity* props)
 	{
 		if (id == ds)
 		{
-			item->data->~Entity();
 			entities.Del(item);
 			return;
 		}
@@ -209,7 +204,6 @@ void EntityManager::DeleteAllEnemies()
 		{
 			if (item->data->type != Entity::EntityType::PROPS)
 			{
-				item->data->~Entity();
 				entities.Del(item);
 			}
 		}
@@ -222,7 +216,6 @@ void EntityManager::DeleteAll()
 	ListItem<Entity*>* item = entities.start;
 	while (item != NULL)
 	{
-		item->data->~Entity();
 		entities.Del(item);
 		item = item->next;
 	}

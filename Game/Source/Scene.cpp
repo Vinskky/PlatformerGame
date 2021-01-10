@@ -1129,7 +1129,14 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 		{
 			if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "PlayButton") == 0)
 			{
-				SetScene(LVL1);
+				if (app->map->lvl1)
+				{
+					SetScene(LVL1);
+				}
+				else if (app->map->lvl2)
+				{
+					SetScene(LVL2);
+				}
 			}
 			else if (control->type == (GuiControlType)0 && strcmp(control->text.GetString(), "ContinueButton") == 0)
 			{
