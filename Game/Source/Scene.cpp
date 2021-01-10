@@ -101,7 +101,11 @@ bool Scene::Update(float dt)
 
 	else if (currentScreen == PAUSE_MENU)
 		UpdatePauseMenu();
-
+	//DEBUG DRAW GUI
+	if (app->input->GetKey(SDL_SCANCODE_F8) == KEY_DOWN)
+	{
+		app->guiManager->debugGui = !app->guiManager->debugGui;
+	}
 	return true;
 }
 
@@ -916,7 +920,6 @@ void Scene::UpdateLevels()
 				SetScene(LVL1);
 			}
 		}
-
 		// GO TO CHECKPOINT 1
 		if (app->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 		{

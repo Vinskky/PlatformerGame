@@ -71,40 +71,79 @@ bool GuiSlider::Update(float dt)
 bool GuiSlider::Draw()
 {
     // Draw the right button depending on state
+ 
     switch (state)
     {
-    case GuiControlState::DISABLED: 
+    case GuiControlState::DISABLED:
     {
         app->render->DrawTexture(app->guiManager->sliderSpriteSheet, bounds.x, bounds.y, &normalBar);
         app->render->DrawTexture(app->guiManager->sliderSpriteSheet, slider.x, slider.y, &normalSlider);
     }
-        break;
+    break;
     case GuiControlState::NORMAL:
     {
         app->render->DrawTexture(app->guiManager->sliderSpriteSheet, bounds.x, bounds.y, &normalBar);
         app->render->DrawTexture(app->guiManager->sliderSpriteSheet, slider.x, slider.y, &normalSlider);
     }
-        break;
+    break;
     case GuiControlState::FOCUSED:
     {
         app->render->DrawTexture(app->guiManager->sliderSpriteSheet, bounds.x, bounds.y, &pressedBar);
         app->render->DrawTexture(app->guiManager->sliderSpriteSheet, slider.x, slider.y, &normalSlider);
     }
-        break;
-    case GuiControlState::PRESSED: 
+    break;
+    case GuiControlState::PRESSED:
     {
         app->render->DrawTexture(app->guiManager->sliderSpriteSheet, bounds.x, bounds.y, &normalBar);
         app->render->DrawTexture(app->guiManager->sliderSpriteSheet, slider.x, slider.y, &normalSlider);
     }
-        break;
-    case GuiControlState::SELECTED: 
+    break;
+    case GuiControlState::SELECTED:
     {
         app->render->DrawTexture(app->guiManager->sliderSpriteSheet, bounds.x, bounds.y, &pressedBar);
         app->render->DrawTexture(app->guiManager->sliderSpriteSheet, slider.x, slider.y, &pressedSlider);
     }
-        break;
+    break;
     default:
         break;
+    }
+    if (app->guiManager->debugGui)
+    {
+        switch (state)
+        {
+        case GuiControlState::DISABLED: 
+        {
+            app->render->DrawRectangle(bounds, 100, 100, 100, 80);
+            app->render->DrawRectangle(slider, 150, 100, 100, 80);
+        }
+        break;
+        case GuiControlState::NORMAL:
+        {
+            app->render->DrawRectangle(bounds, 0, 255, 0, 80);
+            app->render->DrawRectangle(slider, 0, 200, 0, 80);
+        }
+        break;
+        case GuiControlState::FOCUSED: 
+        {
+            app->render->DrawRectangle(bounds, 255, 255, 0, 80);
+            app->render->DrawRectangle(slider, 255, 255, 0, 80);
+        }
+            break;
+        case GuiControlState::PRESSED: 
+        {
+            app->render->DrawRectangle(bounds, 0, 255, 255, 80);
+            app->render->DrawRectangle(slider, 0, 200, 200, 80);
+        }
+            break;
+        case GuiControlState::SELECTED:
+        {
+            app->render->DrawRectangle(bounds, 255, 255, 0, 80);
+            app->render->DrawRectangle(slider, 200, 200, 0, 80);
+        }
+            break;
+        default:
+            break;
+        }
     }
 
     return false;

@@ -83,6 +83,23 @@ bool GuiCheckBox::Draw()
     default:
         break;
     }
-
+    if (app->guiManager->debugGui)
+    {
+        switch (state)
+        {
+        case GuiControlState::DISABLED: app->render->DrawRectangle(bounds, 100, 100, 100, 80);
+            break;
+        case GuiControlState::NORMAL: app->render->DrawRectangle(bounds, 0, 255, 0, 80);
+            break;
+        case GuiControlState::FOCUSED: app->render->DrawRectangle(bounds, 255, 255, 0, 80);
+            break;
+        case GuiControlState::PRESSED: app->render->DrawRectangle(bounds, 0, 255, 255, 80);
+            break;
+        case GuiControlState::SELECTED: app->render->DrawRectangle(bounds, 0, 255, 0, 80);
+            break;
+        default:
+            break;
+        }
+    }
     return false;
 }
