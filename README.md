@@ -44,8 +44,7 @@ Platformer game developed during the course 2020-21 for the subject of developme
  - Updated Fx (NEW!)
  - Implemented fonts using TTF (NEW!)
  - Saved game detection (NEW!)
-     - WARNING: There's no !save_game.xml! file created. It is generated automatically when saved 1rst time. If you want to delete your progress, delete
-       "save_game.xml" file in the /Output folder. The "DISABLED" state of "Continue" button (in Main Menu) depends on the existance of this file.
+     - WARNING: There's no "save_game.xml" file created in the initial state of the game. It is generated automatically when saved 1rst time. If you want to delete        your progress, delete "save_game.xml" file in the /Output folder. The "DISABLED" state of "Continue" button (in Main Menu) depends on the existance of this          file.
  
 ## Controls
 
